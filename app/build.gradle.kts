@@ -134,9 +134,18 @@ fun MapProperty<String, BuildConfigField<out Serializable>>.putBuildConfig(
     type: String = "String",
     comment: String? = null
 ) {
-    put(key, BuildConfigField(type, value ?: localProperties.getProperty(key) ?: System.getenv(key) ?: "\"\"", comment))
+    val property = localProperties.getProperty(key)?.toStringLiteral()
+    val env = System.getenv(key)?.toStringLiteral()
+
+    put(key, BuildConfigField(type, value ?: property ?: env ?: "\"\"", comment))
 }
 
 fun Any.toStringLiteral(): String {
-    return "\"$this\""
+    val value = toString()
+
+    if (value.first() == '\"' && value.last() == '\"') {
+        return value
+    }
+
+    return "\"$value\""
 }
