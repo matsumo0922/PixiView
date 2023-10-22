@@ -83,6 +83,8 @@ junit = "4.13.2"
 runner = "1.0.2"
 espresso-core = "3.0.2"
 appcompat-v7 = "28.0.0"
+androidx-test-ext-junit = "1.1.5"
+androidx-test-espresso-espresso-core = "3.5.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "gradle" }
@@ -234,6 +236,8 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 runner = { group = "com.android.support.test", name = "runner", version.ref = "runner" }
 espresso-core = { group = "com.android.support.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 appcompat-v7 = { group = "com.android.support", name = "appcompat-v7", version.ref = "appcompat-v7" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+androidx-test-espresso-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso-espresso-core" }
 
 [bundles]
 infra-api = [

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Common -->
+    <string name="common_ok">OK</string>
+    <string name="common_cancel">キャンセル</string>
+    <string name="common_allow">許可</string>
+    <string name="common_denied">拒否</string>
+    <string name="common_retry">再試行</string>
+    <string name="common_reload">再読み込み</string>
+    <string name="common_back">戻る</string>
+    <string name="common_close">閉じる</string>
+    <string name="common_next">次へ</string>
+    <string name="common_finish">完了</string>
+    <string name="common_skip">スキップ</string>
+    <string name="common_loading">処理中…</string>
+    <string name="common_caution">注意</string>
+    <string name="common_error">エラー</string>
+    <string name="common_warning">警告</string>
+    <string name="common_save">保存</string>
+    <string name="common_unknown">不明</string>
+    <string name="common_details">詳細</string>
+    <string name="common_delete">削除</string>
+    <string name="common_download">ダウンロード</string>
+
+    <!-- Common Error -->
+    <string name="error_executed">エラーが発生しました</string>
+    <string name="error_unknown">不明なエラーが発生しました</string>
+    <string name="error_no_data">データがありません</string>
+    <string name="error_network">通信エラーが発生しました</string>
+    <string name="error_developing_feature">開発中の機能です</string>
+    <string name="error_billing">購入情報を取得できませんでした</string>
+
+    <!-- Report -->
+    <string name="report_crush_title">Oops! Something went wrong</string>
+    <string name="report_crush_description">申し訳ありません…\n技術的な要因により、PixiView がクラッシュしました。\n以下のレポートを開発者に送付してください。</string>
+    <string name="report_crush_copy">コピー</string>
+    <string name="report_crush_toast_copy">コピーしました</string>
+</resources>

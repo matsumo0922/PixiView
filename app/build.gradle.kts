@@ -32,13 +32,13 @@ android {
             storeFile = file("${project.rootDir}/gradle/keystore/debug.keystore")
         }
         create("release") {
-            storeFile = file("${project.rootDir}/gradle/keystore/release.jks")
+            storeFile = file("${project.rootDir}/gradle/keystore/release.keystore")
             storePassword = localProperties.getProperty("storePassword") ?: System.getenv("RELEASE_STORE_PASSWORD")
             keyPassword = localProperties.getProperty("keyPassword") ?: System.getenv("RELEASE_KEY_PASSWORD")
             keyAlias = localProperties.getProperty("keyAlias") ?: System.getenv("RELEASE_KEY_ALIAS")
         }
         create("billing") {
-            storeFile = file("${project.rootDir}/gradle/keystore/release.jks")
+            storeFile = file("${project.rootDir}/gradle/keystore/release.keystore")
             storePassword = localProperties.getProperty("storePassword") ?: System.getenv("RELEASE_STORE_PASSWORD")
             keyPassword = localProperties.getProperty("keyPassword") ?: System.getenv("RELEASE_KEY_PASSWORD")
             keyAlias = localProperties.getProperty("keyAlias") ?: System.getenv("RELEASE_KEY_ALIAS")
@@ -55,7 +55,7 @@ android {
             signingConfig = signingConfigs.getByName("debug")
             isDebuggable = true
             versionNameSuffix = ".D"
-            applicationIdSuffix = ".debug3"
+            applicationIdSuffix = ".debug"
         }
         create("billing") {
             signingConfig = signingConfigs.getByName("billing")
@@ -67,9 +67,9 @@ android {
     androidComponents {
         onVariants {
             val appName = when (it.buildType) {
-                "debug" -> "KanadeDebug3"
-                "billing" -> "KanadeBilling"
-                else -> "Kanade"
+                "debug" -> "PixiView Debug"
+                "billing" -> "PixiView Billing"
+                else -> "PixiView"
             }
 
             it.resValues.put(it.makeResValueKey("string", "app_name"), ResValue(appName, null))
@@ -96,6 +96,14 @@ kapt {
 }
 
 dependencies {
+    implementation(project(":core:common"))
+    implementation(project(":core:model"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:repository"))
+    implementation(project(":core:ui"))
+
+    implementation(project(":feature:report"))
+
     implementation(platform(libs.firebase.bom))
     implementation(platform(libs.androidx.compose.bom))
 

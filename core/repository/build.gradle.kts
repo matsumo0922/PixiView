@@ -14,6 +14,5 @@ dependencies {
     implementation(project(":core:datastore"))
 
     implementation(libs.bundles.ktor)
-    implementation(libs.androidx.media)
     implementation(libs.jsoup)
 }

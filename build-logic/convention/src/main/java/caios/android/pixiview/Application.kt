@@ -7,7 +7,7 @@ import org.gradle.api.plugins.ExtensionAware
 internal fun Project.configureApplication() {
     androidExt {
         defaultConfig {
-            applicationId = "caios.android.kanade"
+            applicationId = "caios.android.pixiview"
             
             versionName = libs.version("versionName")
             versionCode = libs.version("versionCode").toInt()
