@@ -5,9 +5,10 @@ import android.content.Intent
 import android.os.Build
 import caios.android.pixiview.core.common.PixiViewConfig
 import caios.android.pixiview.core.common.PixiViewDebugTree
+import caios.android.pixiview.feature.report.CrushReportActivity
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.CoroutineDispatcher
+import io.ktor.network.selector.SelectInterest.Companion.flags
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -32,12 +33,12 @@ class PixiViewApplication : Application() {
     private fun startCrushReportActivity(e: Throwable) {
         Timber.e(e)
 
-        /*startActivity(
+        startActivity(
             Intent(this, CrushReportActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 putExtra("report", getVersionReport() + "\n" + e.stackTraceToString())
             },
-        )*/
+        )
     }
 
     private fun getVersionReport() = buildString {

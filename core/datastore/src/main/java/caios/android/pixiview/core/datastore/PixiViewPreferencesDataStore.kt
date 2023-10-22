@@ -14,14 +14,6 @@ class PixiViewPreferencesDataStore(
     private val userPreference: DataStore<UserPreference>,
     private val ioDispatcher: CoroutineDispatcher,
 ) {
-    @Inject
-    constructor(
-        userPreference: DataStore<UserPreference>,
-    ): this(
-        userPreference = userPreference,
-        ioDispatcher = Dispatchers.IO,
-    )
-
     val userData = userPreference.data
         .map {
             UserData(
@@ -46,6 +38,14 @@ class PixiViewPreferencesDataStore(
                 isAgreedTermsOfService = if (it.hasIsAgreedTermsOfService()) it.isAgreedTermsOfService else false,
             )
         }
+
+    @Inject
+    constructor(
+        userPreference: DataStore<UserPreference>,
+    ) : this(
+        userPreference = userPreference,
+        ioDispatcher = Dispatchers.IO,
+    )
 
     suspend fun setPixiViewId(id: String) = withContext(ioDispatcher) {
         userPreference.updateData {

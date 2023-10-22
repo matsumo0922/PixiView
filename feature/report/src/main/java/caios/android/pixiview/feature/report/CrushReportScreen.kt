@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.ui.theme.bold
-import caios.android.pixiview.feature.report.R
 
 @Composable
 internal fun CrushReportScreen(

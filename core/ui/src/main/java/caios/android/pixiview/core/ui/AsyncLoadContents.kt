@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import caios.android.pixiview.core.ui.view.LoadingView
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.ui.view.ErrorView
+import caios.android.pixiview.core.ui.view.LoadingView
 
 @Composable
 fun <T> AsyncLoadContents(

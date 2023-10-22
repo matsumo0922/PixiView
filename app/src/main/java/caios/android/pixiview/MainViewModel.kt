@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor(userDataRepository: UserDataRepository) 
 
     val screenState = userDataRepository.userData.map {
         ScreenState.Idle(
-            MainUiState(it)
+            MainUiState(it),
         )
     }.stateIn(
         scope = viewModelScope,

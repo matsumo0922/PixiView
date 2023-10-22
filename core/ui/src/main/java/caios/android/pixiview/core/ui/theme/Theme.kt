@@ -13,17 +13,17 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import caios.android.kanade.core.design.theme.color.DarkBlueColorScheme
-import caios.android.kanade.core.design.theme.color.DarkBrownColorScheme
-import caios.android.kanade.core.design.theme.color.DarkGreenColorScheme
-import caios.android.kanade.core.design.theme.color.DarkPinkColorScheme
-import caios.android.kanade.core.design.theme.color.DarkPurpleColorScheme
-import caios.android.kanade.core.design.theme.color.LightBlueColorScheme
-import caios.android.kanade.core.design.theme.color.LightBrownColorScheme
-import caios.android.kanade.core.design.theme.color.LightGreenColorScheme
-import caios.android.kanade.core.design.theme.color.LightPinckColorScheme
-import caios.android.kanade.core.design.theme.color.LightPurpleColorScheme
 import caios.android.pixiview.core.model.ThemeColorConfig
+import caios.android.pixiview.core.ui.theme.color.DarkBlueColorScheme
+import caios.android.pixiview.core.ui.theme.color.DarkBrownColorScheme
+import caios.android.pixiview.core.ui.theme.color.DarkGreenColorScheme
+import caios.android.pixiview.core.ui.theme.color.DarkPinkColorScheme
+import caios.android.pixiview.core.ui.theme.color.DarkPurpleColorScheme
+import caios.android.pixiview.core.ui.theme.color.LightBlueColorScheme
+import caios.android.pixiview.core.ui.theme.color.LightBrownColorScheme
+import caios.android.pixiview.core.ui.theme.color.LightGreenColorScheme
+import caios.android.pixiview.core.ui.theme.color.LightPinckColorScheme
+import caios.android.pixiview.core.ui.theme.color.LightPurpleColorScheme
 
 val LightDefaultColorScheme = lightColorScheme(
     primary = Purple40,

@@ -1,6 +1,6 @@
 @file:Suppress("UnusedPrivateMember")
 
-package caios.android.kanade.core.design.theme.color
+package caios.android.pixiview.core.ui.theme.color
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme

@@ -17,5 +17,4 @@ interface RepositoryModule {
     fun bindUserDataRepository(
         userDataRepository: UserDataRepositoryImpl,
     ): UserDataRepository
-
 }
