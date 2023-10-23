@@ -54,6 +54,7 @@ class LoginActivity : ComponentActivity() {
                         LoginScreen(
                             modifier = Modifier.fillMaxSize(),
                             viewModel = viewModel,
+                            onUpdateCookie = viewModel::updateCookie,
                             onDismiss = ::dismiss,
                         )
                     }

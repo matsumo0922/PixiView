@@ -1,5 +1,7 @@
 package caios.android.pixiview.core.repository.di
 
+import caios.android.pixiview.core.repository.FanboxRepository
+import caios.android.pixiview.core.repository.FanboxRepositoryImpl
 import caios.android.pixiview.core.repository.PixivRepository
 import caios.android.pixiview.core.repository.PixivRepositoryImpl
 import caios.android.pixiview.core.repository.UserDataRepository
@@ -21,4 +23,8 @@ interface RepositoryModule {
     @Singleton
     @Binds
     fun bindPixivRepository(pixivRepository: PixivRepositoryImpl): PixivRepository
+
+    @Singleton
+    @Binds
+    fun bindFanboxRepository(fanboxRepository: FanboxRepositoryImpl): FanboxRepository
 }

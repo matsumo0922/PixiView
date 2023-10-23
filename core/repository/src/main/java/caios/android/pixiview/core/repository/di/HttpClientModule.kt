@@ -36,10 +36,6 @@ object HttpClientModule {
                 }
             }
 
-            install(HttpCookies) {
-                storage = AcceptAllCookiesStorage()
-            }
-
             install(ContentNegotiation) {
                 json(
                     Json {

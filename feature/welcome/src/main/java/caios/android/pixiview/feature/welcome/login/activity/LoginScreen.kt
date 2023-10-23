@@ -1,5 +1,7 @@
 package caios.android.pixiview.feature.welcome.login.activity
 
+import android.graphics.Bitmap
+import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.compose.foundation.background
@@ -19,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +32,7 @@ import caios.android.pixiview.core.common.util.ToastUtil
 import caios.android.pixiview.feature.welcome.R
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
+import com.google.accompanist.web.rememberWebViewNavigator
 import com.google.accompanist.web.rememberWebViewState
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -37,10 +41,15 @@ import timber.log.Timber
 @Composable
 internal fun LoginScreen(
     viewModel: LoginViewModel,
+    onUpdateCookie: (String) -> Unit,
     onDismiss: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val webViewState = rememberWebViewState(viewModel.authCode.url)
+    val fanboxUrl = "https://www.fanbox.cc/login"
+    val fanboxRedirectUrl = "https://www.fanbox.cc/creators/find"
+
+    val cookieManager = remember { CookieManager.getInstance() }
+    val webViewState = rememberWebViewState("$fanboxUrl?return_to=$fanboxRedirectUrl")
     val scope = rememberCoroutineScope()
 
     Scaffold(
@@ -73,8 +82,22 @@ internal fun LoginScreen(
         WebView(
             modifier = Modifier.padding(padding),
             state = webViewState,
-            onCreated = { it.settings.javaScriptEnabled = true },
+            onCreated = {
+                cookieManager.acceptCookie()
+                cookieManager.acceptThirdPartyCookies(it)
+
+                it.settings.javaScriptEnabled = true
+            },
             client = object : AccompanistWebViewClient() {
+                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                    if (url == fanboxRedirectUrl) {
+                        onUpdateCookie.invoke(cookieManager.getCookie(url))
+                        navigator.loadUrl(viewModel.authCode.url)
+                    }
+
+                    super.onPageStarted(view, url, favicon)
+                }
+
                 override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                     val url = request?.url
                     val scheme = url?.scheme
@@ -100,6 +123,7 @@ private fun isAllowedDomain(url: String): Boolean {
     Timber.d("isAllowedDomain: $url")
 
     val allowDomain = listOf(
+        "https://www.fanbox.cc",
         "https://accounts.pixiv.net",
         "https://app-api.pixiv.net",
         "https://oauth.secure.pixiv.net",
