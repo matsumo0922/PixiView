@@ -1,11 +1,22 @@
 plugins {
-    id("kanade.library")
-    id("kanade.detekt")
-    id("kanade.hilt")
+    id("pixiview.library")
+    id("pixiview.library.chaquopy")
+    id("pixiview.detekt")
+    id("pixiview.hilt")
 }
 
 android {
     namespace = "caios.android.pixiview.core.repository"
+}
+
+chaquopy {
+    defaultConfig {
+        version = "3.8"
+
+        pip {
+            install("pixivpy3")
+        }
+    }
 }
 
 dependencies {

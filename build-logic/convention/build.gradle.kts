@@ -20,35 +20,35 @@ dependencies {
 gradlePlugin {
     plugins {
         register("androidApplication") {
-            id = "kanade.application"
+            id = "pixiview.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
         register("androidApplicationCompose") {
-            id = "kanade.application.compose"
+            id = "pixiview.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
         register("androidLibrary") {
-            id = "kanade.library"
+            id = "pixiview.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
         register("androidLibraryCompose") {
-            id = "kanade.library.compose"
+            id = "pixiview.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
         register("androidLibraryGlance") {
-            id = "kanade.library.glance"
+            id = "pixiview.library.glance"
             implementationClass = "AndroidLibraryGlanceConventionPlugin"
         }
         register("androidLibraryChaquopy") {
-            id = "kanade.library.chaquopy"
+            id = "pixiview.library.chaquopy"
             implementationClass = "AndroidLibraryChaquopyConventionPlugin"
         }
         register("androidHilt") {
-            id = "kanade.hilt"
+            id = "pixiview.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
         }
         register("androidDetekt") {
-            id = "kanade.detekt"
+            id = "pixiview.detekt"
             implementationClass = "AndroidDetektConventionPlugin"
         }
     }

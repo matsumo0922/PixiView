@@ -1,8 +1,8 @@
 plugins {
-    id("kanade.library")
-    id("kanade.library.compose")
-    id("kanade.hilt")
-    id("kanade.detekt")
+    id("pixiview.library")
+    id("pixiview.library.compose")
+    id("pixiview.hilt")
+    id("pixiview.detekt")
 }
 
 android {

@@ -1,7 +1,7 @@
 [versions]
 # Application
-versionName = "2.0.1"
-versionCode = "133"
+versionName = "1.0.0"
+versionCode = "1"
 
 # SDK
 minSdk = "26"
@@ -9,7 +9,7 @@ targetSdk = "34"
 compileSdk = "34"
 
 # Gradle
-gradle = "8.1.1"
+gradle = "8.1.2"
 
 # Kotlin
 kotlin = "1.9.10"

@@ -31,6 +31,11 @@
     <string name="error_developing_feature">開発中の機能です</string>
     <string name="error_billing">購入情報を取得できませんでした</string>
 
+    <!-- Library -->
+    <string name="library_navigation_home">ホーム</string>
+    <string name="library_navigation_notify">通知</string>
+    <string name="library_navigation_message">メッセージ</string>
+
     <!-- Report -->
     <string name="report_crush_title">Oops! Something went wrong</string>
     <string name="report_crush_description">申し訳ありません…\n技術的な要因により、PixiView がクラッシュしました。\n以下のレポートを開発者に送付してください。</string>

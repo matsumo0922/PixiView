@@ -6,18 +6,16 @@ plugins {
 }
 
 android {
-    namespace = "caios.android.pixiview.core.ui"
+    namespace = "caios.android.pixiview.feature.library"
 }
 
 dependencies {
-    implementation(project(":core:model"))
     implementation(project(":core:common"))
+    implementation(project(":core:model"))
     implementation(project(":core:repository"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:ui"))
 
     implementation(libs.bundles.ui.implementation)
     kapt(libs.bundles.ui.kapt)
-
-    implementation(libs.androidx.palette)
-    implementation(libs.reorderble.compose)
 }

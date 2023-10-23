@@ -27,6 +27,7 @@ import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.ThemeConfig
 import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.core.ui.theme.PixiViewTheme
+import caios.android.pixiview.ui.PixiViewApp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -72,13 +73,7 @@ class MainActivity : ComponentActivity() {
                     shouldUseDarkTheme = shouldUseDarkTheme,
                     enableDynamicTheme = shouldUseDynamicColor(screenState),
                 ) {
-                    Box(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
-                        Text(
-                            text = "Hello, World!",
-                            style = MaterialTheme.typography.displayLarge,
-                            color = MaterialTheme.colorScheme.onBackground,
-                        )
-                    }
+                    PixiViewApp(Modifier.fillMaxSize())
                 }
             }
         }

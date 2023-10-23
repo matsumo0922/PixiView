@@ -6,10 +6,10 @@ import org.jetbrains.kotlin.konan.properties.Properties
 import java.io.Serializable
 
 plugins {
-    id("kanade.application")
-    id("kanade.application.compose")
-    id("kanade.hilt")
-    id("kanade.detekt")
+    id("pixiview.application")
+    id("pixiview.application.compose")
+    id("pixiview.hilt")
+    id("pixiview.detekt")
 }
 
 android {
@@ -101,6 +101,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:repository"))
     implementation(project(":core:ui"))
+    implementation(project(":feature:library"))
 
     implementation(project(":feature:report"))
 
