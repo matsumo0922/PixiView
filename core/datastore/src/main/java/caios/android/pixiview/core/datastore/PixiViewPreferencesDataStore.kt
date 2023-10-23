@@ -55,6 +55,22 @@ class PixiViewPreferencesDataStore(
         }
     }
 
+    suspend fun setAgreedPrivacyPolicy(isAgreed: Boolean) = withContext(ioDispatcher) {
+        userPreference.updateData {
+            it.copy {
+                this.isAgreedPrivacyPolicy = isAgreed
+            }
+        }
+    }
+
+    suspend fun setAgreedTermsOfService(isAgreed: Boolean) = withContext(ioDispatcher) {
+        userPreference.updateData {
+            it.copy {
+                this.isAgreedTermsOfService = isAgreed
+            }
+        }
+    }
+
     suspend fun setThemeConfig(themeConfig: ThemeConfig) = withContext(ioDispatcher) {
         userPreference.updateData {
             it.copy {

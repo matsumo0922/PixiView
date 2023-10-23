@@ -7,6 +7,8 @@ data class PixiViewConfig(
     val versionName: String,
     val isDebug: Boolean,
     val developerPassword: String,
+    val pixivClientId: String,
+    val pixivClientSecret: String,
 ) {
     companion object {
         fun dummy(): PixiViewConfig {
@@ -17,6 +19,8 @@ data class PixiViewConfig(
                 versionName = "1.4.21",
                 isDebug = false,
                 developerPassword = "1919191919",
+                pixivClientId = "1919191919",
+                pixivClientSecret = "1919191919"
             )
         }
     }

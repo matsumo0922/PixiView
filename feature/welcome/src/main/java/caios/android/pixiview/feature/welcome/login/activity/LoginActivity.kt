@@ -1,43 +1,32 @@
-package caios.android.pixiview
+package caios.android.pixiview.feature.welcome.login.activity
 
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.ThemeConfig
 import caios.android.pixiview.core.ui.AsyncLoadContents
+import caios.android.pixiview.core.ui.component.PixiViewBackground
 import caios.android.pixiview.core.ui.theme.PixiViewTheme
-import caios.android.pixiview.ui.PixiViewApp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class LoginActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<MainViewModel>()
+    private val viewModel by viewModels<LoginViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -46,15 +35,6 @@ class MainActivity : ComponentActivity() {
             val screenState by viewModel.screenState.collectAsStateWithLifecycle()
             val systemUiController = rememberSystemUiController()
             val shouldUseDarkTheme = shouldUseDarkTheme(screenState)
-
-            LaunchedEffect(screenState) {
-                splashScreen.setKeepOnScreenCondition {
-                    when (screenState) {
-                        is ScreenState.Loading -> true
-                        else -> false
-                    }
-                }
-            }
 
             DisposableEffect(systemUiController, shouldUseDarkTheme) {
                 systemUiController.systemBarsDarkContentEnabled = !shouldUseDarkTheme
@@ -65,29 +45,31 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 screenState = screenState,
             ) {
-                val isAgreedTeams = remember { it.userData.isAgreedPrivacyPolicy && it.userData.isAgreedTermsOfService }
-                val isAllowedPermission = remember { isAllowedPermission() }
-                val isLoggedIn = remember { viewModel.isLoggedIn() }
-
                 PixiViewTheme(
                     themeColorConfig = it.userData.themeColorConfig,
                     shouldUseDarkTheme = shouldUseDarkTheme,
                     enableDynamicTheme = shouldUseDynamicColor(screenState),
                 ) {
-                    PixiViewApp(
-                        viewModel = viewModel,
-                        userData = it.userData,
-                        isAgreedTeams = isAgreedTeams,
-                        isAllowedPermission = isAllowedPermission,
-                        isLoggedIn = isLoggedIn,
-                    )
+                    PixiViewBackground {
+                        LoginScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            viewModel = viewModel,
+                            onDismiss = ::dismiss,
+                        )
+                    }
                 }
             }
         }
     }
 
+    private fun dismiss(isSuccess: Boolean) {
+        setResult(if (isSuccess) RESULT_OK else RESULT_CANCELED)
+        finish()
+    }
+
+
     @Composable
-    private fun shouldUseDarkTheme(screenState: ScreenState<MainUiState>): Boolean {
+    private fun shouldUseDarkTheme(screenState: ScreenState<LoginUiState>): Boolean {
         return when (screenState) {
             is ScreenState.Idle -> when (screenState.data.userData.themeConfig) {
                 ThemeConfig.Light -> false
@@ -100,25 +82,10 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun shouldUseDynamicColor(screenState: ScreenState<MainUiState>): Boolean {
+    private fun shouldUseDynamicColor(screenState: ScreenState<LoginUiState>): Boolean {
         return when (screenState) {
             is ScreenState.Idle -> screenState.data.userData.isDynamicColor
             else -> false
-        }
-    }
-
-    private fun isAllowedPermission(): Boolean {
-        val storagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            listOf(
-                android.Manifest.permission.READ_MEDIA_IMAGES,
-                android.Manifest.permission.READ_MEDIA_VIDEO,
-            )
-        } else {
-            listOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
-
-        return storagePermission.all {
-            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
     }
 }

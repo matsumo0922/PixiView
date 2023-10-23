@@ -12,6 +12,8 @@ interface UserDataRepository {
     val userData: Flow<UserData>
 
     suspend fun setPixiViewId(id: String)
+    suspend fun setAgreedPrivacyPolicy(isAgreed: Boolean)
+    suspend fun setAgreedTermsOfService(isAgreed: Boolean)
     suspend fun setThemeConfig(themeConfig: ThemeConfig)
     suspend fun setThemeColorConfig(themeColorConfig: ThemeColorConfig)
     suspend fun setDeveloperMode(isDeveloperMode: Boolean)
@@ -27,6 +29,14 @@ class UserDataRepositoryImpl @Inject constructor(
 
     override suspend fun setPixiViewId(id: String) {
         pixiViewPreferencesDataStore.setPixiViewId(id)
+    }
+
+    override suspend fun setAgreedPrivacyPolicy(isAgreed: Boolean) {
+        pixiViewPreferencesDataStore.setAgreedPrivacyPolicy(isAgreed)
+    }
+
+    override suspend fun setAgreedTermsOfService(isAgreed: Boolean) {
+        pixiViewPreferencesDataStore.setAgreedTermsOfService(isAgreed)
     }
 
     override suspend fun setThemeConfig(themeConfig: ThemeConfig) {

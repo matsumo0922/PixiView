@@ -77,6 +77,8 @@ android {
                 putBuildConfig(localProperties, "VERSION_NAME", libs.versions.versionName.get().toStringLiteral())
                 putBuildConfig(localProperties, "VERSION_CODE", libs.versions.versionCode.get().toStringLiteral())
                 putBuildConfig(localProperties, "DEVELOPER_PASSWORD")
+                putBuildConfig(localProperties, "PIXIV_CLIENT_ID")
+                putBuildConfig(localProperties, "PIXIV_CLIENT_SECRET")
             }
 
             if (it.buildType == "release") {
@@ -101,9 +103,10 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:repository"))
     implementation(project(":core:ui"))
-    implementation(project(":feature:library"))
 
     implementation(project(":feature:report"))
+    implementation(project(":feature:library"))
+    implementation(project(":feature:welcome"))
 
     implementation(platform(libs.firebase.bom))
     implementation(platform(libs.androidx.compose.bom))
@@ -115,7 +118,6 @@ dependencies {
     kapt(libs.bundles.ui.kapt)
 
     implementation(libs.androidx.core.splashscreen)
-
     implementation(libs.play.service.oss)
     implementation(libs.google.material)
 

@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -50,6 +52,11 @@
 
         <activity
             android:name=".feature.report.CrushReportActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PixiView" />
+
+        <activity
+            android:name=".feature.welcome.login.activity.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.PixiView" />
 

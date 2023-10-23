@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import caios.android.pixiview.feature.library.LibraryRoute
 import caios.android.pixiview.feature.library.libraryScreen
+import caios.android.pixiview.feature.welcome.login.welcomeLoginScreen
 
 @Composable
 internal fun PixiViewNavHost(

@@ -41,4 +41,33 @@
     <string name="report_crush_description">申し訳ありません…\n技術的な要因により、PixiView がクラッシュしました。\n以下のレポートを開発者に送付してください。</string>
     <string name="report_crush_copy">コピー</string>
     <string name="report_crush_toast_copy">コピーしました</string>
+
+    <!-- Welcome -->
+    <string name="welcome_title">PixiView</string>
+    <string name="welcome_description">このアプリは Pixiv Fanbox の\n非公式 Android クライアントです</string>
+    <string name="welcome_privacy_policy">プライバシーポリシー</string>
+    <string name="welcome_team_of_service">利用規約</string>
+    <string name="welcome_agree">に同意する</string>
+    <string name="welcome_button_next">はじめる</string>
+    <string name="welcome_login_title">ログイン</string>
+    <string name="welcome_login_message">このアプリを利用するには Pixiv アカウントで\nログインする必要があります</string>
+    <string name="welcome_login_ready_title">ログイン済み</string>
+    <string name="welcome_login_ready_message">Pixiv アカウントでログイン済みです</string>
+    <string name="welcome_login_toast_success">ログインしました</string>
+    <string name="welcome_login_toast_failed">ログインに失敗しました</string>
+    <string name="welcome_login_button_login">ログイン</string>
+    <string name="welcome_login_button_next">次へ</string>
+    <string name="welcome_permission_title">権限</string>
+    <string name="welcome_permission_message">アプリの利用には以下の権限が必要です\n下のボタンを押して権限を許可してください</string>
+    <string name="welcome_permission_ready_title">準備完了</string>
+    <string name="welcome_permission_ready_message">アプリの利用に必要な権限がすべて許可されました</string>
+    <string name="welcome_permission_storage">ストレージ</string>
+    <string name="welcome_permission_storage_message">コンテンツを保存するため</string>
+    <string name="welcome_permission_notification">通知</string>
+    <string name="welcome_permission_notification_message">通知を表示するため</string>
+    <string name="welcome_permission_allowed">ALLOWED</string>
+    <string name="welcome_permission_denied">DENIED</string>
+    <string name="welcome_permission_optional">OPTIONAL</string>
+    <string name="welcome_permission_allow_button">許可</string>
+    <string name="welcome_permission_complete_button">完了</string>
 </resources>

@@ -1,31 +1,35 @@
-package caios.android.pixiview
+package caios.android.pixiview.feature.welcome.login.activity
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.UserData
+import caios.android.pixiview.core.model.pixiv.PixivAuthCode
 import caios.android.pixiview.core.repository.PixivRepository
 import caios.android.pixiview.core.repository.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.util.UUID
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@Stable
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class LoginViewModel(
     private val userDataRepository: UserDataRepository,
     private val pixivRepository: PixivRepository,
-) : ViewModel() {
+    private val ioDispatcher: CoroutineDispatcher,
+): ViewModel() {
+
+    val authCode = pixivRepository.getAuthCode()
 
     val screenState = userDataRepository.userData.map {
         ScreenState.Idle(
-            MainUiState(it),
+            LoginUiState(it),
         )
     }.stateIn(
         scope = viewModelScope,
@@ -33,18 +37,24 @@ class MainViewModel @Inject constructor(
         initialValue = ScreenState.Loading,
     )
 
-    fun initPixiViewId() {
-        viewModelScope.launch {
-            userDataRepository.setPixiViewId(UUID.randomUUID().toString())
-        }
-    }
+    @Inject
+    constructor(
+        userDataRepository: UserDataRepository,
+        pixivRepository: PixivRepository,
+    ): this(
+        userDataRepository = userDataRepository,
+        pixivRepository = pixivRepository,
+        ioDispatcher = Dispatchers.IO,
+    )
 
-    fun isLoggedIn(): Boolean {
-        return pixivRepository.hasActiveAccount()
+    suspend fun initAccount(code: PixivAuthCode) = withContext(ioDispatcher) {
+        suspendRunCatching {
+            pixivRepository.initAccount(code)!!
+        }
     }
 }
 
 @Stable
-data class MainUiState(
+data class LoginUiState(
     val userData: UserData,
 )
