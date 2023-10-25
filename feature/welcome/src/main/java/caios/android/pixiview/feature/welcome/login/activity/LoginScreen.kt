@@ -2,7 +2,6 @@ package caios.android.pixiview.feature.welcome.login.activity
 
 import android.graphics.Bitmap
 import android.webkit.CookieManager
-import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -25,17 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import caios.android.pixiview.core.common.util.ToastUtil
 import caios.android.pixiview.feature.welcome.R
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
-import com.google.accompanist.web.rememberWebViewNavigator
 import com.google.accompanist.web.rememberWebViewState
-import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -92,42 +85,12 @@ internal fun LoginScreen(
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                     if (url == fanboxRedirectUrl) {
                         onUpdateCookie.invoke(cookieManager.getCookie(url))
-                        navigator.loadUrl(viewModel.authCode.url)
+                        onDismiss.invoke(true)
                     }
 
                     super.onPageStarted(view, url, favicon)
                 }
-
-                override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                    val url = request?.url
-                    val scheme = url?.scheme
-                    val code = url?.getQueryParameter("code")
-
-                    if (scheme == "pixiv" && code != null) {
-                        scope.launch {
-                            viewModel.initAccount(viewModel.authCode.copy(code = code)).fold(
-                                onSuccess = { onDismiss.invoke(true) },
-                                onFailure = { onDismiss.invoke(false) }
-                            )
-                        }
-                    }
-
-                    return !isAllowedDomain(url.toString())
-                }
             }
         )
     }
-}
-
-private fun isAllowedDomain(url: String): Boolean {
-    Timber.d("isAllowedDomain: $url")
-
-    val allowDomain = listOf(
-        "https://www.fanbox.cc",
-        "https://accounts.pixiv.net",
-        "https://app-api.pixiv.net",
-        "https://oauth.secure.pixiv.net",
-    )
-
-    return allowDomain.any { url.startsWith(it) }
 }

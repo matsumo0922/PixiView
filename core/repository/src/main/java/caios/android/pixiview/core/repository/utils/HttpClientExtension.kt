@@ -2,6 +2,7 @@ package caios.android.pixiview.core.repository.utils
 
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.client.statement.request
 import timber.log.Timber
 
@@ -12,7 +13,12 @@ suspend inline fun <reified T> HttpResponse.parse(
     val requestUrl = request.url
     val isOK = this.status.value in allowRange
 
-    Timber.d("[${if (isOK) "SUCCESS" else "FAILED"}] Ktor Request: $requestUrl")
+    if (isOK) {
+        Timber.d("[SUCCESS] Ktor Request: $requestUrl")
+    } else {
+        Timber.d("[FAILED] Ktor Request: $requestUrl")
+        Timber.d("[RESPONSE] ${this.bodyAsText().replace("\n", "")}")
+    }
 
     return (if (isOK) this.body<T>() else null).also(f)
 }

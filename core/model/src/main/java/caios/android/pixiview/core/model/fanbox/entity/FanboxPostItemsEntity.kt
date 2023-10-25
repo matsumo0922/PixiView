@@ -60,7 +60,7 @@ data class FanboxPostItemsEntity(
             @Serializable
             data class User(
                 @SerialName("iconUrl")
-                val iconUrl: String,
+                val iconUrl: String?,
                 @SerialName("name")
                 val name: String,
                 @SerialName("userId")

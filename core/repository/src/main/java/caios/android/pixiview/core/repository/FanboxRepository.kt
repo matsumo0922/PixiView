@@ -1,5 +1,6 @@
 package caios.android.pixiview.core.repository
 
+import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
 import caios.android.pixiview.core.model.PageInfo
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
 import caios.android.pixiview.core.model.fanbox.FanboxPost
@@ -7,25 +8,13 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
 import caios.android.pixiview.core.repository.utils.parse
 import caios.android.pixiview.core.repository.utils.translate
 import io.ktor.client.HttpClient
-import io.ktor.client.request.HttpRequestBuilder
-import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.Cookie
-import io.ktor.http.HttpHeaders
-import io.ktor.http.Parameters
-import io.ktor.http.decodeCookieValue
-import io.ktor.http.parseServerSetCookieHeader
-import io.ktor.http.renderCookieHeader
-import kotlinx.coroutines.flow.MutableSharedFlow
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.internal.parseCookie
-import timber.log.Timber
 import javax.inject.Inject
 
 interface FanboxRepository {
@@ -38,56 +27,32 @@ interface FanboxRepository {
 
 class FanboxRepositoryImpl @Inject constructor(
     private val client: HttpClient,
+    private val fanboxCookiePreference: PreferenceFanboxCookie,
 ): FanboxRepository {
 
-    private val _cookie = MutableSharedFlow<String>(replay = 1)
-
-    override val cookie: SharedFlow<String> = _cookie.asSharedFlow()
+    override val cookie: SharedFlow<String> = fanboxCookiePreference.data
 
     override suspend fun updateCookie(cookie: String) {
-        Timber.d("updateCookie: $cookie")
-        _cookie.emit(cookie)
+        fanboxCookiePreference.save(cookie)
     }
 
     override suspend fun getHomePosts(cursor: FanboxCursor?): PageInfo<FanboxPost>? {
-        val cookie = cookie.first()
-        val a = client.submitForm(
-            url = "$API/post.listHome",
-            formParameters = Parameters.build {
-                append("limit", 10.toString())
-
-                cursor?.also {
-                    append("maxPublishedDatetime", it.maxPublishedDatetime)
-                    append("maxId", it.maxId)
-                }
-            }
-        ) {
-            headers["Cookie"] = cookie
-        }
-
-        val b = a.bodyAsText()
-
-        Timber.d("getHomePosts: $b")
-
-        return a.parse<FanboxPostItemsEntity>()?.translate()
+        return get("post.listHome", mapOf("limit" to "10")).parse<FanboxPostItemsEntity>()?.translate()
     }
 
-    private suspend fun HttpRequestBuilder.applyCookie()  {
-        /*val ktorCookie = parseServerSetCookieHeader(cookie.first())
-        val renderedCookie = renderCookieHeader(ktorCookie)
+    private suspend fun get(dir: String, parameters: Map<String, String>): HttpResponse {
+        return client.get {
+            url("$API/$dir")
 
-        if (HttpHeaders.Cookie !in headers) {
-            headers.append(HttpHeaders.Cookie, renderedCookie)
-            return
+            for ((key, value) in parameters) {
+                parameter(key, value)
+            }
+
+            header("origin", "https://www.fanbox.cc")
+            header("referer", "https://www.fanbox.cc")
+            header("user-agent",  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36")
+            header("Cookie", cookie.first())
         }
-        // Client cookies are stored in a single header "Cookies" and multiple values are separated with ";"
-        headers[HttpHeaders.Cookie] = headers[HttpHeaders.Cookie] + "; " + renderedCookie*/
-
-        val c = cookie.first()
-
-        Timber.d("applyCookie: $c")
-
-        headers[HttpHeaders.Cookie] = c
     }
 
     companion object {
