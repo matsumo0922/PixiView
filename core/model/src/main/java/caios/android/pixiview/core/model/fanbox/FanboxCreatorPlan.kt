@@ -1,8 +1,5 @@
 package caios.android.pixiview.core.model.fanbox
 
-import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlansEntity
-import kotlinx.serialization.SerialName
-
 data class FanboxCreatorPlan(
     val id: String,
     val title: String,

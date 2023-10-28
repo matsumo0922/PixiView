@@ -1,4 +1,4 @@
-package caios.android.kanade.feature.welcome
+package caios.android.pixiview.feature.welcome
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

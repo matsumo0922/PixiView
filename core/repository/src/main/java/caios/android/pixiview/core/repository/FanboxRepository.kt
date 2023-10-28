@@ -63,7 +63,7 @@ interface FanboxRepository {
 class FanboxRepositoryImpl @Inject constructor(
     private val client: HttpClient,
     private val fanboxCookiePreference: PreferenceFanboxCookie,
-): FanboxRepository {
+) : FanboxRepository {
 
     override val cookie: SharedFlow<String> = fanboxCookiePreference.data
 
@@ -169,7 +169,7 @@ class FanboxRepositoryImpl @Inject constructor(
 
             header("origin", "https://www.fanbox.cc")
             header("referer", "https://www.fanbox.cc")
-            header("user-agent",  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36")
+            header("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36")
             header("Cookie", cookie.first())
         }
     }

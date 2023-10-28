@@ -11,6 +11,5 @@ internal fun LibraryHomeScreen(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.background(Color.Red)) {
-
     }
 }

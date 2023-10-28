@@ -20,7 +20,7 @@ data class PixiViewConfig(
                 isDebug = false,
                 developerPassword = "1919191919",
                 pixivClientId = "1919191919",
-                pixivClientSecret = "1919191919"
+                pixivClientSecret = "1919191919",
             )
         }
     }

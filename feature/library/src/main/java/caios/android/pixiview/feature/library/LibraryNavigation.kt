@@ -6,7 +6,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import caios.android.pixiview.core.ui.animation.NavigateAnimation
-import caios.android.pixiview.feature.library.home.LibraryHomeRoute
 
 const val LibraryRoute = "library"
 

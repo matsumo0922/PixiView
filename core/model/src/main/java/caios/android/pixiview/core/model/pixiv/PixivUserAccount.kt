@@ -19,5 +19,5 @@ data class PixivUserAccount(
     val user: PixivLocalUser = PixivLocalUser(),
     @SerialName("acquisition_time")
     @Serializable(with = LocalDateTimeSerializer::class)
-    val acquisitionTime: LocalDateTime = LocalDateTime.now()
+    val acquisitionTime: LocalDateTime = LocalDateTime.now(),
 )

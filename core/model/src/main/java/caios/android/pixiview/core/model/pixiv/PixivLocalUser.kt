@@ -19,7 +19,7 @@ data class PixivLocalUser(
     @SerialName("require_policy_agreement")
     val requirePolicyAgreement: Boolean = false,
     @SerialName("x_restrict")
-    val xRestrict: Int = 0
+    val xRestrict: Int = 0,
 ) {
     @Serializable
     data class ProfileImageUrls(
@@ -28,6 +28,6 @@ data class PixivLocalUser(
         @SerialName("px_170x170")
         val px170x170: String = "",
         @SerialName("px_50x50")
-        val px50x50: String = ""
+        val px50x50: String = "",
     )
 }

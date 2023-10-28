@@ -12,12 +12,12 @@ data class FanboxCreatorDetail(
     val isSupported: Boolean,
     val profileItems: List<ProfileItem>,
     val profileLinks: List<String>,
-    val user: FanboxUser
+    val user: FanboxUser,
 ) {
     data class ProfileItem(
         val id: String,
         val imageUrl: String,
         val thumbnailUrl: String,
-        val type: String
+        val type: String,
     )
 }

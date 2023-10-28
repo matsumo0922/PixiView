@@ -11,6 +11,5 @@ internal fun LibraryMessageScreen(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.background(Color.Blue)) {
-
     }
 }

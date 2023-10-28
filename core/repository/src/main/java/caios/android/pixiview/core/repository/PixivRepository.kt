@@ -28,7 +28,7 @@ class PixivRepositoryImpl @Inject constructor(
     private val client: HttpClient,
     private val config: PixiViewConfig,
     private val userAccountPreference: PreferencePixivAccount,
-): PixivRepository {
+) : PixivRepository {
 
     override suspend fun initAccount(code: PixivAuthCode): PixivUserAccount? {
         return client.submitForm(
@@ -41,7 +41,7 @@ class PixivRepositoryImpl @Inject constructor(
                 append("grant_type", "authorization_code")
                 append("include_policy", true.toString())
                 append("redirect_uri", "${API_ENDPOINT}/web/v1/users/auth/pixiv/callback")
-            }
+            },
         ).parse<PixivUserAccount?>()?.also {
             userAccountPreference.save(it)
         }
@@ -56,7 +56,7 @@ class PixivRepositoryImpl @Inject constructor(
                 append("include_policy", true.toString())
                 append("grant_type", "refresh_token")
                 append("refresh_token", refreshToken)
-            }
+            },
         ).parse<PixivUserAccount?>()?.also {
             userAccountPreference.save(it)
         }
@@ -72,14 +72,14 @@ class PixivRepositoryImpl @Inject constructor(
         val params = listOf(
             "code_challenge" to codeChallenge,
             "code_challenge_method" to "S256",
-            "client" to "pixiv-android"
+            "client" to "pixiv-android",
         )
 
         return PixivAuthCode(
             code = "",
             codeVerifier = codeVerifier,
             codeChallenge = codeChallenge,
-            url = "${API_ENDPOINT}/web/v1/login?${params.formUrlEncode()}"
+            url = "${API_ENDPOINT}/web/v1/login?${params.formUrlEncode()}",
         )
     }
 

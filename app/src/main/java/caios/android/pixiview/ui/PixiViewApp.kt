@@ -1,6 +1,5 @@
 package caios.android.pixiview.ui
 
-import android.app.Activity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -10,8 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModel
 import caios.android.pixiview.MainViewModel
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.ui.component.PixiViewBackground
@@ -50,7 +47,6 @@ internal fun PixiViewApp(
             } else {
                 IdleScreen(
                     modifier = Modifier.fillMaxSize(),
-                    userData = userData,
                 )
             }
         }
@@ -59,7 +55,6 @@ internal fun PixiViewApp(
 
 @Composable
 private fun IdleScreen(
-    userData: UserData,
     modifier: Modifier = Modifier,
 ) {
     PixiViewNavHost(

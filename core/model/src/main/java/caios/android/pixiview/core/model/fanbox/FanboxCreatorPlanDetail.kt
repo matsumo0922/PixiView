@@ -4,7 +4,7 @@ data class FanboxCreatorPlanDetail(
     val plan: FanboxCreatorPlan,
     val supportStartDatetime: String,
     val supportTransactions: List<SupportTransaction>,
-    val supporterCardImageUrl: String
+    val supporterCardImageUrl: String,
 ) {
     data class SupportTransaction(
         val id: String,

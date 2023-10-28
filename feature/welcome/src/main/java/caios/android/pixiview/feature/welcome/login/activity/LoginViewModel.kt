@@ -26,7 +26,7 @@ class LoginViewModel(
     private val pixivRepository: PixivRepository,
     private val fanboxRepository: FanboxRepository,
     private val ioDispatcher: CoroutineDispatcher,
-): ViewModel() {
+) : ViewModel() {
 
     val authCode = pixivRepository.getAuthCode()
 
@@ -45,7 +45,7 @@ class LoginViewModel(
         userDataRepository: UserDataRepository,
         pixivRepository: PixivRepository,
         fanboxRepository: FanboxRepository,
-    ): this(
+    ) : this(
         userDataRepository = userDataRepository,
         pixivRepository = pixivRepository,
         fanboxRepository = fanboxRepository,

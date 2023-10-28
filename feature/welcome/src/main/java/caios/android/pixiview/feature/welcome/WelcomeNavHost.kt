@@ -5,11 +5,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import caios.android.pixiview.feature.welcome.login.WelcomeLoginRoute
+import caios.android.pixiview.feature.welcome.login.navigateToWelcomeLogin
+import caios.android.pixiview.feature.welcome.login.welcomeLoginScreen
 import caios.android.pixiview.feature.welcome.permission.WelcomePermissionRoute
 import caios.android.pixiview.feature.welcome.permission.navigateToWelcomePermission
 import caios.android.pixiview.feature.welcome.permission.welcomePermissionScreen
-import caios.android.pixiview.feature.welcome.login.navigateToWelcomeLogin
-import caios.android.pixiview.feature.welcome.login.welcomeLoginScreen
 import caios.android.pixiview.feature.welcome.top.WelcomeTopRoute
 import caios.android.pixiview.feature.welcome.top.welcomeTopScreen
 

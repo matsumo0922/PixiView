@@ -1,13 +1,12 @@
 package caios.android.pixiview.core.model.fanbox.entity
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class FanboxPaidRecordEntity(
     @SerialName("body")
-    val body: List<Body>
+    val body: List<Body>,
 ) {
     @Serializable
     data class Body(
@@ -20,7 +19,7 @@ data class FanboxPaidRecordEntity(
         @SerialName("paymentDatetime")
         val paymentDatetime: String,
         @SerialName("paymentMethod")
-        val paymentMethod: String
+        val paymentMethod: String,
     ) {
         @Serializable
         data class Creator(
@@ -29,7 +28,7 @@ data class FanboxPaidRecordEntity(
             @SerialName("isActive")
             val isActive: Boolean,
             @SerialName("user")
-            val user: User
+            val user: User,
         ) {
             @Serializable
             data class User(
@@ -38,7 +37,7 @@ data class FanboxPaidRecordEntity(
                 @SerialName("name")
                 val name: String,
                 @SerialName("userId")
-                val userId: String
+                val userId: String,
             )
         }
     }

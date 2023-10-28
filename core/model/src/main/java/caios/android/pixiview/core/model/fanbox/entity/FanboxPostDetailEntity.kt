@@ -1,13 +1,12 @@
 package caios.android.pixiview.core.model.fanbox.entity
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class FanboxPostDetailEntity(
     @SerialName("body")
-    val body: Body
+    val body: Body,
 ) {
     @Serializable
     data class Body(
@@ -64,7 +63,7 @@ data class FanboxPostDetailEntity(
                 @SerialName("size")
                 val size: Long,
                 @SerialName("url")
-                val url: String
+                val url: String,
             )
 
             @Serializable
@@ -80,7 +79,7 @@ data class FanboxPostDetailEntity(
                 @SerialName("thumbnailUrl")
                 val thumbnailUrl: String,
                 @SerialName("width")
-                val width: Int
+                val width: Int,
             )
         }
 
@@ -89,7 +88,7 @@ data class FanboxPostDetailEntity(
             @SerialName("items")
             val items: List<Item>,
             @SerialName("nextUrl")
-            val nextUrl: String?
+            val nextUrl: String?,
         ) {
             @Serializable
             data class Item(
@@ -110,7 +109,7 @@ data class FanboxPostDetailEntity(
                 @SerialName("rootCommentId")
                 val rootCommentId: String,
                 @SerialName("user")
-                val user: User
+                val user: User,
             ) {
                 @Serializable
                 data class User(
@@ -119,7 +118,7 @@ data class FanboxPostDetailEntity(
                     @SerialName("name")
                     val name: String,
                     @SerialName("userId")
-                    val userId: String
+                    val userId: String,
                 )
             }
         }
@@ -131,7 +130,7 @@ data class FanboxPostDetailEntity(
             @SerialName("publishedDatetime")
             val publishedDatetime: String,
             @SerialName("title")
-            val title: String
+            val title: String,
         )
 
         @Serializable
@@ -141,7 +140,7 @@ data class FanboxPostDetailEntity(
             @SerialName("name")
             val name: String,
             @SerialName("userId")
-            val userId: String
+            val userId: String,
         )
     }
 }

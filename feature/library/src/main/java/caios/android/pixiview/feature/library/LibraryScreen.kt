@@ -1,6 +1,5 @@
 package caios.android.pixiview.feature.library
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -44,10 +43,10 @@ fun LibraryScreen(
                     }
                 },
             )
-        }
+        },
     ) {
         LibraryNavHost(
-            modifier = modifier.padding(it),
+            modifier = Modifier.padding(it),
             navController = navController,
         )
     }

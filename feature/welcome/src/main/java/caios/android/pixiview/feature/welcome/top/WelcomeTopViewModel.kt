@@ -1,6 +1,5 @@
-package caios.android.kanade.feature.welcome.top
+package caios.android.pixiview.feature.welcome.top
 
-import android.content.Context
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

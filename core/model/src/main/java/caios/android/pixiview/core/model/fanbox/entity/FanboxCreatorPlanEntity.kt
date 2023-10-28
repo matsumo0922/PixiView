@@ -1,13 +1,12 @@
 package caios.android.pixiview.core.model.fanbox.entity
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class FanboxCreatorPlanEntity(
     @SerialName("body")
-    val body: Body
+    val body: Body,
 ) {
     @Serializable
     data class Body(
@@ -18,7 +17,7 @@ data class FanboxCreatorPlanEntity(
         @SerialName("supportTransactions")
         val supportTransactions: List<SupportTransaction>,
         @SerialName("supporterCardImageUrl")
-        val supporterCardImageUrl: String
+        val supporterCardImageUrl: String,
     ) {
         @Serializable
         data class Plan(
@@ -39,7 +38,7 @@ data class FanboxCreatorPlanEntity(
             @SerialName("title")
             val title: String,
             @SerialName("user")
-            val user: User
+            val user: User,
         ) {
             @Serializable
             data class User(
@@ -48,7 +47,7 @@ data class FanboxCreatorPlanEntity(
                 @SerialName("name")
                 val name: String,
                 @SerialName("userId")
-                val userId: String
+                val userId: String,
             )
         }
 
@@ -63,7 +62,7 @@ data class FanboxCreatorPlanEntity(
             @SerialName("targetMonth")
             val targetMonth: String,
             @SerialName("transactionDatetime")
-            val transactionDatetime: String
+            val transactionDatetime: String,
         ) {
             @Serializable
             data class Supporter(
@@ -72,7 +71,7 @@ data class FanboxCreatorPlanEntity(
                 @SerialName("name")
                 val name: String,
                 @SerialName("userId")
-                val userId: String
+                val userId: String,
             )
         }
     }

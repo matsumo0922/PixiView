@@ -159,7 +159,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                             null
                         }
                     }
-                }
+                },
             )
         }
     }
@@ -177,7 +177,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                         originalUrl = it.originalUrl,
                         thumbnailUrl = it.thumbnailUrl,
                     )
-                }
+                },
             )
         }
     }
@@ -196,7 +196,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                         size = it.size,
                         url = it.url,
                     )
-                }
+                },
             )
         }
     }

@@ -1,8 +1,5 @@
 package caios.android.pixiview.core.model.fanbox
 
-import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
-import kotlinx.serialization.SerialName
-
 data class FanboxPostDetail(
     val id: String,
     val title: String,
@@ -46,7 +43,7 @@ data class FanboxPostDetail(
 
         data class Image(
             val text: String,
-            val images: List<ImageItem>
+            val images: List<ImageItem>,
         ) : Body {
             data class ImageItem(
                 val id: String,
@@ -58,7 +55,7 @@ data class FanboxPostDetail(
 
         data class File(
             val text: String,
-            val files: List<FileItem>
+            val files: List<FileItem>,
         ) : Body {
             data class FileItem(
                 val id: String,

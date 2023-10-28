@@ -5,7 +5,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.Notifications
@@ -33,7 +32,7 @@ internal enum class LibraryDestination(
         selectedIcon = Icons.Default.Mail,
         deselectedIcon = Icons.Outlined.Mail,
         title = R.string.library_navigation_message,
-    )
+    ),
 }
 
 internal fun NavDestination?.isLibraryDestinationInHierarchy(destination: LibraryDestination): Boolean {

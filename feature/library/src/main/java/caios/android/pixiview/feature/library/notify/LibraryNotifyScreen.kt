@@ -11,6 +11,5 @@ internal fun LibraryNotifyScreen(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.background(Color.Yellow)) {
-
     }
 }

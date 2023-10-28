@@ -15,8 +15,8 @@ class PixiViewDebugTree : Timber.DebugTree() {
         val stackTrace = Throwable().stackTrace
 
         if (stackTrace.size < 6) {
-            // stack[0] KanadeDebugTree.getCallerInfo()
-            // stack[1] KanadeDebugTree.log()
+            // stack[0] PixiViewDebugTree.getCallerInfo()
+            // stack[1] PixiViewDebugTree.log()
             // stack[2] Tree.prepareLog()
             // stack[3] Tree.d()
             // stack[4] Forrest.d()

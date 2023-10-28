@@ -22,7 +22,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,11 +40,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
-import caios.android.kanade.feature.welcome.WelcomeIndicatorItem
-import caios.android.kanade.feature.welcome.top.WelcomeTopViewModel
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
 import caios.android.pixiview.feature.welcome.R
+import caios.android.pixiview.feature.welcome.WelcomeIndicatorItem
 
 @Composable
 internal fun WelcomeTopScreen(

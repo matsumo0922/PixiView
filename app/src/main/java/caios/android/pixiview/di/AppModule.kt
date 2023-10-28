@@ -23,7 +23,7 @@ object AppModule {
             isDebug = BuildConfig.DEBUG,
             developerPassword = BuildConfig.DEVELOPER_PASSWORD,
             pixivClientId = BuildConfig.PIXIV_CLIENT_ID,
-            pixivClientSecret = BuildConfig.PIXIV_CLIENT_SECRET
+            pixivClientSecret = BuildConfig.PIXIV_CLIENT_SECRET,
         )
     }
 }
