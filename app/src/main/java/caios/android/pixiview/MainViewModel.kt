@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.repository.FanboxRepository
-import caios.android.pixiview.core.repository.PixivRepository
 import caios.android.pixiview.core.repository.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,8 +38,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/")?.also {
                 fanboxRepository.updateCookie(it)
-                val a = fanboxRepository.getSupportedPosts()
-                val b = fanboxRepository.getSupportedPosts(a!!.cursor)
+                val a = fanboxRepository.getFollowingCreators()
+                val b = fanboxRepository.getRecommendedCreators()
 
                 Timber.d("test: $a, $b")
             }

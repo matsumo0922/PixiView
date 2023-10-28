@@ -2,8 +2,10 @@ package caios.android.pixiview.core.repository
 
 import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
 import caios.android.pixiview.core.model.PageInfo
+import caios.android.pixiview.core.model.fanbox.FanboxCreator
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
 import caios.android.pixiview.core.model.fanbox.FanboxPost
+import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
 import caios.android.pixiview.core.repository.utils.parse
 import caios.android.pixiview.core.repository.utils.translate
@@ -26,6 +28,9 @@ interface FanboxRepository {
 
     suspend fun getHomePosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>?
     suspend fun getSupportedPosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>?
+
+    suspend fun getFollowingCreators(): List<FanboxCreator>?
+    suspend fun getRecommendedCreators(): List<FanboxCreator>?
 }
 
 class FanboxRepositoryImpl @Inject constructor(
@@ -69,7 +74,15 @@ class FanboxRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun get(dir: String, parameters: Map<String, String>): HttpResponse {
+    override suspend fun getFollowingCreators(): List<FanboxCreator>? {
+        return get("creator.listFollowing").parse<FanboxCreatorItemsEntity>()?.translate()
+    }
+
+    override suspend fun getRecommendedCreators(): List<FanboxCreator>? {
+        return get("creator.listRecommended").parse<FanboxCreatorItemsEntity>()?.translate()
+    }
+
+    private suspend fun get(dir: String, parameters: Map<String, String> = emptyMap()): HttpResponse {
         return client.get {
             url("$API/$dir")
 
