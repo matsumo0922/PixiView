@@ -20,6 +20,8 @@ import javax.inject.Inject
 interface FanboxRepository {
     val cookie: SharedFlow<String>
 
+    fun hasActiveCookie(): Boolean
+
     suspend fun updateCookie(cookie: String)
 
     suspend fun getHomePosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>?
@@ -31,6 +33,10 @@ class FanboxRepositoryImpl @Inject constructor(
 ): FanboxRepository {
 
     override val cookie: SharedFlow<String> = fanboxCookiePreference.data
+
+    override fun hasActiveCookie(): Boolean {
+        return fanboxCookiePreference.get() != null
+    }
 
     override suspend fun updateCookie(cookie: String) {
         fanboxCookiePreference.save(cookie)

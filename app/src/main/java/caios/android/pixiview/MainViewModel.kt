@@ -11,11 +11,9 @@ import caios.android.pixiview.core.repository.PixivRepository
 import caios.android.pixiview.core.repository.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -41,9 +39,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/")?.also {
                 fanboxRepository.updateCookie(it)
-                fanboxRepository.getHomePosts().also {
-                    Timber.d("fanboxRepository.getHomePosts(): $it")
-                }
+                fanboxRepository.getHomePosts()
             }
         }
     }
@@ -55,10 +51,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun isLoggedIn(): Boolean {
-        val pixiv = pixivRepository.hasActiveAccount()
-        val fanbox = CookieManager.getInstance().getCookie("https://www.fanbox.cc/")
-
-        return pixiv && fanbox != null
+        return pixivRepository.hasActiveAccount() && fanboxRepository.hasActiveCookie()
     }
 }
 

@@ -28,6 +28,10 @@ class PreferenceFanboxCookie @Inject constructor(
         _data.tryEmit(cookie)
     }
 
+    fun get(): String? {
+        return preference.getString(KEY_COOKIE, null)
+    }
+
     companion object {
         private const val PREFERENCE = "FanboxCookie"
         private const val KEY_COOKIE = "cookie"
