@@ -77,7 +77,7 @@ class FanboxRepositoryImpl @Inject constructor(
 
     override suspend fun getHomePosts(cursor: FanboxCursor?): PageInfo<FanboxPost>? {
         return buildMap {
-            put("limit", "10")
+            put("limit", PAGE_LIMIT)
 
             if (cursor != null) {
                 put("maxPublishedDatetime", cursor.maxPublishedDatetime)
@@ -90,7 +90,7 @@ class FanboxRepositoryImpl @Inject constructor(
 
     override suspend fun getSupportedPosts(cursor: FanboxCursor?): PageInfo<FanboxPost>? {
         return buildMap {
-            put("limit", "10")
+            put("limit", PAGE_LIMIT)
 
             if (cursor != null) {
                 put("maxPublishedDatetime", cursor.maxPublishedDatetime)
@@ -104,7 +104,7 @@ class FanboxRepositoryImpl @Inject constructor(
     override suspend fun getCreatorPosts(creatorId: String, cursor: FanboxCursor?): PageInfo<FanboxPost>? {
         return buildMap {
             put("creatorId", creatorId)
-            put("limit", "10")
+            put("limit", PAGE_LIMIT)
 
             if (cursor != null) {
                 put("maxPublishedDatetime", cursor.maxPublishedDatetime)
@@ -176,5 +176,6 @@ class FanboxRepositoryImpl @Inject constructor(
 
     companion object {
         private const val API = "https://api.fanbox.cc"
+        private const val PAGE_LIMIT = "10"
     }
 }
