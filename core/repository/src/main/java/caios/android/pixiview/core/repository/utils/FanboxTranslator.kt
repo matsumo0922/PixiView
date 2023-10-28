@@ -4,17 +4,22 @@ import androidx.core.net.toUri
 import caios.android.pixiview.core.model.PageInfo
 import caios.android.pixiview.core.model.fanbox.FanboxCover
 import caios.android.pixiview.core.model.fanbox.FanboxCreator
+import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
+import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlanDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
+import caios.android.pixiview.core.model.fanbox.FanboxNewsLetter
 import caios.android.pixiview.core.model.fanbox.FanboxPaidRecord
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.FanboxUser
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlanEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlansEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxNewsLattersEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPaidRecordEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
@@ -54,9 +59,9 @@ internal fun FanboxPostItemsEntity.translate(): PageInfo<FanboxPost> {
     )
 }
 
-internal fun FanboxCreatorItemsEntity.translate(): List<FanboxCreator> {
+internal fun FanboxCreatorItemsEntity.translate(): List<FanboxCreatorDetail> {
     return body.map {
-        FanboxCreator(
+        FanboxCreatorDetail(
             creatorId = it.creatorId,
             coverImageUrl = it.coverImageUrl,
             description = it.description,
@@ -67,7 +72,7 @@ internal fun FanboxCreatorItemsEntity.translate(): List<FanboxCreator> {
             isStopped = it.isStopped,
             isSupported = it.isSupported,
             profileItems = it.profileItems.map { profileItem ->
-                FanboxCreator.ProfileItem(
+                FanboxCreatorDetail.ProfileItem(
                     id = profileItem.id,
                     imageUrl = profileItem.imageUrl,
                     thumbnailUrl = profileItem.thumbnailUrl,
@@ -85,8 +90,8 @@ internal fun FanboxCreatorItemsEntity.translate(): List<FanboxCreator> {
     }
 }
 
-internal fun FanboxCreatorEntity.translate(): FanboxCreator {
-    return FanboxCreator(
+internal fun FanboxCreatorEntity.translate(): FanboxCreatorDetail {
+    return FanboxCreatorDetail(
         creatorId = body.creatorId,
         coverImageUrl = body.coverImageUrl,
         description = body.description,
@@ -97,7 +102,7 @@ internal fun FanboxCreatorEntity.translate(): FanboxCreator {
         isStopped = body.isStopped,
         isSupported = body.isSupported,
         profileItems = body.profileItems.map { profileItem ->
-            FanboxCreator.ProfileItem(
+            FanboxCreatorDetail.ProfileItem(
                 id = profileItem.id,
                 imageUrl = profileItem.imageUrl,
                 thumbnailUrl = profileItem.thumbnailUrl,
@@ -288,6 +293,42 @@ internal fun FanboxCreatorPlansEntity.translate(): List<FanboxCreatorPlan> {
     }
 }
 
+internal fun FanboxCreatorPlanEntity.translate(): FanboxCreatorPlanDetail {
+    return FanboxCreatorPlanDetail(
+        plan = FanboxCreatorPlan(
+            id = body.plan.id,
+            title = body.plan.title,
+            description = body.plan.description,
+            fee = body.plan.fee,
+            coverImageUrl = body.plan.coverImageUrl,
+            hasAdultContent = body.plan.hasAdultContent,
+            paymentMethod = body.plan.paymentMethod,
+            user = FanboxUser(
+                userId = body.plan.user.userId,
+                creatorId = body.plan.creatorId,
+                name = body.plan.user.name,
+                iconUrl = body.plan.user.iconUrl,
+            ),
+        ),
+        supportStartDatetime = body.supportStartDatetime,
+        supportTransactions = body.supportTransactions.map {
+            FanboxCreatorPlanDetail.SupportTransaction(
+                id = it.id,
+                paidAmount = it.paidAmount,
+                transactionDatetime = it.transactionDatetime,
+                targetMonth = it.targetMonth,
+                user = FanboxUser(
+                    userId = it.supporter.userId,
+                    creatorId = body.plan.creatorId,
+                    name = it.supporter.name,
+                    iconUrl = it.supporter.iconUrl,
+                ),
+            )
+        },
+        supporterCardImageUrl = body.supporterCardImageUrl,
+    )
+}
+
 internal fun FanboxPaidRecordEntity.translate(): List<FanboxPaidRecord> {
     return body.map {
         FanboxPaidRecord(
@@ -295,9 +336,8 @@ internal fun FanboxPaidRecordEntity.translate(): List<FanboxPaidRecord> {
             paidAmount = it.paidAmount,
             paymentDatetime = it.paymentDatetime,
             paymentMethod = it.paymentMethod,
-            creator = FanboxPaidRecord.Creator(
+            creator = FanboxCreator(
                 creatorId = it.creator.creatorId,
-                isActive = it.creator.isActive,
                 user = FanboxUser(
                     userId = it.creator.user.userId,
                     creatorId = it.creator.creatorId.orEmpty(),
@@ -305,6 +345,26 @@ internal fun FanboxPaidRecordEntity.translate(): List<FanboxPaidRecord> {
                     iconUrl = it.creator.user.iconUrl,
                 ),
             ),
+        )
+    }
+}
+
+internal fun FanboxNewsLattersEntity.translate(): List<FanboxNewsLetter> {
+    return body.map {
+        FanboxNewsLetter(
+            body = it.body,
+            createdAt = it.createdAt,
+            creator = FanboxCreator(
+                creatorId = it.creator.creatorId,
+                user = FanboxUser(
+                    userId = it.creator.user.userId,
+                    creatorId = it.creator.creatorId.orEmpty(),
+                    name = it.creator.user.name,
+                    iconUrl = it.creator.user.iconUrl,
+                ),
+            ),
+            id = it.id,
+            isRead = it.isRead,
         )
     }
 }

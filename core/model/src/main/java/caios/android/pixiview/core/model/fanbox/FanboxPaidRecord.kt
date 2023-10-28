@@ -8,11 +8,5 @@ data class FanboxPaidRecord(
     val paidAmount: Int,
     val paymentDatetime: String,
     val paymentMethod: String,
-    val creator: Creator,
-) {
-    data class Creator(
-        val creatorId: String?,
-        val isActive: Boolean,
-        val user: FanboxUser,
-    )
-}
+    val creator: FanboxCreator,
+)
