@@ -4,6 +4,7 @@ import androidx.core.net.toUri
 import caios.android.pixiview.core.model.PageInfo
 import caios.android.pixiview.core.model.fanbox.FanboxCover
 import caios.android.pixiview.core.model.fanbox.FanboxCreator
+import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
 import caios.android.pixiview.core.model.fanbox.FanboxPost
@@ -11,6 +12,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.FanboxUser
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlansEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
@@ -260,6 +262,26 @@ internal fun FanboxCreatorTagsEntity.translate(): List<FanboxCreatorTag> {
             count = it.count,
             coverImageUrl = it.coverImageUrl,
             tag = it.tag,
+        )
+    }
+}
+
+internal fun FanboxCreatorPlansEntity.translate(): List<FanboxCreatorPlan> {
+    return body.map {
+        FanboxCreatorPlan(
+            coverImageUrl = it.coverImageUrl,
+            description = it.description,
+            fee = it.fee,
+            hasAdultContent = it.hasAdultContent,
+            id = it.id,
+            paymentMethod = it.paymentMethod,
+            title = it.title,
+            user = FanboxUser(
+                userId = it.user.userId,
+                creatorId = it.creatorId,
+                name = it.user.name,
+                iconUrl = it.user.iconUrl,
+            ),
         )
     }
 }
