@@ -30,12 +30,17 @@
     <string name="error_network">通信エラーが発生しました</string>
     <string name="error_developing_feature">開発中の機能です</string>
     <string name="error_billing">購入情報を取得できませんでした</string>
+    <string name="error_restricted_post">月額%,d円以上支援すると見ることができます</string>
 
     <!-- Library -->
     <string name="library_navigation_home">ホーム</string>
     <string name="library_navigation_discovery">検索</string>
     <string name="library_navigation_notify">通知</string>
     <string name="library_navigation_message">メッセージ</string>
+
+    <!-- Fanbox -->
+    <string name="fanbox_free_fee">全体公開</string>
+    <string name="fanbox_plan_List">プラン一覧</string>
 
     <!-- Report -->
     <string name="report_crush_title">Oops! Something went wrong</string>
