@@ -7,6 +7,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxCreator
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
+import caios.android.pixiview.core.model.fanbox.FanboxPaidRecord
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.FanboxUser
@@ -14,6 +15,7 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlansEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxPaidRecordEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
 import timber.log.Timber
@@ -281,6 +283,27 @@ internal fun FanboxCreatorPlansEntity.translate(): List<FanboxCreatorPlan> {
                 creatorId = it.creatorId,
                 name = it.user.name,
                 iconUrl = it.user.iconUrl,
+            ),
+        )
+    }
+}
+
+internal fun FanboxPaidRecordEntity.translate(): List<FanboxPaidRecord> {
+    return body.map {
+        FanboxPaidRecord(
+            id = it.id,
+            paidAmount = it.paidAmount,
+            paymentDatetime = it.paymentDatetime,
+            paymentMethod = it.paymentMethod,
+            creator = FanboxPaidRecord.Creator(
+                creatorId = it.creator.creatorId,
+                isActive = it.creator.isActive,
+                user = FanboxUser(
+                    userId = it.creator.user.userId,
+                    creatorId = it.creator.creatorId.orEmpty(),
+                    name = it.creator.user.name,
+                    iconUrl = it.creator.user.iconUrl,
+                ),
             ),
         )
     }

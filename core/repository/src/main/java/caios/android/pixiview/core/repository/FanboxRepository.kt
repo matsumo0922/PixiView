@@ -6,12 +6,14 @@ import caios.android.pixiview.core.model.fanbox.FanboxCreator
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
+import caios.android.pixiview.core.model.fanbox.FanboxPaidRecord
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlansEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxPaidRecordEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
 import caios.android.pixiview.core.repository.utils.parse
@@ -46,6 +48,9 @@ interface FanboxRepository {
 
     suspend fun getSupportedPlans(): List<FanboxCreatorPlan>?
     suspend fun getCreatorPlans(creatorId: String): List<FanboxCreatorPlan>?
+
+    suspend fun getPaidRecords(): List<FanboxPaidRecord>?
+    suspend fun getUnpaidRecords(): List<FanboxPaidRecord>?
 }
 
 class FanboxRepositoryImpl @Inject constructor(
@@ -129,6 +134,14 @@ class FanboxRepositoryImpl @Inject constructor(
 
     override suspend fun getCreatorPlans(creatorId: String): List<FanboxCreatorPlan>? {
         return get("plan.listCreator", mapOf("creatorId" to creatorId)).parse<FanboxCreatorPlansEntity>()?.translate()
+    }
+
+    override suspend fun getPaidRecords(): List<FanboxPaidRecord>? {
+        return get("payment.listPaid").parse<FanboxPaidRecordEntity>()?.translate()
+    }
+
+    override suspend fun getUnpaidRecords(): List<FanboxPaidRecord>? {
+        return get("payment.listUnpaid").parse<FanboxPaidRecordEntity>()?.translate()
     }
 
     private suspend fun get(dir: String, parameters: Map<String, String> = emptyMap()): HttpResponse {
