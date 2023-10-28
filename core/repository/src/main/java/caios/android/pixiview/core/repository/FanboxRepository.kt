@@ -3,9 +3,12 @@ package caios.android.pixiview.core.repository
 import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
 import caios.android.pixiview.core.model.PageInfo
 import caios.android.pixiview.core.model.fanbox.FanboxCreator
+import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
 import caios.android.pixiview.core.model.fanbox.FanboxPost
+import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
 import caios.android.pixiview.core.repository.utils.parse
 import caios.android.pixiview.core.repository.utils.translate
@@ -31,6 +34,9 @@ interface FanboxRepository {
 
     suspend fun getFollowingCreators(): List<FanboxCreator>?
     suspend fun getRecommendedCreators(): List<FanboxCreator>?
+
+    suspend fun getCreator(creatorId: String): FanboxCreator?
+    suspend fun getCreatorTags(creatorId: String): List<FanboxCreatorTag>?
 }
 
 class FanboxRepositoryImpl @Inject constructor(
@@ -80,6 +86,14 @@ class FanboxRepositoryImpl @Inject constructor(
 
     override suspend fun getRecommendedCreators(): List<FanboxCreator>? {
         return get("creator.listRecommended").parse<FanboxCreatorItemsEntity>()?.translate()
+    }
+
+    override suspend fun getCreator(creatorId: String): FanboxCreator? {
+        return get("creator.get", mapOf("creatorId" to creatorId)).parse<FanboxCreatorEntity>()?.translate()
+    }
+
+    override suspend fun getCreatorTags(creatorId: String): List<FanboxCreatorTag>? {
+        return get("tag.getFeatured", mapOf("creatorId" to creatorId)).parse<FanboxCreatorTagsEntity>()?.translate()
     }
 
     private suspend fun get(dir: String, parameters: Map<String, String> = emptyMap()): HttpResponse {

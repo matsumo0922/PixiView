@@ -38,8 +38,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/")?.also {
                 fanboxRepository.updateCookie(it)
-                val a = fanboxRepository.getFollowingCreators()
-                val b = fanboxRepository.getRecommendedCreators()
+                val a = fanboxRepository.getCreator("kiyo")
+                val b = fanboxRepository.getCreatorTags("kiyo")
 
                 Timber.d("test: $a, $b")
             }

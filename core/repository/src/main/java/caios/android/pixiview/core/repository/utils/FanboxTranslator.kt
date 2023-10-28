@@ -4,10 +4,13 @@ import androidx.core.net.toUri
 import caios.android.pixiview.core.model.PageInfo
 import caios.android.pixiview.core.model.fanbox.FanboxCover
 import caios.android.pixiview.core.model.fanbox.FanboxCreator
+import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxUser
+import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
 
 internal fun FanboxPostItemsEntity.translate(): PageInfo<FanboxPost> {
@@ -71,6 +74,45 @@ internal fun FanboxCreatorItemsEntity.translate(): List<FanboxCreator> {
                 name = it.user.name,
                 iconUrl = it.user.iconUrl,
             ),
+        )
+    }
+}
+
+internal fun FanboxCreatorEntity.translate(): FanboxCreator {
+    return FanboxCreator(
+        creatorId = body.creatorId,
+        coverImageUrl = body.coverImageUrl,
+        description = body.description,
+        hasAdultContent = body.hasAdultContent,
+        hasBoothShop = body.hasBoothShop,
+        isAcceptingRequest = body.isAcceptingRequest,
+        isFollowed = body.isFollowed,
+        isStopped = body.isStopped,
+        isSupported = body.isSupported,
+        profileItems = body.profileItems.map { profileItem ->
+            FanboxCreator.ProfileItem(
+                id = profileItem.id,
+                imageUrl = profileItem.imageUrl,
+                thumbnailUrl = profileItem.thumbnailUrl,
+                type = profileItem.type,
+            )
+        },
+        profileLinks = body.profileLinks,
+        user = FanboxUser(
+            userId = body.user.userId,
+            creatorId = body.creatorId,
+            name = body.user.name,
+            iconUrl = body.user.iconUrl,
+        ),
+    )
+}
+
+internal fun FanboxCreatorTagsEntity.translate(): List<FanboxCreatorTag> {
+    return body.map {
+        FanboxCreatorTag(
+            count = it.count,
+            coverImageUrl = it.coverImageUrl,
+            tag = it.tag,
         )
     }
 }
