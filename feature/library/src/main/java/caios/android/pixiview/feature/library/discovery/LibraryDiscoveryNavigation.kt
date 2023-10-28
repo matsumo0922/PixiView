@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.library.notify
+package caios.android.pixiview.feature.library.discovery
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
@@ -8,19 +8,19 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import caios.android.pixiview.core.ui.animation.NavigateAnimation
 
-const val LibraryNotifyRoute = "libraryNotify"
+const val LibraryDiscoveryRoute = "libraryDiscovery"
 
-fun NavController.navigateToLibraryNotify(navOptions: NavOptions? = null) {
-    this.navigate(LibraryNotifyRoute, navOptions)
+fun NavController.navigateToLibraryDiscovery(navOptions: NavOptions? = null) {
+    this.navigate(LibraryDiscoveryRoute, navOptions)
 }
 
-fun NavGraphBuilder.libraryNotifyScreen() {
+fun NavGraphBuilder.libraryDiscoveryScreen() {
     composable(
-        route = LibraryNotifyRoute,
+        route = LibraryDiscoveryRoute,
         enterTransition = { NavigateAnimation.Library.enter },
         exitTransition = { NavigateAnimation.Library.exit },
     ) {
-        LibraryNotifyScreen(
+        LibraryDiscoveryScreen(
             modifier = Modifier.fillMaxSize(),
         )
     }

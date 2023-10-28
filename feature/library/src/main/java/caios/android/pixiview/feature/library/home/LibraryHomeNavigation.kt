@@ -1,5 +1,7 @@
 package caios.android.pixiview.feature.library.home
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -18,6 +20,8 @@ fun NavGraphBuilder.libraryHomeScreen() {
         enterTransition = { NavigateAnimation.Library.enter },
         exitTransition = { NavigateAnimation.Library.exit },
     ) {
-        LibraryHomeScreen()
+        LibraryHomeScreen(
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }

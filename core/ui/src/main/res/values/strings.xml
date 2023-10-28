@@ -33,6 +33,7 @@
 
     <!-- Library -->
     <string name="library_navigation_home">ホーム</string>
+    <string name="library_navigation_discovery">検索</string>
     <string name="library_navigation_notify">通知</string>
     <string name="library_navigation_message">メッセージ</string>
 

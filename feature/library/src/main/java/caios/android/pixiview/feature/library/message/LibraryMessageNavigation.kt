@@ -1,5 +1,7 @@
 package caios.android.pixiview.feature.library.message
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -18,6 +20,8 @@ fun NavGraphBuilder.libraryMessageScreen() {
         enterTransition = { NavigateAnimation.Library.enter },
         exitTransition = { NavigateAnimation.Library.exit },
     ) {
-        LibraryMessageScreen()
+        LibraryMessageScreen(
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }

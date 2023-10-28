@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import caios.android.pixiview.feature.library.discovery.libraryDiscoveryScreen
 import caios.android.pixiview.feature.library.home.LibraryHomeRoute
 import caios.android.pixiview.feature.library.home.libraryHomeScreen
 import caios.android.pixiview.feature.library.message.libraryMessageScreen
@@ -22,6 +23,8 @@ fun LibraryNavHost(
         modifier = modifier,
     ) {
         libraryHomeScreen()
+
+        libraryDiscoveryScreen()
 
         libraryNotifyScreen()
 

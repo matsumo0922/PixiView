@@ -10,6 +10,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import caios.android.pixiview.feature.library.component.LibraryBottomBar
 import caios.android.pixiview.feature.library.component.LibraryDestination
+import caios.android.pixiview.feature.library.discovery.LibraryDiscoveryRoute
+import caios.android.pixiview.feature.library.discovery.navigateToLibraryDiscovery
 import caios.android.pixiview.feature.library.home.navigateToLibraryHome
 import caios.android.pixiview.feature.library.message.navigateToLibraryMessage
 import caios.android.pixiview.feature.library.notify.navigateToLibraryNotify
@@ -38,6 +40,7 @@ fun LibraryScreen(
 
                     when (it) {
                         LibraryDestination.Home -> navController.navigateToLibraryHome(navOption)
+                        LibraryDestination.Discovery -> navController.navigateToLibraryDiscovery(navOption)
                         LibraryDestination.Notify -> navController.navigateToLibraryNotify(navOption)
                         LibraryDestination.Message -> navController.navigateToLibraryMessage(navOption)
                     }
