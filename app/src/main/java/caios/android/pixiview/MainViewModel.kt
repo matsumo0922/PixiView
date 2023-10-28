@@ -38,7 +38,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/")?.also {
                 fanboxRepository.updateCookie(it)
-                val a = fanboxRepository.getCreatorPlans("lambda")
+                val a = fanboxRepository.getSupportedPlans()
 
                 Timber.d("test: $a")
             }

@@ -8,7 +8,7 @@ data class FanboxCreatorPlan(
     val title: String,
     val description: String,
     val fee: Int,
-    val coverImageUrl: String,
+    val coverImageUrl: String?,
     val hasAdultContent: Boolean,
     val paymentMethod: String?,
     val user: FanboxUser,

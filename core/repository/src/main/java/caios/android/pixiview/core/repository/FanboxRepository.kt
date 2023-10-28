@@ -43,6 +43,8 @@ interface FanboxRepository {
 
     suspend fun getCreator(creatorId: String): FanboxCreator?
     suspend fun getCreatorTags(creatorId: String): List<FanboxCreatorTag>?
+
+    suspend fun getSupportedPlans(): List<FanboxCreatorPlan>?
     suspend fun getCreatorPlans(creatorId: String): List<FanboxCreatorPlan>?
 }
 
@@ -119,6 +121,10 @@ class FanboxRepositoryImpl @Inject constructor(
 
     override suspend fun getCreatorTags(creatorId: String): List<FanboxCreatorTag>? {
         return get("tag.getFeatured", mapOf("creatorId" to creatorId)).parse<FanboxCreatorTagsEntity>()?.translate()
+    }
+
+    override suspend fun getSupportedPlans(): List<FanboxCreatorPlan>? {
+        return get("plan.listSupporting").parse<FanboxCreatorPlansEntity>()?.translate()
     }
 
     override suspend fun getCreatorPlans(creatorId: String): List<FanboxCreatorPlan>? {
