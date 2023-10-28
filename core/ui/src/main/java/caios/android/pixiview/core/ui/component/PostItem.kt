@@ -328,7 +328,7 @@ private fun CommentLikeButton(
 @Composable
 private fun PostItemPreview1() {
     PostItem(
-        post = FanboxPost.dummy()
+        post = FanboxPost.dummy(),
     )
 }
 
@@ -336,6 +336,6 @@ private fun PostItemPreview1() {
 @Composable
 private fun PostItemPreview2() {
     PostItem(
-        post = FanboxPost.dummy().copy(isRestricted = true)
+        post = FanboxPost.dummy().copy(isRestricted = true),
     )
 }

@@ -12,6 +12,6 @@ fun <T : Any> emptyPaging(): Flow<PagingData<T>> = flowOf(
             prepend = LoadState.NotLoading(true),
             append = LoadState.NotLoading(true),
             refresh = LoadState.NotLoading(true),
-        )
-    )
+        ),
+    ),
 )

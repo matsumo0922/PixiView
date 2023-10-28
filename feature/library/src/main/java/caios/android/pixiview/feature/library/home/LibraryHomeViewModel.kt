@@ -35,7 +35,7 @@ class LibraryHomeViewModel @Inject constructor(
             initialKey = null,
             pagingSourceFactory = {
                 LibraryHomePagingSource(fanboxRepository)
-            }
+            },
         ).flow.cachedIn(viewModelScope).also {
             _homeUiState.value = LibraryHomeUiState(it)
         }
@@ -45,7 +45,7 @@ class LibraryHomeViewModel @Inject constructor(
             initialKey = null,
             pagingSourceFactory = {
                 LibrarySupportedPagingSource(fanboxRepository)
-            }
+            },
         ).flow.cachedIn(viewModelScope).also {
             _supportedUiState.value = LibrarySupportedUiState(it)
         }
@@ -54,10 +54,10 @@ class LibraryHomeViewModel @Inject constructor(
 
 @Stable
 data class LibraryHomeUiState(
-    val paging: Flow<PagingData<FanboxPost>>
+    val paging: Flow<PagingData<FanboxPost>>,
 )
 
 @Stable
 data class LibrarySupportedUiState(
-    val paging: Flow<PagingData<FanboxPost>>
+    val paging: Flow<PagingData<FanboxPost>>,
 )

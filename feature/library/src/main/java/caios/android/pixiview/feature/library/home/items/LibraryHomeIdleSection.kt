@@ -21,7 +21,7 @@ internal fun LibraryHomeIdleSection(
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(
             count = pagingAdapter.itemCount,

@@ -24,7 +24,7 @@ class LibraryHomePagingSource(
             },
             onFailure = {
                 LoadResult.Error(it)
-            }
+            },
         )
     }
 

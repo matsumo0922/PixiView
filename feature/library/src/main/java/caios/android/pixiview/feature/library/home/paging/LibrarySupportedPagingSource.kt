@@ -24,7 +24,7 @@ class LibrarySupportedPagingSource(
             },
             onFailure = {
                 LoadResult.Error(it)
-            }
+            },
         )
     }
 

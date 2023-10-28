@@ -34,7 +34,7 @@ data class FanboxPost(
             hasAdultContent = false,
             tags = emptyList(),
             updatedDatetime = "2020/09/22",
-            user = FanboxUser.dummy()
+            user = FanboxUser.dummy(),
         )
     }
 }
