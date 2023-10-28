@@ -8,11 +8,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeLoginViewModel @Inject constructor(
-    private val pixivRepository: PixivRepository,
     private val fanboxRepository: FanboxRepository,
 ): ViewModel() {
 
     fun isLoggedIn(): Boolean {
-        return pixivRepository.hasActiveAccount() && fanboxRepository.hasActiveCookie()
+        return fanboxRepository.hasActiveCookie()
     }
 }

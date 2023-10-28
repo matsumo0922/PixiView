@@ -25,6 +25,7 @@ interface FanboxRepository {
     suspend fun updateCookie(cookie: String)
 
     suspend fun getHomePosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>?
+    suspend fun getSupportedPosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>?
 }
 
 class FanboxRepositoryImpl @Inject constructor(
@@ -43,7 +44,29 @@ class FanboxRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getHomePosts(cursor: FanboxCursor?): PageInfo<FanboxPost>? {
-        return get("post.listHome", mapOf("limit" to "10")).parse<FanboxPostItemsEntity>()?.translate()
+        return buildMap {
+            put("limit", "10")
+
+            if (cursor != null) {
+                put("maxPublishedDatetime", cursor.maxPublishedDatetime)
+                put("maxId", cursor.maxId)
+            }
+        }.let {
+            get("post.listHome", it).parse<FanboxPostItemsEntity>()?.translate()
+        }
+    }
+
+    override suspend fun getSupportedPosts(cursor: FanboxCursor?): PageInfo<FanboxPost>? {
+        return buildMap {
+            put("limit", "10")
+
+            if (cursor != null) {
+                put("maxPublishedDatetime", cursor.maxPublishedDatetime)
+                put("maxId", cursor.maxId)
+            }
+        }.let {
+            get("post.listSupporting", it).parse<FanboxPostItemsEntity>()?.translate()
+        }
     }
 
     private suspend fun get(dir: String, parameters: Map<String, String>): HttpResponse {

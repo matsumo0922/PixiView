@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -21,7 +22,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val userDataRepository: UserDataRepository,
-    private val pixivRepository: PixivRepository,
     private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
 
@@ -39,7 +39,10 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/")?.also {
                 fanboxRepository.updateCookie(it)
-                fanboxRepository.getHomePosts()
+                val a = fanboxRepository.getSupportedPosts()
+                val b = fanboxRepository.getSupportedPosts(a!!.cursor)
+
+                Timber.d("test: $a, $b")
             }
         }
     }
@@ -51,7 +54,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun isLoggedIn(): Boolean {
-        return pixivRepository.hasActiveAccount() && fanboxRepository.hasActiveCookie()
+        return fanboxRepository.hasActiveCookie()
     }
 }
 

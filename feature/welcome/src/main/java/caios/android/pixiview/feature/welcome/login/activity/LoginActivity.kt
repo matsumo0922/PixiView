@@ -53,7 +53,6 @@ class LoginActivity : ComponentActivity() {
                     PixiViewBackground {
                         LoginScreen(
                             modifier = Modifier.fillMaxSize(),
-                            viewModel = viewModel,
                             onUpdateCookie = viewModel::updateCookie,
                             onDismiss = ::dismiss,
                         )

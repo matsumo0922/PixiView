@@ -5,6 +5,7 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,13 +29,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.feature.welcome.R
 import com.google.accompanist.web.AccompanistWebViewClient
+import com.google.accompanist.web.LoadingState
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LoginScreen(
-    viewModel: LoginViewModel,
     onUpdateCookie: (String) -> Unit,
     onDismiss: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -43,33 +45,41 @@ internal fun LoginScreen(
 
     val cookieManager = remember { CookieManager.getInstance() }
     val webViewState = rememberWebViewState("$fanboxUrl?return_to=$fanboxRedirectUrl")
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier.background(MaterialTheme.colorScheme.surface),
         topBar = {
-            TopAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                title = {
-                    Text(
-                        text = stringResource(R.string.welcome_login_title),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                },
-                navigationIcon = {
-                    Icon(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .aspectRatio(1f)
-                            .clip(RoundedCornerShape(50))
-                            .clickable { onDismiss.invoke(false) }
-                            .padding(8.dp),
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
+            Column {
+                TopAppBar(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = {
+                        Text(
+                            text = stringResource(R.string.welcome_login_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                    },
+                    navigationIcon = {
+                        Icon(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(50))
+                                .clickable { onDismiss.invoke(false) }
+                                .padding(8.dp),
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                        )
+                    }
+                )
+
+                (webViewState.loadingState as? LoadingState.Loading)?.also {
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth(),
+                        progress = { it.progress },
                     )
                 }
-            )
+            }
         }
     ) { padding ->
         WebView(

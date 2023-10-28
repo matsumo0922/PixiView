@@ -1,5 +1,6 @@
 package caios.android.pixiview.core.repository.utils
 
+import androidx.core.net.toUri
 import caios.android.pixiview.core.model.PageInfo
 import caios.android.pixiview.core.model.fanbox.FanboxCover
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
@@ -42,11 +43,10 @@ internal fun FanboxPostItemsEntity.translate(): PageInfo<FanboxPost> {
 }
 
 private fun String.translateToCursor(): FanboxCursor {
-    val pattern = Regex("maxPublishedDatetime=(.*)&maxId=(.*)")
-    val results = pattern.find(this)!!.groupValues
+    val uri = this.toUri()
 
     return FanboxCursor(
-        maxPublishedDatetime = results[0],
-        maxId = results[1],
+        maxPublishedDatetime = uri.getQueryParameter("maxPublishedDatetime")!!,
+        maxId = uri.getQueryParameter("maxId")!!,
     )
 }
