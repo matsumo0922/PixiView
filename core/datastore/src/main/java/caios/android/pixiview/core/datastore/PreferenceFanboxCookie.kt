@@ -6,7 +6,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import timber.log.Timber
 import javax.inject.Inject
 
 class PreferenceFanboxCookie @Inject constructor(
@@ -19,8 +18,6 @@ class PreferenceFanboxCookie @Inject constructor(
     val data: SharedFlow<String> = _data.asSharedFlow()
 
     fun save(cookie: String) {
-        Timber.d("save cookie: $cookie")
-
         preference.edit {
             putString(KEY_COOKIE, cookie)
         }

@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -38,9 +37,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/")?.also {
                 fanboxRepository.updateCookie(it)
-                val a = fanboxRepository.getCreatorPlan("lambda")
-
-                Timber.d("test: $a")
             }
         }
     }

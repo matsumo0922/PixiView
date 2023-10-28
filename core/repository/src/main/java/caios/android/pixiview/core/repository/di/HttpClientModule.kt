@@ -62,7 +62,6 @@ object HttpClientModule {
                                 cookies.add(parseServerSetCookieHeader(header))
                             }
 
-                            Timber.d("getCookie Request from $url: $cookiesString")
                             preference.save(cookiesString)
 
                             return cookies.filterNotNull()
