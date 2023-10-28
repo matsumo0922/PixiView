@@ -38,10 +38,9 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/")?.also {
                 fanboxRepository.updateCookie(it)
-                val a = fanboxRepository.getCreator("kiyo")
-                val b = fanboxRepository.getCreatorTags("kiyo")
+                val a = fanboxRepository.getPost("6847111")
 
-                Timber.d("test: $a, $b")
+                Timber.d("test: $a")
             }
         }
     }

@@ -6,9 +6,11 @@ import caios.android.pixiview.core.model.fanbox.FanboxCreator
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
 import caios.android.pixiview.core.model.fanbox.FanboxPost
+import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
 import caios.android.pixiview.core.repository.utils.parse
 import caios.android.pixiview.core.repository.utils.translate
@@ -31,6 +33,8 @@ interface FanboxRepository {
 
     suspend fun getHomePosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>?
     suspend fun getSupportedPosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>?
+    suspend fun getCreatorPosts(creatorId: String, cursor: FanboxCursor? = null): PageInfo<FanboxPost>?
+    suspend fun getPost(postId: String): FanboxPostDetail?
 
     suspend fun getFollowingCreators(): List<FanboxCreator>?
     suspend fun getRecommendedCreators(): List<FanboxCreator>?
@@ -78,6 +82,24 @@ class FanboxRepositoryImpl @Inject constructor(
         }.let {
             get("post.listSupporting", it).parse<FanboxPostItemsEntity>()?.translate()
         }
+    }
+
+    override suspend fun getCreatorPosts(creatorId: String, cursor: FanboxCursor?): PageInfo<FanboxPost>? {
+        return buildMap {
+            put("creatorId", creatorId)
+            put("limit", "10")
+
+            if (cursor != null) {
+                put("maxPublishedDatetime", cursor.maxPublishedDatetime)
+                put("maxId", cursor.maxId)
+            }
+        }.let {
+            get("post.listCreator", it).parse<FanboxPostItemsEntity>()?.translate()
+        }
+    }
+
+    override suspend fun getPost(postId: String): FanboxPostDetail? {
+        return get("post.info", mapOf("postId" to postId)).parse<FanboxPostDetailEntity>()?.translate()
     }
 
     override suspend fun getFollowingCreators(): List<FanboxCreator>? {
