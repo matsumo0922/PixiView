@@ -34,6 +34,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.model.fanbox.FanboxPost
+import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.R
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
@@ -43,14 +45,14 @@ import coil.request.ImageRequest
 @Composable
 fun PostItem(
     post: FanboxPost,
-    onClickPost: (FanboxPost) -> Unit,
-    onClickPlanList: (String) -> Unit,
+    onClickPost: (PostId) -> Unit,
+    onClickPlanList: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
-            .clickable { onClickPost.invoke(post) },
+            .clickable { onClickPost.invoke(post.id) },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp)),
     ) {

@@ -12,14 +12,16 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import caios.android.pixiview.core.model.fanbox.FanboxPost
+import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.component.PostItem
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 
 @Composable
 internal fun LibraryHomeIdleSection(
     pagingAdapter: LazyPagingItems<FanboxPost>,
-    onClickPost: (FanboxPost) -> Unit,
-    onClickPlanList: (String) -> Unit,
+    onClickPost: (PostId) -> Unit,
+    onClickPlanList: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state = rememberLazyListState()
@@ -32,7 +34,7 @@ internal fun LibraryHomeIdleSection(
     ) {
         items(
             count = pagingAdapter.itemCount,
-            key = pagingAdapter.itemKey { it.id },
+            key = pagingAdapter.itemKey { it.id.value },
             contentType = pagingAdapter.itemContentType(),
         ) { index ->
             pagingAdapter[index]?.let {

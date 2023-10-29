@@ -1,7 +1,9 @@
 package caios.android.pixiview.core.model.fanbox
 
+import caios.android.pixiview.core.model.fanbox.id.PlanId
+
 data class FanboxCreatorPlan(
-    val id: String,
+    val id: PlanId,
     val title: String,
     val description: String,
     val fee: Int,

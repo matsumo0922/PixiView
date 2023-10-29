@@ -1,12 +1,13 @@
 package caios.android.pixiview.core.model.fanbox
 
+import caios.android.pixiview.core.model.fanbox.id.PostId
+
 data class FanboxPostDetail(
-    val id: String,
+    val id: PostId,
     val title: String,
     val body: Body,
     val commentCount: Int,
     val commentList: Comment,
-    val creatorId: String,
     val excerpt: String,
     val feeRequired: Int,
     val hasAdultContent: Boolean,

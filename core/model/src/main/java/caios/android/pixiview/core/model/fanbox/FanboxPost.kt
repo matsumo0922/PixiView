@@ -1,7 +1,9 @@
 package caios.android.pixiview.core.model.fanbox
 
+import caios.android.pixiview.core.model.fanbox.id.PostId
+
 data class FanboxPost(
-    val id: String,
+    val id: PostId,
     val title: String,
     val cover: FanboxCover?,
     val user: FanboxUser,
@@ -18,7 +20,7 @@ data class FanboxPost(
 ) {
     companion object {
         fun dummy() = FanboxPost(
-            id = "",
+            id = PostId(""),
             title = "週末こっそり配信絵 Vol.159",
             excerpt = "~23:30 くらいまで、軽く配信します～！！",
             publishedDatetime = "2020/09/22",

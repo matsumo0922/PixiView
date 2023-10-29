@@ -1,7 +1,9 @@
 package caios.android.pixiview.core.model.fanbox
 
+import caios.android.pixiview.core.model.fanbox.id.CreatorId
+
 data class FanboxCreatorDetail(
-    val creatorId: String,
+    val creatorId: CreatorId,
     val coverImageUrl: String?,
     val description: String,
     val hasAdultContent: Boolean,

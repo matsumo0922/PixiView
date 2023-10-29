@@ -34,10 +34,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
-import caios.android.pixiview.core.model.fanbox.FanboxPost
+import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.LazyPagingItemsLoadSurface
 import caios.android.pixiview.feature.library.R
 import caios.android.pixiview.feature.library.home.items.LibraryHomeIdleSection
+import caios.android.pixiview.feature.library.home.items.LibrarySupportedIdleSection
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -45,8 +47,8 @@ import kotlinx.coroutines.launch
 internal fun LibraryHomeScreen(
     modifier: Modifier = Modifier,
     openDrawer: () -> Unit,
-    navigateToPostDetail: (FanboxPost) -> Unit,
-    navigateToCreatorPlans: (String) -> Unit,
+    navigateToPostDetail: (PostId) -> Unit,
+    navigateToCreatorPlans: (CreatorId) -> Unit,
     viewModel: LibraryHomeViewModel = hiltViewModel(),
 ) {
     val homeUiState by viewModel.homeScreenState.collectAsStateWithLifecycle()
@@ -79,7 +81,7 @@ internal fun LibraryHomeScreen(
                             .size(40.dp)
                             .clip(RoundedCornerShape(50))
                             .clickable { openDrawer.invoke() }
-                            .padding(4.dp),
+                            .padding(6.dp),
                         imageVector = Icons.Default.Menu,
                         contentDescription = null,
                     )
@@ -127,7 +129,7 @@ internal fun LibraryHomeScreen(
                         }
 
                         HomeTabs.Supported -> {
-                            LibraryHomeIdleSection(
+                            LibrarySupportedIdleSection(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = supportedPager,
                                 onClickPost = navigateToPostDetail,
