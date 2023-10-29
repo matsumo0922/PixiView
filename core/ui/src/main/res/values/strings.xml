@@ -37,10 +37,16 @@
     <string name="library_navigation_discovery">検索</string>
     <string name="library_navigation_notify">通知</string>
     <string name="library_navigation_message">メッセージ</string>
+    <string name="library_navigation_setting">設定</string>
+    <string name="library_navigation_about">アプリについて</string>
 
     <!-- Fanbox -->
     <string name="fanbox_free_fee">全体公開</string>
     <string name="fanbox_plan_List">プラン一覧</string>
+
+    <!-- Home -->
+    <string name="home_tab_home">フォロー中</string>
+    <string name="home_tab_supported">支援中</string>
 
     <!-- Report -->
     <string name="report_crush_title">Oops! Something went wrong</string>

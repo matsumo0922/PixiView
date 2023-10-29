@@ -16,7 +16,7 @@ import caios.android.pixiview.core.ui.component.PostItem
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 
 @Composable
-internal fun LibraryHomeIdleSection(
+internal fun LibrarySupportedIdleSection(
     pagingAdapter: LazyPagingItems<FanboxPost>,
     onClickPost: (FanboxPost) -> Unit,
     onClickPlanList: (String) -> Unit,

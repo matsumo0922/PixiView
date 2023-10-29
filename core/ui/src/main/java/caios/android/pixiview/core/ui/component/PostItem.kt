@@ -43,10 +43,14 @@ import coil.request.ImageRequest
 @Composable
 fun PostItem(
     post: FanboxPost,
+    onClickPost: (FanboxPost) -> Unit,
+    onClickPlanList: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier.clickable { },
+        modifier = modifier
+            .clip(RoundedCornerShape(8.dp))
+            .clickable { onClickPost.invoke(post) },
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp)),
     ) {
@@ -103,7 +107,7 @@ fun PostItem(
                         )
                         .fillMaxWidth(),
                     feeRequired = post.feeRequired,
-                    onClickPlanList = {},
+                    onClickPlanList = { onClickPlanList.invoke(post.user.creatorId) },
                 )
             } else {
                 Text(
@@ -329,6 +333,8 @@ private fun CommentLikeButton(
 private fun PostItemPreview1() {
     PostItem(
         post = FanboxPost.dummy(),
+        onClickPost = {},
+        onClickPlanList = {},
     )
 }
 
@@ -337,5 +343,7 @@ private fun PostItemPreview1() {
 private fun PostItemPreview2() {
     PostItem(
         post = FanboxPost.dummy().copy(isRestricted = true),
+        onClickPost = {},
+        onClickPlanList = {},
     )
 }

@@ -13,6 +13,7 @@ import caios.android.pixiview.feature.library.notify.libraryNotifyScreen
 
 @Composable
 fun LibraryNavHost(
+    openDrawer: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = LibraryHomeRoute,
@@ -22,7 +23,11 @@ fun LibraryNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
-        libraryHomeScreen()
+        libraryHomeScreen(
+            openDrawer = openDrawer,
+            navigateToPostDetail = {},
+            navigateToCreatorPlans = {},
+        )
 
         libraryDiscoveryScreen()
 
