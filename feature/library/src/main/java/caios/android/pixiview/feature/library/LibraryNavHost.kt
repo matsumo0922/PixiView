@@ -5,6 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.feature.library.discovery.libraryDiscoveryScreen
 import caios.android.pixiview.feature.library.home.LibraryHomeRoute
 import caios.android.pixiview.feature.library.home.libraryHomeScreen
@@ -14,6 +16,8 @@ import caios.android.pixiview.feature.library.notify.libraryNotifyScreen
 @Composable
 fun LibraryNavHost(
     openDrawer: () -> Unit,
+    navigateToPostDetail: (postId: PostId) -> Unit,
+    navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = LibraryHomeRoute,
@@ -25,8 +29,8 @@ fun LibraryNavHost(
     ) {
         libraryHomeScreen(
             openDrawer = openDrawer,
-            navigateToPostDetail = {},
-            navigateToCreatorPlans = {},
+            navigateToPostDetail = navigateToPostDetail,
+            navigateToCreatorPlans = navigateToCreatorPlans,
         )
 
         libraryDiscoveryScreen()

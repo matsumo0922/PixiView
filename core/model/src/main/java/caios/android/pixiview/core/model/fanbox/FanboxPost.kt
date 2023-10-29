@@ -1,6 +1,7 @@
 package caios.android.pixiview.core.model.fanbox
 
 import caios.android.pixiview.core.model.fanbox.id.PostId
+import java.time.OffsetDateTime
 
 data class FanboxPost(
     val id: PostId,
@@ -15,15 +16,15 @@ data class FanboxPost(
     val likeCount: Int,
     val commentCount: Int,
     val tags: List<String>,
-    val publishedDatetime: String,
-    val updatedDatetime: String,
+    val publishedDatetime: OffsetDateTime,
+    val updatedDatetime: OffsetDateTime,
 ) {
     companion object {
         fun dummy() = FanboxPost(
             id = PostId(""),
             title = "週末こっそり配信絵 Vol.159",
             excerpt = "~23:30 くらいまで、軽く配信します～！！",
-            publishedDatetime = "2020/09/22",
+            publishedDatetime = OffsetDateTime.MAX,
             cover = FanboxCover(
                 url = "https://downloads.fanbox.cc/images/post/6894357/w/1200/kcksgQDZpzodzjrvTrlJ834X.jpeg",
                 type = "image/jpeg",
@@ -35,7 +36,7 @@ data class FanboxPost(
             isRestricted = false,
             hasAdultContent = false,
             tags = emptyList(),
-            updatedDatetime = "2020/09/22",
+            updatedDatetime = OffsetDateTime.MAX,
             user = FanboxUser.dummy(),
         )
     }

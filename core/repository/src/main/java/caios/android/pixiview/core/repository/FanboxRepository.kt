@@ -20,6 +20,8 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxNewsLattersEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPaidRecordEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
+import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.utils.parse
 import caios.android.pixiview.core.repository.utils.translate
 import io.ktor.client.HttpClient
@@ -45,17 +47,17 @@ interface FanboxRepository {
     suspend fun getHomePosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>
     suspend fun getSupportedPosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>
     suspend fun getCreatorPosts(creatorId: String, cursor: FanboxCursor? = null): PageInfo<FanboxPost>
-    suspend fun getPost(postId: String): FanboxPostDetail
+    suspend fun getPost(postId: PostId): FanboxPostDetail
 
     suspend fun getFollowingCreators(): List<FanboxCreatorDetail>
     suspend fun getRecommendedCreators(): List<FanboxCreatorDetail>
 
-    suspend fun getCreator(creatorId: String): FanboxCreatorDetail
-    suspend fun getCreatorTags(creatorId: String): List<FanboxCreatorTag>
+    suspend fun getCreator(creatorId: CreatorId): FanboxCreatorDetail
+    suspend fun getCreatorTags(creatorId: CreatorId): List<FanboxCreatorTag>
 
     suspend fun getSupportedPlans(): List<FanboxCreatorPlan>
-    suspend fun getCreatorPlans(creatorId: String): List<FanboxCreatorPlan>
-    suspend fun getCreatorPlan(creatorId: String): FanboxCreatorPlanDetail
+    suspend fun getCreatorPlans(creatorId: CreatorId): List<FanboxCreatorPlan>
+    suspend fun getCreatorPlan(creatorId: CreatorId): FanboxCreatorPlanDetail
 
     suspend fun getPaidRecords(): List<FanboxPaidRecord>
     suspend fun getUnpaidRecords(): List<FanboxPaidRecord>
@@ -129,8 +131,8 @@ class FanboxRepositoryImpl(
         }
     }
 
-    override suspend fun getPost(postId: String): FanboxPostDetail = withContext(ioDispatcher) {
-        get("post.info", mapOf("postId" to postId)).parse<FanboxPostDetailEntity>()!!.translate()
+    override suspend fun getPost(postId: PostId): FanboxPostDetail = withContext(ioDispatcher) {
+        get("post.info", mapOf("postId" to postId.value)).parse<FanboxPostDetailEntity>()!!.translate()
     }
 
     override suspend fun getFollowingCreators(): List<FanboxCreatorDetail> = withContext(ioDispatcher) {
@@ -141,24 +143,24 @@ class FanboxRepositoryImpl(
         get("creator.listRecommended").parse<FanboxCreatorItemsEntity>()!!.translate()
     }
 
-    override suspend fun getCreator(creatorId: String): FanboxCreatorDetail = withContext(ioDispatcher) {
-        get("creator.get", mapOf("creatorId" to creatorId)).parse<FanboxCreatorEntity>()!!.translate()
+    override suspend fun getCreator(creatorId: CreatorId): FanboxCreatorDetail = withContext(ioDispatcher) {
+        get("creator.get", mapOf("creatorId" to creatorId.value)).parse<FanboxCreatorEntity>()!!.translate()
     }
 
-    override suspend fun getCreatorTags(creatorId: String): List<FanboxCreatorTag> = withContext(ioDispatcher) {
-        get("tag.getFeatured", mapOf("creatorId" to creatorId)).parse<FanboxCreatorTagsEntity>()!!.translate()
+    override suspend fun getCreatorTags(creatorId: CreatorId): List<FanboxCreatorTag> = withContext(ioDispatcher) {
+        get("tag.getFeatured", mapOf("creatorId" to creatorId.value)).parse<FanboxCreatorTagsEntity>()!!.translate()
     }
 
     override suspend fun getSupportedPlans(): List<FanboxCreatorPlan> = withContext(ioDispatcher) {
         get("plan.listSupporting").parse<FanboxCreatorPlansEntity>()!!.translate()
     }
 
-    override suspend fun getCreatorPlans(creatorId: String): List<FanboxCreatorPlan> = withContext(ioDispatcher) {
-        get("plan.listCreator", mapOf("creatorId" to creatorId)).parse<FanboxCreatorPlansEntity>()!!.translate()
+    override suspend fun getCreatorPlans(creatorId: CreatorId): List<FanboxCreatorPlan> = withContext(ioDispatcher) {
+        get("plan.listCreator", mapOf("creatorId" to creatorId.value)).parse<FanboxCreatorPlansEntity>()!!.translate()
     }
 
-    override suspend fun getCreatorPlan(creatorId: String): FanboxCreatorPlanDetail = withContext(ioDispatcher) {
-        get("legacy/support/creator", mapOf("creatorId" to creatorId)).parse<FanboxCreatorPlanEntity>()!!.translate()
+    override suspend fun getCreatorPlan(creatorId: CreatorId): FanboxCreatorPlanDetail = withContext(ioDispatcher) {
+        get("legacy/support/creator", mapOf("creatorId" to creatorId.value)).parse<FanboxCreatorPlanEntity>()!!.translate()
     }
 
     override suspend fun getPaidRecords(): List<FanboxPaidRecord> = withContext(ioDispatcher) {

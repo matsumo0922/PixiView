@@ -28,6 +28,7 @@ import caios.android.pixiview.core.model.fanbox.id.NewsLetterId
 import caios.android.pixiview.core.model.fanbox.id.PlanId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import timber.log.Timber
+import java.time.OffsetDateTime
 
 internal fun FanboxPostItemsEntity.translate(): PageInfo<FanboxPost> {
     return PageInfo(
@@ -36,8 +37,8 @@ internal fun FanboxPostItemsEntity.translate(): PageInfo<FanboxPost> {
                 id = PostId(it.id),
                 title = it.title,
                 excerpt = it.excerpt,
-                publishedDatetime = it.publishedDatetime,
-                updatedDatetime = it.updatedDatetime,
+                publishedDatetime = OffsetDateTime.parse(it.publishedDatetime),
+                updatedDatetime = OffsetDateTime.parse(it.updatedDatetime),
                 isLiked = it.isLiked,
                 likeCount = it.likeCount,
                 commentCount = it.commentCount,
@@ -132,6 +133,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
 
             val images = body.body?.imageMap.orEmpty()
             val files = body.body?.fileMap.orEmpty()
+            val urls = body.body?.urlEmbedMap.orEmpty()
 
             bodyBlock = FanboxPostDetail.Body.Article(
                 blocks = blocks.mapNotNull {
@@ -155,6 +157,13 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                                     name = file.name,
                                     size = file.size,
                                     url = file.url,
+                                )
+                            }
+                        }
+                        it.urlEmbedId != null -> {
+                            urls[it.urlEmbedId!!]?.let { url ->
+                                FanboxPostDetail.Body.Article.Block.Link(
+                                    html = url.html,
                                 )
                             }
                         }
@@ -208,8 +217,8 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
     return FanboxPostDetail(
         id = PostId(body.id),
         title = body.title,
-        publishedDatetime = body.publishedDatetime,
-        updatedDatetime = body.updatedDatetime,
+        publishedDatetime = OffsetDateTime.parse(body.publishedDatetime),
+        updatedDatetime = OffsetDateTime.parse(body.updatedDatetime),
         isLiked = body.isLiked,
         likeCount = body.likeCount,
         commentCount = body.commentCount,
@@ -230,7 +239,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                 items = commentList.items.map {
                     FanboxPostDetail.Comment.CommentItem(
                         body = it.body,
-                        createdDatetime = it.createdDatetime,
+                        createdDatetime = OffsetDateTime.parse(it.createdDatetime),
                         id = it.id,
                         isLiked = it.isLiked,
                         isOwn = it.isOwn,
@@ -252,14 +261,14 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
             FanboxPostDetail.OtherPost(
                 id = it.id,
                 title = it.title,
-                publishedDatetime = it.publishedDatetime,
+                publishedDatetime = OffsetDateTime.parse(it.publishedDatetime),
             )
         },
         prevPost = body.prevPost?.let {
             FanboxPostDetail.OtherPost(
                 id = it.id,
                 title = it.title,
-                publishedDatetime = it.publishedDatetime,
+                publishedDatetime = OffsetDateTime.parse(it.publishedDatetime),
             )
         },
         imageForShare = body.imageForShare,
@@ -337,7 +346,7 @@ internal fun FanboxPaidRecordEntity.translate(): List<FanboxPaidRecord> {
         FanboxPaidRecord(
             id = it.id,
             paidAmount = it.paidAmount,
-            paymentDatetime = it.paymentDatetime,
+            paymentDatetime = OffsetDateTime.parse(it.paymentDatetime),
             paymentMethod = it.paymentMethod,
             creator = FanboxCreator(
                 creatorId = it.creator.creatorId?.let { id -> CreatorId(id) },

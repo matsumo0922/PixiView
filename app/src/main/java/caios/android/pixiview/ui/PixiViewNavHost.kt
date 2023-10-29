@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import caios.android.pixiview.feature.library.LibraryRoute
 import caios.android.pixiview.feature.library.libraryScreen
+import caios.android.pixiview.feature.post.navigateToPostDetail
+import caios.android.pixiview.feature.post.postDetailScreen
 
 @Composable
 internal fun PixiViewNavHost(
@@ -19,6 +21,13 @@ internal fun PixiViewNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
-        libraryScreen()
+        libraryScreen(
+            navigateToPostDetail = { navController.navigateToPostDetail(it) },
+            navigateToCreatorPlans = {},
+        )
+
+        postDetailScreen(
+            terminate = { navController.popBackStack() },
+        )
     }
 }

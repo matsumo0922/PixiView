@@ -37,6 +37,7 @@ data class FanboxPostDetailEntity(
             @SerialName("blocks") val blocks: List<Block> = emptyList(),
             @SerialName("fileMap") val fileMap: Map<String, File> = emptyMap(),
             @SerialName("imageMap") val imageMap: Map<String, Image> = emptyMap(),
+            @SerialName("urlEmbedMap") val urlEmbedMap: Map<String, Url> = emptyMap(),
             @SerialName("images") val images: List<Image> = emptyList(),
             @SerialName("files") val files: List<File> = emptyList(),
         ) {
@@ -50,6 +51,8 @@ data class FanboxPostDetailEntity(
                 val imageId: String?,
                 @SerialName("fileId")
                 val fileId: String?,
+                @SerialName("urlEmbedId")
+                val urlEmbedId: String?,
             )
 
             @Serializable
@@ -80,6 +83,16 @@ data class FanboxPostDetailEntity(
                 val thumbnailUrl: String,
                 @SerialName("width")
                 val width: Int,
+            )
+
+            @Serializable
+            data class Url(
+                @SerialName("id")
+                val id: String,
+                @SerialName("type")
+                val type: String,
+                @SerialName("html")
+                val html: String,
             )
         }
 

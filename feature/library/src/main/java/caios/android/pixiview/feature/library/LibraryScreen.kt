@@ -14,6 +14,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.feature.library.component.LibraryBottomBar
 import caios.android.pixiview.feature.library.component.LibraryDestination
 import caios.android.pixiview.feature.library.component.LibraryDrawer
@@ -26,6 +28,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LibraryScreen(
+    navigateToPostDetail: (postId: PostId) -> Unit,
+    navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
@@ -63,6 +67,8 @@ fun LibraryScreen(
                         drawerState.open()
                     }
                 },
+                navigateToPostDetail = navigateToPostDetail,
+                navigateToCreatorPlans = navigateToCreatorPlans,
             )
         }
     }

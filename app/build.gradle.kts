@@ -107,6 +107,7 @@ dependencies {
     implementation(project(":feature:report"))
     implementation(project(":feature:library"))
     implementation(project(":feature:welcome"))
+    implementation(project(":feature:post"))
 
     implementation(platform(libs.firebase.bom))
     implementation(platform(libs.androidx.compose.bom))

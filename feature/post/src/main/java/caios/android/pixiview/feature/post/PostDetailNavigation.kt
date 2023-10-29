@@ -1,5 +1,7 @@
 package caios.android.pixiview.feature.post
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -26,6 +28,9 @@ fun NavGraphBuilder.postDetailScreen(
         popEnterTransition = { NavigateAnimation.Vertical.popEnter },
         popExitTransition = { NavigateAnimation.Vertical.popExit },
     ) {
-
+        PostDetailRoute(
+            modifier = Modifier.fillMaxSize(),
+            postId = PostId(it.arguments?.getString(PostDetailId) ?: ""),
+        )
     }
 }

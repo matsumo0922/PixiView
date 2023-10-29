@@ -1,6 +1,7 @@
 package caios.android.pixiview.core.model.fanbox
 
 import caios.android.pixiview.core.model.fanbox.id.PostId
+import java.time.OffsetDateTime
 
 data class FanboxPostDetail(
     val id: PostId,
@@ -16,8 +17,8 @@ data class FanboxPostDetail(
     val isRestricted: Boolean,
     val likeCount: Int,
     val tags: List<String>,
-    val updatedDatetime: String,
-    val publishedDatetime: String,
+    val updatedDatetime: OffsetDateTime,
+    val publishedDatetime: OffsetDateTime,
     val nextPost: OtherPost?,
     val prevPost: OtherPost?,
     val user: FanboxUser,
@@ -38,6 +39,10 @@ data class FanboxPostDetail(
                     val extension: String,
                     val size: Long,
                     val url: String,
+                ) : Block
+
+                data class Link(
+                    val html: String,
                 ) : Block
             }
         }
@@ -74,7 +79,7 @@ data class FanboxPostDetail(
     ) {
         data class CommentItem(
             val body: String,
-            val createdDatetime: String,
+            val createdDatetime: OffsetDateTime,
             val id: String,
             val isLiked: Boolean,
             val isOwn: Boolean,
@@ -88,6 +93,6 @@ data class FanboxPostDetail(
     data class OtherPost(
         val id: String,
         val title: String,
-        val publishedDatetime: String,
+        val publishedDatetime: OffsetDateTime,
     )
 }

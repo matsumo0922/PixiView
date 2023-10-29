@@ -41,6 +41,7 @@ import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun PostItem(
@@ -174,7 +175,7 @@ private fun UserSection(
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = post.publishedDatetime,
+                text = post.publishedDatetime.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
