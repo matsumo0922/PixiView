@@ -125,7 +125,7 @@ internal fun FanboxCreatorEntity.translate(): FanboxCreatorDetail {
 }
 
 internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
-    var bodyBlock: FanboxPostDetail.Body? = null
+    var bodyBlock: FanboxPostDetail.Body = FanboxPostDetail.Body.Unknown
 
     if (!body.body?.blocks.isNullOrEmpty()) {
         body.body?.blocks?.let { blocks ->
@@ -139,27 +139,35 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                 blocks = blocks.mapNotNull {
                     when {
                         it.text != null -> {
-                            FanboxPostDetail.Body.Article.Block.Text(it.text!!)
+                            if (it.text!!.isEmpty()) null else FanboxPostDetail.Body.Article.Block.Text(it.text!!)
                         }
+
                         it.imageId != null -> {
                             images[it.imageId!!]?.let { image ->
                                 FanboxPostDetail.Body.Article.Block.Image(
-                                    extension = image.extension,
-                                    originalUrl = image.originalUrl,
-                                    thumbnailUrl = image.thumbnailUrl,
+                                    FanboxPostDetail.ImageItem(
+                                        extension = image.extension,
+                                        originalUrl = image.originalUrl,
+                                        thumbnailUrl = image.thumbnailUrl,
+                                        aspectRatio = image.width.toFloat() / image.height.toFloat(),
+                                    )
                                 )
                             }
                         }
+
                         it.fileId != null -> {
                             files[it.fileId!!]?.let { file ->
                                 FanboxPostDetail.Body.Article.Block.File(
-                                    extension = file.extension,
-                                    name = file.name,
-                                    size = file.size,
-                                    url = file.url,
+                                    FanboxPostDetail.FileItem(
+                                        extension = file.extension,
+                                        name = file.name,
+                                        size = file.size,
+                                        url = file.url,
+                                    )
                                 )
                             }
                         }
+
                         it.urlEmbedId != null -> {
                             urls[it.urlEmbedId!!]?.let { url ->
                                 FanboxPostDetail.Body.Article.Block.Link(
@@ -167,6 +175,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                                 )
                             }
                         }
+
                         else -> {
                             Timber.d("FanboxPostDetailEntity translate error: Unknown block type. $it")
                             null
@@ -184,11 +193,11 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
             bodyBlock = FanboxPostDetail.Body.Image(
                 text = body.body?.text.orEmpty(),
                 images = blocks.map {
-                    FanboxPostDetail.Body.Image.ImageItem(
-                        id = it.id,
+                    FanboxPostDetail.ImageItem(
                         extension = it.extension,
                         originalUrl = it.originalUrl,
                         thumbnailUrl = it.thumbnailUrl,
+                        aspectRatio = it.width.toFloat() / it.height.toFloat(),
                     )
                 },
             )
@@ -202,8 +211,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
             bodyBlock = FanboxPostDetail.Body.File(
                 text = body.body?.text.orEmpty(),
                 files = blocks.map {
-                    FanboxPostDetail.Body.File.FileItem(
-                        id = it.id,
+                    FanboxPostDetail.FileItem(
                         name = it.name,
                         extension = it.extension,
                         size = it.size,
@@ -232,7 +240,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
             name = body.user.name,
             iconUrl = body.user.iconUrl,
         ),
-        body = bodyBlock!!,
+        body = bodyBlock,
         excerpt = body.excerpt,
         commentList = body.commentList.let { commentList ->
             FanboxPostDetail.Comment(

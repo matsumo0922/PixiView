@@ -31,6 +31,7 @@ fun NavGraphBuilder.postDetailScreen(
         PostDetailRoute(
             modifier = Modifier.fillMaxSize(),
             postId = PostId(it.arguments?.getString(PostDetailId) ?: ""),
+            terminate = terminate,
         )
     }
 }

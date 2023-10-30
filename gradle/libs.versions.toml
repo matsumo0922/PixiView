@@ -191,6 +191,7 @@ accompanist-compose-theme-adapter3 = { module = "com.google.accompanist:accompan
 accompanist-navigation = { module = "com.google.accompanist:accompanist-navigation-material", version.ref = "accompanist" }
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist" }
+accompanist-placeholder-material = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
@@ -291,6 +292,7 @@ ui-implementation = [
     "accompanist-navigation",
     "accompanist-permissions",
     "accompanist-webview",
+    "accompanist-placeholder-material",
     "google-material",
     "coil-compose",
     "unifile"

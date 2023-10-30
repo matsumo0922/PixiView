@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.model.ThemeColorConfig
+import caios.android.pixiview.core.ui.extensition.FanboxCookie
+import caios.android.pixiview.core.ui.extensition.LocalFanboxCookie
 import caios.android.pixiview.core.ui.theme.color.DarkBlueColorScheme
 import caios.android.pixiview.core.ui.theme.color.DarkBrownColorScheme
 import caios.android.pixiview.core.ui.theme.color.DarkGreenColorScheme
@@ -83,6 +85,7 @@ val DarkDefaultColorScheme = darkColorScheme(
 
 @Composable
 fun PixiViewTheme(
+    fanboxCookie: String = "",
     themeColorConfig: ThemeColorConfig = ThemeColorConfig.Default,
     shouldUseDarkTheme: Boolean = isSystemInDarkTheme(),
     enableDynamicTheme: Boolean = false,
@@ -112,6 +115,7 @@ fun PixiViewTheme(
     }
 
     CompositionLocalProvider(
+        LocalFanboxCookie provides FanboxCookie(fanboxCookie),
         LocalBackgroundTheme provides backgroundTheme,
         LocalTintTheme provides tintTheme,
     ) {

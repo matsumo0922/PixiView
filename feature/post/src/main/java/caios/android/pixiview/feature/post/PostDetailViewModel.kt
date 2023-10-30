@@ -27,6 +27,7 @@ class PostDetailViewModel @Inject constructor(
 
     fun fetch(postId: PostId) {
         viewModelScope.launch {
+            _screenState.value = ScreenState.Loading
             _screenState.value = suspendRunCatching {
                 fanboxRepository.getPost(postId)
             }.fold(

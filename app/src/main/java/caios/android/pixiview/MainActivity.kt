@@ -66,6 +66,7 @@ class MainActivity : ComponentActivity() {
                 val isLoggedIn = remember { viewModel.isLoggedIn() }
 
                 PixiViewTheme(
+                    fanboxCookie = it.fanboxCookie,
                     themeColorConfig = it.userData.themeColorConfig,
                     shouldUseDarkTheme = shouldUseDarkTheme,
                     enableDynamicTheme = shouldUseDynamicColor(screenState),

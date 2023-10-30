@@ -28,18 +28,9 @@ data class FanboxPostDetail(
             sealed interface Block {
                 data class Text(val text: String) : Block
 
-                data class Image(
-                    val extension: String,
-                    val originalUrl: String,
-                    val thumbnailUrl: String,
-                ) : Block
+                data class Image(val item: ImageItem) : Block
 
-                data class File(
-                    val name: String,
-                    val extension: String,
-                    val size: Long,
-                    val url: String,
-                ) : Block
+                data class File(val item: FileItem) : Block
 
                 data class Link(
                     val html: String,
@@ -50,27 +41,14 @@ data class FanboxPostDetail(
         data class Image(
             val text: String,
             val images: List<ImageItem>,
-        ) : Body {
-            data class ImageItem(
-                val id: String,
-                val extension: String,
-                val originalUrl: String,
-                val thumbnailUrl: String,
-            )
-        }
+        ) : Body
 
         data class File(
             val text: String,
             val files: List<FileItem>,
-        ) : Body {
-            data class FileItem(
-                val id: String,
-                val name: String,
-                val extension: String,
-                val size: Long,
-                val url: String,
-            )
-        }
+        ) : Body
+
+        data object Unknown : Body
     }
 
     data class Comment(
@@ -94,5 +72,19 @@ data class FanboxPostDetail(
         val id: String,
         val title: String,
         val publishedDatetime: OffsetDateTime,
+    )
+
+    data class ImageItem(
+        val extension: String,
+        val originalUrl: String,
+        val thumbnailUrl: String,
+        val aspectRatio: Float,
+    )
+
+    data class FileItem(
+        val name: String,
+        val extension: String,
+        val size: Long,
+        val url: String,
     )
 }

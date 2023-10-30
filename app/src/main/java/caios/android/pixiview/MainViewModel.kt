@@ -10,6 +10,7 @@ import caios.android.pixiview.core.repository.FanboxRepository
 import caios.android.pixiview.core.repository.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -23,9 +24,12 @@ class MainViewModel @Inject constructor(
     private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
 
-    val screenState = userDataRepository.userData.map {
+    val screenState = combine(userDataRepository.userData, fanboxRepository.cookie, ::Pair).map { (userData, cookie) ->
         ScreenState.Idle(
-            MainUiState(it),
+            MainUiState(
+                userData = userData,
+                fanboxCookie = cookie,
+            ),
         )
     }.stateIn(
         scope = viewModelScope,
@@ -55,4 +59,5 @@ class MainViewModel @Inject constructor(
 @Stable
 data class MainUiState(
     val userData: UserData,
+    val fanboxCookie: String,
 )
