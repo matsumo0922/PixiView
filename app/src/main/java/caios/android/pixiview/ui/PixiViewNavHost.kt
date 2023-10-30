@@ -27,6 +27,7 @@ internal fun PixiViewNavHost(
         )
 
         postDetailScreen(
+            navigateToPostDetail = { navController.navigateToPostDetail(it) },
             terminate = { navController.popBackStack() },
         )
     }

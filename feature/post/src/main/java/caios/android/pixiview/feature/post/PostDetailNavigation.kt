@@ -18,19 +18,21 @@ fun NavController.navigateToPostDetail(postId: PostId) {
 }
 
 fun NavGraphBuilder.postDetailScreen(
+    navigateToPostDetail: (PostId) -> Unit,
     terminate: () -> Unit,
 ) {
     composable(
         route = PostDetailRoute,
         arguments = listOf(navArgument(PostDetailId) { type = NavType.StringType }),
-        enterTransition = { NavigateAnimation.Vertical.enter },
-        exitTransition = { NavigateAnimation.Vertical.exit },
-        popEnterTransition = { NavigateAnimation.Vertical.popEnter },
-        popExitTransition = { NavigateAnimation.Vertical.popExit },
+        enterTransition = { NavigateAnimation.Horizontal.enter },
+        exitTransition = { NavigateAnimation.Horizontal.exit },
+        popEnterTransition = { NavigateAnimation.Horizontal.popEnter },
+        popExitTransition = { NavigateAnimation.Horizontal.popExit },
     ) {
         PostDetailRoute(
             modifier = Modifier.fillMaxSize(),
             postId = PostId(it.arguments?.getString(PostDetailId) ?: ""),
+            navigateToPostDetail = navigateToPostDetail,
             terminate = terminate,
         )
     }

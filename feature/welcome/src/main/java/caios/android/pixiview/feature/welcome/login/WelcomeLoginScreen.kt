@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.pixiview.core.common.util.ToastUtil
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
@@ -40,11 +41,11 @@ internal fun WelcomeLoginScreen(
     viewModel: WelcomeLoginViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
-    var isLoggedIn by remember { mutableStateOf(viewModel.isLoggedIn()) }
+    val isLoggedIn by viewModel.isLoggedInFlow.collectAsStateWithLifecycle(initialValue = false)
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             ToastUtil.show(context, R.string.welcome_login_toast_success)
-            isLoggedIn = true
+            viewModel.fetchLoggedIn()
         } else {
             ToastUtil.show(context, R.string.welcome_login_toast_failed)
         }

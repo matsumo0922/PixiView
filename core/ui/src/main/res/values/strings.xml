@@ -48,6 +48,10 @@
     <string name="home_tab_home">フォロー中</string>
     <string name="home_tab_supported">支援中</string>
 
+    <!-- PostDetail -->
+    <string name="post_detail_title">投稿詳細</string>
+    <string name="post_detail_download_images">画像を全てダウンロード (%1$d枚)</string>
+
     <!-- Report -->
     <string name="report_crush_title">Oops! Something went wrong</string>
     <string name="report_crush_description">申し訳ありません…\n技術的な要因により、PixiView がクラッシュしました。\n以下のレポートを開発者に送付してください。</string>

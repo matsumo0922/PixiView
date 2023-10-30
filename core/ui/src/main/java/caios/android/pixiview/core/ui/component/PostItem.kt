@@ -101,7 +101,7 @@ fun PostItem(
             )
 
             if (post.isRestricted) {
-                RestrictCard(
+                RestrictCardItem(
                     modifier = Modifier
                         .padding(
                             start = 16.dp,
@@ -223,45 +223,6 @@ private fun RestrictThumbnail(
             style = MaterialTheme.typography.bodySmall.center(),
             color = Color.White,
         )
-    }
-}
-
-@Composable
-private fun RestrictCard(
-    feeRequired: Int,
-    onClickPlanList: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(6.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp, 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                imageVector = Icons.Default.Lock,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                contentDescription = null,
-            )
-
-            Text(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.error_restricted_post, feeRequired),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-
-            Button(onClick = { onClickPlanList.invoke() }) {
-                Text(stringResource(R.string.fanbox_plan_List))
-            }
-        }
     }
 }
 

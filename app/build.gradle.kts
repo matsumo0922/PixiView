@@ -129,7 +129,7 @@ dependencies {
     // debugImplementation(libs.leakcanary)
 }
 
-// plugins.apply("com.google.gms.google-services")
+plugins.apply("com.google.gms.google-services")
 
 fun MapProperty<String, BuildConfigField<out Serializable>>.putBuildConfig(
     localProperties: Properties,

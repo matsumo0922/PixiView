@@ -7,10 +7,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
+import caios.android.pixiview.feature.library.discovery.LibraryDiscoveryRoute
 import caios.android.pixiview.feature.library.discovery.libraryDiscoveryScreen
 import caios.android.pixiview.feature.library.home.LibraryHomeRoute
 import caios.android.pixiview.feature.library.home.libraryHomeScreen
+import caios.android.pixiview.feature.library.message.LibraryMessageRoute
 import caios.android.pixiview.feature.library.message.libraryMessageScreen
+import caios.android.pixiview.feature.library.notify.LibraryNotifyRoute
 import caios.android.pixiview.feature.library.notify.libraryNotifyScreen
 
 @Composable
@@ -40,3 +43,10 @@ fun LibraryNavHost(
         libraryMessageScreen()
     }
 }
+
+internal val LibraryRoutes = listOf(
+    LibraryHomeRoute,
+    LibraryDiscoveryRoute,
+    LibraryNotifyRoute,
+    LibraryMessageRoute,
+)

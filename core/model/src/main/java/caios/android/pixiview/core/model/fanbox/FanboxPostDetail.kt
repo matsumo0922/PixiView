@@ -25,6 +25,20 @@ data class FanboxPostDetail(
     val user: FanboxUser,
 ) {
     sealed interface Body {
+        val imageItems get() = when (this) {
+            is Article -> blocks.filterIsInstance<Article.Block.Image>().map { it.item }
+            is Image -> images
+            is File -> emptyList()
+            is Unknown -> emptyList()
+        }
+
+        val fileItems get() = when (this) {
+            is Article -> blocks.filterIsInstance<Article.Block.File>().map { it.item }
+            is Image -> emptyList()
+            is File -> files
+            is Unknown -> emptyList()
+        }
+
         data class Article(val blocks: List<Block>) : Body {
             sealed interface Block {
                 data class Text(val text: String) : Block

@@ -9,6 +9,8 @@ import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.repository.FanboxRepository
 import caios.android.pixiview.core.repository.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -24,11 +26,14 @@ class MainViewModel @Inject constructor(
     private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
 
-    val screenState = combine(userDataRepository.userData, fanboxRepository.cookie, ::Pair).map { (userData, cookie) ->
+    private val isLoggedInFlow: MutableSharedFlow<Boolean> = MutableSharedFlow(replay = 1)
+
+    val screenState = combine(userDataRepository.userData, fanboxRepository.cookie, isLoggedInFlow, ::Triple).map { (userData, cookie, isLoggedIn) ->
         ScreenState.Idle(
             MainUiState(
                 userData = userData,
                 fanboxCookie = cookie,
+                isLoggedIn = isLoggedIn,
             ),
         )
     }.stateIn(
@@ -39,8 +44,11 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            CookieManager.getInstance().getCookie("https://www.fanbox.cc/")?.also {
-                fanboxRepository.updateCookie(it)
+            CookieManager.getInstance().getCookie("https://www.fanbox.cc/").also {
+                fanboxRepository.updateCookie(it.orEmpty())
+                fanboxRepository.getNewsLetters().also { newsLetters ->
+                    isLoggedInFlow.emit(newsLetters != null)
+                }
             }
         }
     }
@@ -50,14 +58,11 @@ class MainViewModel @Inject constructor(
             userDataRepository.setPixiViewId(UUID.randomUUID().toString())
         }
     }
-
-    fun isLoggedIn(): Boolean {
-        return fanboxRepository.hasActiveCookie()
-    }
 }
 
 @Stable
 data class MainUiState(
     val userData: UserData,
     val fanboxCookie: String,
+    val isLoggedIn: Boolean,
 )

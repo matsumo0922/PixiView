@@ -21,8 +21,30 @@ fun NavGraphBuilder.libraryScreen(
 ) {
     composable(
         route = LibraryRoute,
-        enterTransition = { NavigateAnimation.Library.enter },
-        exitTransition = { NavigateAnimation.Library.exit },
+        enterTransition = {
+            when (initialState.destination.route) {
+                in LibraryRoutes -> NavigateAnimation.Library.enter
+                else -> NavigateAnimation.Horizontal.enter
+            }
+        },
+        exitTransition = {
+            when (targetState.destination.route) {
+                in LibraryRoutes -> NavigateAnimation.Library.exit
+                else -> NavigateAnimation.Horizontal.exit
+            }
+        },
+        popEnterTransition = {
+            when (initialState.destination.route) {
+                in LibraryRoutes -> NavigateAnimation.Library.enter
+                else -> NavigateAnimation.Horizontal.popEnter
+            }
+        },
+        popExitTransition = {
+            when (targetState.destination.route) {
+                in LibraryRoutes -> NavigateAnimation.Library.exit
+                else -> NavigateAnimation.Horizontal.popExit
+            }
+        },
     ) {
         LibraryScreen(
             modifier = Modifier.fillMaxSize(),

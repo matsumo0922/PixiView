@@ -63,7 +63,6 @@ class MainActivity : ComponentActivity() {
             ) {
                 val isAgreedTeams = remember { it.userData.isAgreedPrivacyPolicy && it.userData.isAgreedTermsOfService }
                 val isAllowedPermission = remember { isAllowedPermission() }
-                val isLoggedIn = remember { viewModel.isLoggedIn() }
 
                 PixiViewTheme(
                     fanboxCookie = it.fanboxCookie,
@@ -76,7 +75,7 @@ class MainActivity : ComponentActivity() {
                         userData = it.userData,
                         isAgreedTeams = isAgreedTeams,
                         isAllowedPermission = isAllowedPermission,
-                        isLoggedIn = isLoggedIn,
+                        isLoggedIn = it.isLoggedIn,
                     )
                 }
             }
