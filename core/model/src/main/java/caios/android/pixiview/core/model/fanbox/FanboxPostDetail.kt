@@ -7,6 +7,7 @@ data class FanboxPostDetail(
     val id: PostId,
     val title: String,
     val body: Body,
+    val coverImageUrl: String?,
     val commentCount: Int,
     val commentList: Comment,
     val excerpt: String,
@@ -33,7 +34,8 @@ data class FanboxPostDetail(
                 data class File(val item: FileItem) : Block
 
                 data class Link(
-                    val html: String,
+                    val html: String?,
+                    val post: FanboxPost?,
                 ) : Block
             }
         }
@@ -53,7 +55,7 @@ data class FanboxPostDetail(
 
     data class Comment(
         val items: List<CommentItem>,
-        val cursor: FanboxCursor?,
+        val nextUrl: String?,
     ) {
         data class CommentItem(
             val body: String,

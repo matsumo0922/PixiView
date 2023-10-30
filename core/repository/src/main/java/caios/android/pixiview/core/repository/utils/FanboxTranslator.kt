@@ -32,35 +32,37 @@ import java.time.OffsetDateTime
 
 internal fun FanboxPostItemsEntity.translate(): PageInfo<FanboxPost> {
     return PageInfo(
-        contents = body.items.map {
-            FanboxPost(
-                id = PostId(it.id),
-                title = it.title,
-                excerpt = it.excerpt,
-                publishedDatetime = OffsetDateTime.parse(it.publishedDatetime),
-                updatedDatetime = OffsetDateTime.parse(it.updatedDatetime),
-                isLiked = it.isLiked,
-                likeCount = it.likeCount,
-                commentCount = it.commentCount,
-                feeRequired = it.feeRequired,
-                isRestricted = it.isRestricted,
-                hasAdultContent = it.hasAdultContent,
-                tags = it.tags,
-                cover = it.cover?.let { cover ->
-                    FanboxCover(
-                        type = cover.type,
-                        url = cover.url,
-                    )
-                },
-                user = FanboxUser(
-                    userId = it.user.userId,
-                    creatorId = CreatorId(it.creatorId),
-                    name = it.user.name,
-                    iconUrl = it.user.iconUrl,
-                ),
+        contents = body.items.map { it.translate() },
+        cursor = body.nextUrl?.translateToCursor(),
+    )
+}
+
+internal fun FanboxPostItemsEntity.Body.Item.translate(): FanboxPost {
+    return FanboxPost(
+        id = PostId(id),
+        title = title,
+        excerpt = excerpt,
+        publishedDatetime = OffsetDateTime.parse(publishedDatetime),
+        updatedDatetime = OffsetDateTime.parse(updatedDatetime),
+        isLiked = isLiked,
+        likeCount = likeCount,
+        commentCount = commentCount,
+        feeRequired = feeRequired,
+        isRestricted = isRestricted,
+        hasAdultContent = hasAdultContent,
+        tags = tags,
+        cover = cover?.let { cover ->
+            FanboxCover(
+                type = cover.type,
+                url = cover.url,
             )
         },
-        cursor = body.nextUrl?.translateToCursor(),
+        user = FanboxUser(
+            userId = user.userId,
+            creatorId = CreatorId(creatorId),
+            name = user.name,
+            iconUrl = user.iconUrl,
+        ),
     )
 }
 
@@ -172,6 +174,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                             urls[it.urlEmbedId!!]?.let { url ->
                                 FanboxPostDetail.Body.Article.Block.Link(
                                     html = url.html,
+                                    post = url.postInfo?.translate(),
                                 )
                             }
                         }
@@ -229,6 +232,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
         updatedDatetime = OffsetDateTime.parse(body.updatedDatetime),
         isLiked = body.isLiked,
         likeCount = body.likeCount,
+        coverImageUrl = body.coverImageUrl,
         commentCount = body.commentCount,
         feeRequired = body.feeRequired,
         isRestricted = body.isRestricted,
@@ -262,7 +266,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                         ),
                     )
                 },
-                cursor = commentList.nextUrl?.translateToCursor(),
+                nextUrl = commentList.nextUrl,
             )
         },
         nextPost = body.nextPost?.let {

@@ -3,17 +3,21 @@ package caios.android.pixiview.core.ui.extensition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.unit.dp
 import coil.request.ImageRequest
 import com.google.accompanist.placeholder.PlaceholderDefaults
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.shimmerHighlightColor
 import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.shimmer
+import com.google.accompanist.placeholder.material.shimmer
 
 @Immutable
 data class FanboxCookie(
@@ -45,13 +49,10 @@ fun SimmerPlaceHolder(
         modifier = modifier
             .fillMaxSize()
             .placeholder(
-                color = MaterialTheme.colorScheme.surfaceVariant,
                 visible = true,
-                highlight = PlaceholderHighlight.shimmer(
-                    highlightColor = PlaceholderDefaults.shimmerHighlightColor(
-                        backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-                    ),
-                ),
-            )
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                highlight = PlaceholderHighlight.shimmer(),
+                shape = RectangleShape,
+            ),
     )
 }

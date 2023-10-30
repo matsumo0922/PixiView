@@ -11,7 +11,7 @@ data class FanboxCreatorEntity(
     @Serializable
     data class Body(
         @SerialName("coverImageUrl")
-        val coverImageUrl: String,
+        val coverImageUrl: String?,
         @SerialName("creatorId")
         val creatorId: String,
         @SerialName("description")
@@ -50,7 +50,7 @@ data class FanboxCreatorEntity(
         @Serializable
         data class User(
             @SerialName("iconUrl")
-            val iconUrl: String,
+            val iconUrl: String?,
             @SerialName("name")
             val name: String,
             @SerialName("userId")

@@ -1,5 +1,6 @@
 package caios.android.pixiview.core.ui.component
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -55,6 +56,7 @@ import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
 import kotlinx.collections.immutable.toImmutableList
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CoordinatorScaffold(
     header: @Composable (Modifier) -> Unit,
@@ -68,39 +70,41 @@ fun CoordinatorScaffold(
     var appBarAlpha by remember { mutableFloatStateOf(0f) }
     var topSectionHeight by remember { mutableIntStateOf(100) }
 
-    Box(modifier.background(color)) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = listState,
-        ) {
-            item {
-                header.invoke(
-                    Modifier
-                        .fillMaxWidth()
-                        .onGloballyPositioned { topSectionHeight = it.size.height },
-                )
-            }
-
-            content(this)
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color),
+        state = listState,
+    ) {
+        stickyHeader {
+            CoordinatorToolBar(
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.applyTonalElevation(
+                    backgroundColor = MaterialTheme.colorScheme.surface,
+                    elevation = 3.dp,
+                ),
+                backgroundAlpha = appBarAlpha,
+                onClickNavigateUp = onClickNavigateUp,
+                onClickMenu = onClickMenu,
+            )
         }
 
-        CoordinatorToolBar(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.applyTonalElevation(
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                elevation = 3.dp,
-            ),
-            backgroundAlpha = appBarAlpha,
-            onClickNavigateUp = onClickNavigateUp,
-            onClickMenu = onClickMenu,
-        )
+        item {
+            header.invoke(
+                Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned { topSectionHeight = it.size.height },
+            )
+        }
+
+        content(this)
     }
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo }.collect {
             val index = listState.firstVisibleItemIndex
             val disableArea = topSectionHeight * 0.7f
-            val alpha = if (index == 0) (listState.firstVisibleItemScrollOffset.toDouble() - disableArea) / (topSectionHeight - disableArea) else 1
+            val alpha = if (index <= 1) (listState.firstVisibleItemScrollOffset.toDouble() - disableArea) / (topSectionHeight - disableArea) else 1
 
             appBarAlpha = (alpha.toFloat() * 2).coerceIn(0f..1f)
         }
@@ -124,7 +128,10 @@ private fun CoordinatorToolBar(
     ) {
         TopAppBar(
             modifier = Modifier.statusBarsPadding(),
-            colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,
+                scrolledContainerColor = Color.Transparent,
+            ),
             windowInsets = WindowInsets(0, 0, 0, 0),
             title = { /* do nothing */ },
             navigationIcon = {

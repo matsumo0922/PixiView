@@ -29,6 +29,7 @@ data class FanboxPostDetailEntity(
         @SerialName("title") val title: String,
         @SerialName("type") val type: String,
         @SerialName("updatedDatetime") val updatedDatetime: String,
+        @SerialName("coverImageUrl") val coverImageUrl: String?,
         @SerialName("user") val user: User,
     ) {
         @Serializable
@@ -92,7 +93,9 @@ data class FanboxPostDetailEntity(
                 @SerialName("type")
                 val type: String,
                 @SerialName("html")
-                val html: String,
+                val html: String?,
+                @SerialName("postInfo")
+                val postInfo: FanboxPostItemsEntity.Body.Item?,
             )
         }
 
@@ -149,7 +152,7 @@ data class FanboxPostDetailEntity(
         @Serializable
         data class User(
             @SerialName("iconUrl")
-            val iconUrl: String,
+            val iconUrl: String?,
             @SerialName("name")
             val name: String,
             @SerialName("userId")
