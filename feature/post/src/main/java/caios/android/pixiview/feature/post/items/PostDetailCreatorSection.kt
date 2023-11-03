@@ -62,7 +62,6 @@ internal fun PostDetailCreatorSection(
     }
 }
 
-
 @Composable
 private fun CreatorItem(
     post: FanboxPostDetail,

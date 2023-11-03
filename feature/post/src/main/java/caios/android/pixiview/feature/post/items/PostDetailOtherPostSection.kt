@@ -109,7 +109,7 @@ private fun NextPostButton(
             verticalArrangement = Arrangement.spacedBy(
                 space = 8.dp,
                 alignment = Alignment.CenterVertically,
-            )
+            ),
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -161,7 +161,7 @@ private fun PreviousPostButton(
             verticalArrangement = Arrangement.spacedBy(
                 space = 8.dp,
                 alignment = Alignment.CenterVertically,
-            )
+            ),
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
