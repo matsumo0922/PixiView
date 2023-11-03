@@ -37,11 +37,11 @@ internal fun LibrarySupportedIdleSection(
             key = pagingAdapter.itemKey { it.id.value },
             contentType = pagingAdapter.itemContentType(),
         ) { index ->
-            pagingAdapter[index]?.let {
+            pagingAdapter[index]?.let { post ->
                 PostItem(
                     modifier = Modifier.fillMaxWidth(),
-                    post = it,
-                    onClickPost = onClickPost,
+                    post = post,
+                    onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
                     onClickPlanList = onClickPlanList,
                 )
             }

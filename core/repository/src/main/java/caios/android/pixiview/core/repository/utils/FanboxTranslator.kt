@@ -271,14 +271,14 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
         },
         nextPost = body.nextPost?.let {
             FanboxPostDetail.OtherPost(
-                id = it.id,
+                id = PostId(it.id),
                 title = it.title,
                 publishedDatetime = OffsetDateTime.parse(it.publishedDatetime),
             )
         },
         prevPost = body.prevPost?.let {
             FanboxPostDetail.OtherPost(
-                id = it.id,
+                id = PostId(it.id),
                 title = it.title,
                 publishedDatetime = OffsetDateTime.parse(it.publishedDatetime),
             )

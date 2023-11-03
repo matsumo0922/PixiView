@@ -8,13 +8,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
+import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.core.ui.component.CoordinatorScaffold
@@ -44,11 +42,14 @@ import caios.android.pixiview.core.ui.extensition.marquee
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
 import caios.android.pixiview.feature.post.items.PostDetailArticleHeader
+import caios.android.pixiview.feature.post.items.PostDetailBottomSection
 import caios.android.pixiview.feature.post.items.PostDetailCommentLikeButton
 import caios.android.pixiview.feature.post.items.PostDetailCommentSection
+import caios.android.pixiview.feature.post.items.PostDetailCreatorSection
 import caios.android.pixiview.feature.post.items.PostDetailDownloadSection
 import caios.android.pixiview.feature.post.items.PostDetailFileHeader
 import caios.android.pixiview.feature.post.items.PostDetailImageHeader
+import caios.android.pixiview.feature.post.items.PostDetailOtherPostSection
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.toImmutableList
@@ -80,6 +81,10 @@ internal fun PostDetailRoute(
             onClickImage = { },
             onClickFile = { },
             onClickDownloadImages = { },
+            onClickWebBrowser = { },
+            onClickShare = { },
+            onClickCreatorPosts = { _, _ -> },
+            onClickCreatorPlans = { },
             onTerminate = terminate,
         )
     }
@@ -92,6 +97,10 @@ private fun PostDetailScreen(
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
     onClickFile: (FanboxPostDetail.FileItem) -> Unit,
     onClickDownloadImages: (List<FanboxPostDetail.ImageItem>) -> Unit,
+    onClickWebBrowser: () -> Unit,
+    onClickShare: () -> Unit,
+    onClickCreatorPosts: (CreatorId, String) -> Unit,
+    onClickCreatorPlans: (CreatorId) -> Unit,
     onTerminate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -146,7 +155,7 @@ private fun PostDetailScreen(
                 TagItems(
                     modifier = Modifier.weight(1f),
                     tags = postDetail.tags.toImmutableList(),
-                    onClickTag = {},
+                    onClickTag = { onClickCreatorPosts.invoke(postDetail.user.creatorId, it) },
                 )
 
                 PostDetailCommentLikeButton(
@@ -156,21 +165,19 @@ private fun PostDetailScreen(
             }
         }
 
-        item {
-            HorizontalDivider()
-        }
-
-        item {
-            if (postDetail.isRestricted) {
+        if (postDetail.isRestricted) {
+            item {
                 RestrictCardItem(
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth(),
                     feeRequired = postDetail.feeRequired,
                     backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp),
-                    onClickPlanList = { },
+                    onClickPlanList = { onClickCreatorPlans.invoke(postDetail.user.creatorId) },
                 )
-            } else if (postDetail.body.imageItems.isNotEmpty()) {
+            }
+        } else if (postDetail.body.imageItems.isNotEmpty()) {
+            item {
                 PostDetailDownloadSection(
                     modifier = Modifier
                         .padding(16.dp)
@@ -182,22 +189,41 @@ private fun PostDetailScreen(
         }
 
         item {
-            PostDetailCommentSection(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
+            PostDetailCreatorSection(
+                modifier = Modifier.fillMaxWidth(),
                 post = postDetail,
+                onClickCreator = { onClickCreatorPosts.invoke(it, "") },
             )
         }
 
-        items(listOf(Color.Blue, Color.Red, Color.Yellow, Color.Cyan)) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(256.dp)
-                    .background(it),
+        if (postDetail.commentCount != 0) {
+            item {
+                PostDetailCommentSection(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    post = postDetail,
+                )
+            }
+        }
+
+        item {
+            PostDetailOtherPostSection(
+                modifier = Modifier.fillMaxWidth(),
+                nextPost = postDetail.nextPost,
+                previousPost = postDetail.prevPost,
+                onClickNextPost = onClickPost,
+                onClickPreviousPost = onClickPost,
             )
-            postDetail.user
+        }
+
+        item {
+            PostDetailBottomSection(
+                modifier = Modifier.fillMaxWidth(),
+                onClickWebBrowser = onClickWebBrowser,
+                onClickShare = onClickShare,
+                onClickPlans = { onClickCreatorPlans.invoke(postDetail.user.creatorId) },
+            )
         }
     }
 }
@@ -290,6 +316,7 @@ private fun PostDetailContent(
                     onClickFile = onClickFile,
                 )
             }
+
             is FanboxPostDetail.Body.Image -> {
                 PostDetailImageHeader(
                     modifier = Modifier.fillMaxWidth(),
@@ -297,6 +324,7 @@ private fun PostDetailContent(
                     onClickImage = onClickImage,
                 )
             }
+
             is FanboxPostDetail.Body.File -> {
                 PostDetailFileHeader(
                     modifier = Modifier.fillMaxWidth(),
@@ -304,6 +332,7 @@ private fun PostDetailContent(
                     onClickFile = onClickFile,
                 )
             }
+
             is FanboxPostDetail.Body.Unknown -> {
                 // do nothing
             }

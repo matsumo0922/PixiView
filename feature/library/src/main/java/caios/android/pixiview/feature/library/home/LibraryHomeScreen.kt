@@ -114,7 +114,9 @@ internal fun LibraryHomeScreen(
             }
 
             LazyPagingItemsLoadSurface(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
                 lazyPagingItems = homePager,
             ) {
                 HorizontalPager(pagerState) {

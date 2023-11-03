@@ -85,7 +85,7 @@ data class FanboxPostDetail(
     }
 
     data class OtherPost(
-        val id: String,
+        val id: PostId,
         val title: String,
         val publishedDatetime: OffsetDateTime,
     )

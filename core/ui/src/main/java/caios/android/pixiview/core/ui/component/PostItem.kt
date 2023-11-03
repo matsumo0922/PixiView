@@ -282,7 +282,7 @@ private fun CommentLikeButton(
         Row(
             modifier = Modifier
                 .border(
-                    width = 1.dp,
+                    width = 0.5.dp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     shape = RoundedCornerShape(50),
                 )
@@ -307,7 +307,7 @@ private fun CommentLikeButton(
         Row(
             modifier = Modifier
                 .border(
-                    width = 1.dp,
+                    width = 0.5.dp,
                     color = likeColor,
                     shape = RoundedCornerShape(50),
                 )
