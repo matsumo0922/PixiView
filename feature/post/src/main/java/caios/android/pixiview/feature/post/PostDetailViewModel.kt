@@ -3,10 +3,8 @@ package caios.android.pixiview.feature.post
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.ScreenState
-import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.FanboxRepository
@@ -19,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PostDetailViewModel @Inject constructor(
     private val fanboxRepository: FanboxRepository,
-): ViewModel() {
+) : ViewModel() {
 
     private val _screenState = MutableStateFlow<ScreenState<PostDetailUiState>>(ScreenState.Loading)
 
@@ -32,7 +30,7 @@ class PostDetailViewModel @Inject constructor(
                 fanboxRepository.getPost(postId)
             }.fold(
                 onSuccess = { ScreenState.Idle(PostDetailUiState(it)) },
-                onFailure = { ScreenState.Error(R.string.error_network) }
+                onFailure = { ScreenState.Error(R.string.error_network) },
             )
         }
     }

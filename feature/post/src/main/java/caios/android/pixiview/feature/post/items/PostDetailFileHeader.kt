@@ -27,7 +27,7 @@ internal fun PostDetailFileHeader(
 
         if (content.text.isNotBlank()) {
             Text(
-                modifier = modifier.padding(16.dp),
+                modifier = Modifier.padding(16.dp),
                 text = content.text,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,

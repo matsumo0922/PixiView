@@ -15,11 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TagItems(
-    tags: List<String>,
+    tags: ImmutableList<String>,
     onClickTag: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -51,7 +53,7 @@ private fun TagItem(
                 width = 0.5.dp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(4.dp),
-            )
+            ),
     ) {
         Text(
             modifier = Modifier.padding(8.dp, 4.dp),
@@ -66,7 +68,7 @@ private fun TagItem(
 @Composable
 private fun TagItemsPreview() {
     TagItems(
-        tags = listOf("たこ焼き", "秋刀魚", "メガネ", "ゲーミングPC", "机", "コーヒー", "Nintendo Switch", "ティッシュ", "食洗機"),
+        tags = persistentListOf("たこ焼き", "秋刀魚", "メガネ", "ゲーミングPC", "机", "コーヒー", "Nintendo Switch", "ティッシュ", "食洗機"),
         onClickTag = {},
     )
 }

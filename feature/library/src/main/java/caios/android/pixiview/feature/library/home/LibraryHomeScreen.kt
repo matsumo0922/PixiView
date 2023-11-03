@@ -45,10 +45,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun LibraryHomeScreen(
-    modifier: Modifier = Modifier,
     openDrawer: () -> Unit,
     navigateToPostDetail: (PostId) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: LibraryHomeViewModel = hiltViewModel(),
 ) {
     val homeUiState by viewModel.homeScreenState.collectAsStateWithLifecycle()
@@ -93,9 +93,9 @@ internal fun LibraryHomeScreen(
                 ),
             )
         },
-        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->
-        Column(modifier.padding(padding)) {
+        Column(Modifier.padding(padding)) {
             PrimaryTabRow(
                 modifier = Modifier.fillMaxWidth(),
                 selectedTabIndex = pagerState.currentPage,
@@ -114,7 +114,7 @@ internal fun LibraryHomeScreen(
             }
 
             LazyPagingItemsLoadSurface(
-                modifier = modifier.weight(1f),
+                modifier = Modifier.weight(1f),
                 lazyPagingItems = homePager,
             ) {
                 HorizontalPager(pagerState) {

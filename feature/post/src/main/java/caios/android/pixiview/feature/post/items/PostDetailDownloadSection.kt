@@ -45,7 +45,7 @@ internal fun PostDetailDownloadSection(
             verticalArrangement = Arrangement.spacedBy(
                 space = 16.dp,
                 alignment = Alignment.CenterVertically,
-            )
+            ),
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),

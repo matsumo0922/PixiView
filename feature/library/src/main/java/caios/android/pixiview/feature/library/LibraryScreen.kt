@@ -57,7 +57,7 @@ fun LibraryScreen(
                     navigateToDestination = navController::navigateToLibrary,
                 )
             },
-            contentWindowInsets = WindowInsets(0, 0, 0, 0)
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
         ) {
             LibraryNavHost(
                 modifier = Modifier.padding(it),

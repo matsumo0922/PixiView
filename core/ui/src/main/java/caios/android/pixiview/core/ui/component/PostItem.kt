@@ -63,7 +63,7 @@ fun PostItem(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             when {
-                post.isRestricted ->{
+                post.isRestricted -> {
                     RestrictThumbnail(
                         modifier = Modifier
                             .fillMaxWidth()

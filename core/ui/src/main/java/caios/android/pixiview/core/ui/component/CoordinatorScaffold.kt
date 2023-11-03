@@ -141,7 +141,7 @@ private fun CoordinatorToolBar(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = null,
                 )
-            }
+            },
         )
     }
 }
@@ -156,7 +156,7 @@ private fun CoordinatorScaffoldPreview() {
                 modifier = it
                     .fillMaxWidth()
                     .height(512.dp)
-                    .background(Color.Green)
+                    .background(Color.Green),
             )
         },
         content = {
@@ -165,7 +165,7 @@ private fun CoordinatorScaffoldPreview() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(256.dp)
-                        .background(it)
+                        .background(it),
                 )
             }
         },

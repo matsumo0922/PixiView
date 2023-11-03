@@ -51,14 +51,15 @@ import caios.android.pixiview.feature.post.items.PostDetailFileHeader
 import caios.android.pixiview.feature.post.items.PostDetailImageHeader
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import kotlinx.collections.immutable.toImmutableList
 import java.time.format.DateTimeFormatter
 
 @Composable
 internal fun PostDetailRoute(
     postId: PostId,
-    modifier: Modifier = Modifier,
     navigateToPostDetail: (PostId) -> Unit,
     terminate: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: PostDetailViewModel = hiltViewModel(),
 ) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
@@ -120,7 +121,7 @@ private fun PostDetailScreen(
                     post = postDetail,
                 )
             }
-        }
+        },
     ) {
         if (isShowCoordinateHeader) {
             item {
@@ -144,7 +145,7 @@ private fun PostDetailScreen(
             ) {
                 TagItems(
                     modifier = Modifier.weight(1f),
-                    tags = postDetail.tags,
+                    tags = postDetail.tags.toImmutableList(),
                     onClickTag = {},
                 )
 
@@ -194,7 +195,7 @@ private fun PostDetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(256.dp)
-                    .background(it)
+                    .background(it),
             )
             postDetail.user
         }

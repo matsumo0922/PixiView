@@ -152,7 +152,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                                         originalUrl = image.originalUrl,
                                         thumbnailUrl = image.thumbnailUrl,
                                         aspectRatio = image.width.toFloat() / image.height.toFloat(),
-                                    )
+                                    ),
                                 )
                             }
                         }
@@ -165,7 +165,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                                         name = file.name,
                                         size = file.size,
                                         url = file.url,
-                                    )
+                                    ),
                                 )
                             }
                         }

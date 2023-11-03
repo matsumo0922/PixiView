@@ -46,7 +46,7 @@ internal fun PostDetailFileItem(
             verticalArrangement = Arrangement.spacedBy(
                 space = 16.dp,
                 alignment = Alignment.CenterVertically,
-            )
+            ),
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
