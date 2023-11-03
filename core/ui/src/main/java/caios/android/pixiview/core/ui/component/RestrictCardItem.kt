@@ -14,6 +14,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +28,7 @@ fun RestrictCardItem(
     feeRequired: Int,
     onClickPlanList: () -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp),
 ) {
     Card(
         modifier = modifier,
@@ -37,7 +38,7 @@ fun RestrictCardItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp, 8.dp),
+                .padding(16.dp, 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {

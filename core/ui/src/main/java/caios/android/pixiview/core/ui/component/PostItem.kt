@@ -13,9 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Comment
+import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -37,6 +37,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.R
+import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
 import coil.compose.AsyncImage
@@ -61,25 +62,36 @@ fun PostItem(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            if (post.isRestricted) {
-                RestrictThumbnail(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16f / 9),
-                    feeRequired = post.feeRequired,
-                )
-            } else {
-                AsyncImage(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16f / 9),
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(post.cover?.url)
-                        .crossfade(true)
-                        .build(),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null,
-                )
+            when {
+                post.isRestricted ->{
+                    RestrictThumbnail(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9),
+                        feeRequired = post.feeRequired,
+                    )
+                }
+                post.cover == null -> {
+                    FileThumbnail(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9),
+                    )
+                }
+                else -> {
+                    AsyncImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9),
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .fanboxHeader()
+                            .data(post.cover?.url)
+                            .crossfade(true)
+                            .build(),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null,
+                    )
+                }
             }
 
             UserSection(
@@ -109,20 +121,23 @@ fun PostItem(
                             bottom = 16.dp,
                         )
                         .fillMaxWidth(),
+                    backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
                     feeRequired = post.feeRequired,
                     onClickPlanList = { onClickPlanList.invoke(post.user.creatorId) },
                 )
             } else {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
-                    text = post.excerpt,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                if (post.excerpt.isNotBlank()) {
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth(),
+                        text = post.excerpt,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
 
                 CommentLikeButton(
                     modifier = Modifier
@@ -156,6 +171,7 @@ private fun UserSection(
                 .size(32.dp)
                 .clip(RoundedCornerShape(50)),
             model = ImageRequest.Builder(LocalContext.current)
+                .error(R.drawable.im_default_user)
                 .data(post.user.iconUrl)
                 .crossfade(true)
                 .build(),
@@ -222,6 +238,29 @@ private fun RestrictThumbnail(
             text = stringResource(R.string.error_restricted_post, feeRequired),
             style = MaterialTheme.typography.bodySmall.center(),
             color = Color.White,
+        )
+    }
+}
+
+@Composable
+private fun FileThumbnail(
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .background(Color.DarkGray)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(
+            space = 16.dp,
+            alignment = Alignment.CenterVertically,
+        ),
+    ) {
+        Icon(
+            modifier = Modifier.size(48.dp),
+            imageVector = Icons.AutoMirrored.Filled.InsertDriveFile,
+            tint = Color.White,
+            contentDescription = null,
         )
     }
 }

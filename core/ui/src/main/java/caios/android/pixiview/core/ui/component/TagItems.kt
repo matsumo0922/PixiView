@@ -24,7 +24,7 @@ fun TagItems(
     modifier: Modifier = Modifier,
 ) {
     FlowRow(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         for (tag in tags) {

@@ -32,6 +32,10 @@
     <string name="error_billing">購入情報を取得できませんでした</string>
     <string name="error_restricted_post">月額%,d円以上支援すると見ることができます</string>
 
+    <!-- Common Unit -->
+    <string name="unit_day_before">%1$d日前</string>
+    <string name="unit_favorite">%1$dいいね</string>
+
     <!-- Library -->
     <string name="library_navigation_home">ホーム</string>
     <string name="library_navigation_discovery">検索</string>
@@ -51,6 +55,7 @@
     <!-- PostDetail -->
     <string name="post_detail_title">投稿詳細</string>
     <string name="post_detail_download_images">画像を全てダウンロード (%1$d枚)</string>
+    <string name="post_detail_comment_title">コメント</string>
 
     <!-- Report -->
     <string name="report_crush_title">Oops! Something went wrong</string>

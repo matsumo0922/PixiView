@@ -27,7 +27,9 @@ package caios.android.pixiview.core.ui.extensition
 import android.view.ViewConfiguration
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
@@ -51,8 +53,13 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -248,6 +255,33 @@ private fun Modifier.drawScrollbar(
             drawContent()
             onDraw(reverseDirection, atEnd, color, alpha::value)
         }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+fun Modifier.marquee(): Modifier {
+    return this
+        .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+        .drawWithContent {
+            drawContent()
+            drawFadedEdge(leftEdge = true)
+            drawFadedEdge(leftEdge = false)
+        }
+        .basicMarquee(Int.MAX_VALUE)
+        .padding(horizontal = 8.dp)
+}
+
+fun ContentDrawScope.drawFadedEdge(leftEdge: Boolean) {
+    val edgeWidthPx = 8.dp.toPx()
+    drawRect(
+        topLeft = Offset(if (leftEdge) 0f else size.width - edgeWidthPx, 0f),
+        size = Size(edgeWidthPx, size.height),
+        brush = Brush.horizontalGradient(
+            colors = listOf(Color.Transparent, Color.Black),
+            startX = if (leftEdge) 0f else size.width,
+            endX = if (leftEdge) edgeWidthPx else size.width - edgeWidthPx,
+        ),
+        blendMode = BlendMode.DstIn,
+    )
 }
 
 private val BarColor: Color

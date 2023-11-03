@@ -4,9 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,11 +25,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -40,21 +35,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.ui.theme.applyTonalElevation
-import caios.android.pixiview.core.ui.theme.bold
-import caios.android.pixiview.core.ui.theme.center
-import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -70,41 +57,39 @@ fun CoordinatorScaffold(
     var appBarAlpha by remember { mutableFloatStateOf(0f) }
     var topSectionHeight by remember { mutableIntStateOf(100) }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color),
-        state = listState,
-    ) {
-        stickyHeader {
-            CoordinatorToolBar(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.applyTonalElevation(
-                    backgroundColor = MaterialTheme.colorScheme.surface,
-                    elevation = 3.dp,
-                ),
-                backgroundAlpha = appBarAlpha,
-                onClickNavigateUp = onClickNavigateUp,
-                onClickMenu = onClickMenu,
-            )
+    Box(modifier.background(color)) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            state = listState,
+        ) {
+            item {
+                header.invoke(
+                    Modifier
+                        .fillMaxWidth()
+                        .onGloballyPositioned { topSectionHeight = it.size.height },
+                )
+            }
+
+            content(this)
         }
 
-        item {
-            header.invoke(
-                Modifier
-                    .fillMaxWidth()
-                    .onGloballyPositioned { topSectionHeight = it.size.height },
-            )
-        }
-
-        content(this)
+        CoordinatorToolBar(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.applyTonalElevation(
+                backgroundColor = MaterialTheme.colorScheme.surface,
+                elevation = 3.dp,
+            ),
+            backgroundAlpha = appBarAlpha,
+            onClickNavigateUp = onClickNavigateUp,
+            onClickMenu = onClickMenu,
+        )
     }
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo }.collect {
             val index = listState.firstVisibleItemIndex
             val disableArea = topSectionHeight * 0.7f
-            val alpha = if (index <= 1) (listState.firstVisibleItemScrollOffset.toDouble() - disableArea) / (topSectionHeight - disableArea) else 1
+            val alpha = if (index == 0) (listState.firstVisibleItemScrollOffset.toDouble() - disableArea) / (topSectionHeight - disableArea) else 1
 
             appBarAlpha = (alpha.toFloat() * 2).coerceIn(0f..1f)
         }
