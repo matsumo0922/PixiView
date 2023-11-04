@@ -1,8 +1,12 @@
 package caios.android.pixiview
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -13,24 +17,53 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import caios.android.pixiview.core.common.util.ToastUtil
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.ThemeConfig
+import caios.android.pixiview.core.model.contract.PostDownloader
+import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.core.ui.theme.PixiViewTheme
+import caios.android.pixiview.feature.post.service.PostDownloadService
 import caios.android.pixiview.ui.PixiViewApp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), PostDownloader {
 
     private val viewModel by viewModels<MainViewModel>()
+
+    private lateinit var postDownloadService: PostDownloadService
+    private var isPostDownloadServiceBound = false
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            postDownloadService = (service as PostDownloadService.PostDownloadBinder).getService()
+            isPostDownloadServiceBound = true
+
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    postDownloadService.downloadedEvent.collect { _ ->
+                        ToastUtil.show(this@MainActivity, R.string.common_downloaded)
+                    }
+                }
+            }
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isPostDownloadServiceBound = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -79,6 +112,37 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        Intent(this, PostDownloadService::class.java).also { intent ->
+            bindService(intent, serviceConnection, BIND_AUTO_CREATE)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        unbindService(serviceConnection)
+        isPostDownloadServiceBound = false
+    }
+
+    override fun onDownloadImages(imageItems: List<FanboxPostDetail.ImageItem>) {
+        if (isPostDownloadServiceBound) {
+            postDownloadService.downloadImages(imageItems)
+        } else {
+            ToastUtil.show(this, R.string.error_unknown)
+        }
+    }
+
+    override fun onDownloadFile(fileItem: FanboxPostDetail.FileItem) {
+        if (isPostDownloadServiceBound) {
+            postDownloadService.downloadFile(fileItem)
+        } else {
+            ToastUtil.show(this, R.string.error_unknown)
         }
     }
 

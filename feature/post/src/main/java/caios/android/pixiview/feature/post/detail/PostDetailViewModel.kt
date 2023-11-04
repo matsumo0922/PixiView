@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.post
+package caios.android.pixiview.feature.post.detail
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -8,6 +8,7 @@ import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.FanboxRepository
+import caios.android.pixiview.feature.post.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,4 +40,5 @@ class PostDetailViewModel @Inject constructor(
 @Stable
 data class PostDetailUiState(
     val postDetail: FanboxPostDetail,
+    val messageToast: Int? = null,
 )

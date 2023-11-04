@@ -298,7 +298,6 @@ ui-implementation = [
     "google-material",
     "coil-compose",
     "coil-gif",
-    "unifile"
 ]
 
 ui-kapt = [

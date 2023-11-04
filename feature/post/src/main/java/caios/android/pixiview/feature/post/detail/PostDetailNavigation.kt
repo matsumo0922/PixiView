@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.post
+package caios.android.pixiview.feature.post.detail
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier

@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.post
+package caios.android.pixiview.feature.post.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +29,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import caios.android.pixiview.core.common.util.ToastUtil
+import caios.android.pixiview.core.model.contract.PostDownloader
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
@@ -41,15 +43,15 @@ import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.core.ui.extensition.marquee
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
-import caios.android.pixiview.feature.post.items.PostDetailArticleHeader
-import caios.android.pixiview.feature.post.items.PostDetailBottomSection
-import caios.android.pixiview.feature.post.items.PostDetailCommentLikeButton
-import caios.android.pixiview.feature.post.items.PostDetailCommentSection
-import caios.android.pixiview.feature.post.items.PostDetailCreatorSection
-import caios.android.pixiview.feature.post.items.PostDetailDownloadSection
-import caios.android.pixiview.feature.post.items.PostDetailFileHeader
-import caios.android.pixiview.feature.post.items.PostDetailImageHeader
-import caios.android.pixiview.feature.post.items.PostDetailOtherPostSection
+import caios.android.pixiview.feature.post.detail.items.PostDetailArticleHeader
+import caios.android.pixiview.feature.post.detail.items.PostDetailBottomSection
+import caios.android.pixiview.feature.post.detail.items.PostDetailCommentLikeButton
+import caios.android.pixiview.feature.post.detail.items.PostDetailCommentSection
+import caios.android.pixiview.feature.post.detail.items.PostDetailCreatorSection
+import caios.android.pixiview.feature.post.detail.items.PostDetailDownloadSection
+import caios.android.pixiview.feature.post.detail.items.PostDetailFileHeader
+import caios.android.pixiview.feature.post.detail.items.PostDetailImageHeader
+import caios.android.pixiview.feature.post.detail.items.PostDetailOtherPostSection
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.toImmutableList
@@ -63,6 +65,8 @@ internal fun PostDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: PostDetailViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    val postDownloader = context as PostDownloader
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     LaunchedEffect(postId) {
@@ -73,20 +77,24 @@ internal fun PostDetailRoute(
         modifier = modifier,
         screenState = screenState,
         retryAction = { viewModel.fetch(postId) },
-    ) {
+    ) { uiState ->
         PostDetailScreen(
             modifier = Modifier.fillMaxSize(),
-            postDetail = it.postDetail,
+            postDetail = uiState.postDetail,
             onClickPost = navigateToPostDetail,
             onClickImage = { },
-            onClickFile = { },
-            onClickDownloadImages = { },
+            onClickFile = postDownloader::onDownloadFile,
+            onClickDownloadImages = postDownloader::onDownloadImages,
             onClickWebBrowser = { },
             onClickShare = { },
             onClickCreatorPosts = { _, _ -> },
             onClickCreatorPlans = { },
             onTerminate = terminate,
         )
+
+        LaunchedEffect(uiState.messageToast) {
+            uiState.messageToast?.let { ToastUtil.show(context, it) }
+        }
     }
 }
 

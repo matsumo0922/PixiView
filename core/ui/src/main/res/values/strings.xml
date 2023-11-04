@@ -22,6 +22,7 @@
     <string name="common_details">詳細</string>
     <string name="common_delete">削除</string>
     <string name="common_download">ダウンロード</string>
+    <string name="common_downloaded">ダウンロードしました</string>
 
     <!-- Common Error -->
     <string name="error_executed">エラーが発生しました</string>
@@ -35,6 +36,10 @@
     <!-- Common Unit -->
     <string name="unit_day_before">%1$d日前</string>
     <string name="unit_favorite">%1$dいいね</string>
+
+    <!-- Notify -->
+    <string name="notify_download_channel_name">ダウンロード</string>
+    <string name="notify_download_channel_description">ダウンロードの進捗状況を通知します</string>
 
     <!-- Library -->
     <string name="library_navigation_home">ホーム</string>
@@ -59,6 +64,7 @@
     <string name="post_detail_comment_title">コメント</string>
     <string name="post_detail_oldest_post">前の投稿はありません</string>
     <string name="post_detail_newest_post">次の投稿はありません</string>
+    <string name="post_detail_downloading">ダウンロード中…</string>
 
     <!-- Report -->
     <string name="report_crush_title">Oops! Something went wrong</string>

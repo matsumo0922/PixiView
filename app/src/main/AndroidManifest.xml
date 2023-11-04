@@ -60,6 +60,10 @@
             android:exported="false"
             android:theme="@style/Theme.PixiView" />
 
+        <service
+            android:name=".feature.post.service.PostDownloadService"
+            android:foregroundServiceType="dataSync" />
+
     </application>
 
 </manifest>

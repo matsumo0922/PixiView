@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.post.items
+package caios.android.pixiview.feature.post.detail.items
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

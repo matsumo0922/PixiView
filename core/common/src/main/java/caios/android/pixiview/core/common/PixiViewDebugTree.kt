@@ -7,7 +7,7 @@ import java.util.Locale
 class PixiViewDebugTree : Timber.DebugTree() {
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-        Log.println(priority, "PixiviewLog", "$message ${getCallerInfo()}")
+        Log.println(priority, "PixiViewLog", "$message ${getCallerInfo()}")
     }
 
     @Suppress("ThrowingExceptionsWithoutMessageOrCause")

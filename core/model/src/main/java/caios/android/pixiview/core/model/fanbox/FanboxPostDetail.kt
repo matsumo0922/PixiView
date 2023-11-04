@@ -91,6 +91,8 @@ data class FanboxPostDetail(
     )
 
     data class ImageItem(
+        val id: String,
+        val postId: PostId,
         val extension: String,
         val originalUrl: String,
         val thumbnailUrl: String,
@@ -98,6 +100,8 @@ data class FanboxPostDetail(
     )
 
     data class FileItem(
+        val id: String,
+        val postId: PostId,
         val name: String,
         val extension: String,
         val size: Long,

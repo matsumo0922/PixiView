@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.post.items
+package caios.android.pixiview.feature.post.detail.items
 
 import android.os.Build
 import androidx.compose.foundation.clickable

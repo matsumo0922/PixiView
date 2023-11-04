@@ -1,5 +1,9 @@
 package caios.android.pixiview.core.repository
 
+import android.content.Context
+import android.media.MediaScannerConnection
+import android.os.Environment
+import android.webkit.MimeTypeMap
 import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
 import caios.android.pixiview.core.model.PageInfo
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
@@ -24,12 +28,18 @@ import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.utils.parse
 import caios.android.pixiview.core.repository.utils.translate
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsChannel
+import io.ktor.http.HttpMessageBuilder
+import io.ktor.util.cio.writeChannel
+import io.ktor.utils.io.ByteWriteChannel
+import io.ktor.utils.io.copyAndClose
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharedFlow
@@ -63,9 +73,13 @@ interface FanboxRepository {
     suspend fun getUnpaidRecords(): List<FanboxPaidRecord>
 
     suspend fun getNewsLetters(): List<FanboxNewsLetter>?
+
+    suspend fun downloadImage(url: String, name: String, extension: String)
+    suspend fun downloadFile(url: String, name: String, extension: String)
 }
 
 class FanboxRepositoryImpl(
+    private val context: Context,
     private val client: HttpClient,
     private val fanboxCookiePreference: PreferenceFanboxCookie,
     private val ioDispatcher: CoroutineDispatcher,
@@ -75,9 +89,11 @@ class FanboxRepositoryImpl(
 
     @Inject
     constructor(
+        @ApplicationContext context: Context,
         client: HttpClient,
         fanboxCookiePreference: PreferenceFanboxCookie,
     ) : this(
+        context = context,
         client = client,
         fanboxCookiePreference = fanboxCookiePreference,
         ioDispatcher = Dispatchers.IO,
@@ -175,19 +191,61 @@ class FanboxRepositoryImpl(
         get("newsletter.list").parse<FanboxNewsLattersEntity>()?.translate()
     }
 
+    override suspend fun downloadImage(url: String, name: String, extension: String) = withContext(ioDispatcher) {
+        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        val pictureFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val pixiViewFile = pictureFile.resolve("PixiView")
+
+        if (!pixiViewFile.exists()) {
+            pixiViewFile.mkdirs()
+        }
+
+        val itemFile = pixiViewFile.resolve("$name.$extension")
+
+        download(url, itemFile.writeChannel())
+        MediaScannerConnection.scanFile(context, arrayOf(itemFile.absolutePath), arrayOf(mime), null)
+    }
+
+    override suspend fun downloadFile(url: String, name: String, extension: String) = withContext(ioDispatcher) {
+        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        val pictureFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val pixiViewFile = pictureFile.resolve("PixiView")
+
+        if (!pixiViewFile.exists()) {
+            pixiViewFile.mkdirs()
+        }
+
+        val itemFile = pixiViewFile.resolve("$name.$extension")
+
+        download(url, itemFile.writeChannel())
+        MediaScannerConnection.scanFile(context, arrayOf(itemFile.absolutePath), arrayOf(mime), null)
+    }
+
     private suspend fun get(dir: String, parameters: Map<String, String> = emptyMap()): HttpResponse {
         return client.get {
             url("$API/$dir")
+            fanboxHeader()
 
             for ((key, value) in parameters) {
                 parameter(key, value)
             }
-
-            header("origin", "https://www.fanbox.cc")
-            header("referer", "https://www.fanbox.cc")
-            header("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36")
-            header("Cookie", cookie.first())
         }
+    }
+
+    private suspend fun download(url: String, writeChannel: ByteWriteChannel) {
+        client.get {
+            url(url)
+            fanboxHeader()
+        }
+            .bodyAsChannel()
+            .copyAndClose(writeChannel)
+    }
+
+    private suspend fun HttpMessageBuilder.fanboxHeader() {
+        header("origin", "https://www.fanbox.cc")
+        header("referer", "https://www.fanbox.cc")
+        header("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36")
+        header("Cookie", cookie.first())
     }
 
     companion object {

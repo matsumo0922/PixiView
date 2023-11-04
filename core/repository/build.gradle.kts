@@ -1,22 +1,11 @@
 plugins {
     id("pixiview.library")
-    id("pixiview.library.chaquopy")
     id("pixiview.detekt")
     id("pixiview.hilt")
 }
 
 android {
     namespace = "caios.android.pixiview.core.repository"
-}
-
-chaquopy {
-    defaultConfig {
-        version = "3.8"
-
-        pip {
-            install("pixivpy3")
-        }
-    }
 }
 
 dependencies {
@@ -26,4 +15,5 @@ dependencies {
 
     implementation(libs.bundles.ktor)
     implementation(libs.jsoup)
+    implementation(libs.unifile)
 }

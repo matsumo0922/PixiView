@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import caios.android.pixiview.feature.library.LibraryRoute
 import caios.android.pixiview.feature.library.libraryScreen
-import caios.android.pixiview.feature.post.navigateToPostDetail
-import caios.android.pixiview.feature.post.postDetailScreen
+import caios.android.pixiview.feature.post.detail.navigateToPostDetail
+import caios.android.pixiview.feature.post.detail.postDetailScreen
 
 @Composable
 internal fun PixiViewNavHost(

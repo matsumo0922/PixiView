@@ -12,3 +12,7 @@ sealed class ScreenState<out T> {
         var data: T,
     ) : ScreenState<T>()
 }
+
+fun <T> ScreenState<T>.changeContent(action: (T) -> T): ScreenState<T> {
+    return if (this is ScreenState.Idle) ScreenState.Idle(action(data)) else this
+}

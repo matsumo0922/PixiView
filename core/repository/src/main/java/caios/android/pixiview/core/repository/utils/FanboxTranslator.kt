@@ -148,6 +148,8 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                             images[it.imageId!!]?.let { image ->
                                 FanboxPostDetail.Body.Article.Block.Image(
                                     FanboxPostDetail.ImageItem(
+                                        id = image.id,
+                                        postId = PostId(body.id),
                                         extension = image.extension,
                                         originalUrl = image.originalUrl,
                                         thumbnailUrl = image.thumbnailUrl,
@@ -161,6 +163,8 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                             files[it.fileId!!]?.let { file ->
                                 FanboxPostDetail.Body.Article.Block.File(
                                     FanboxPostDetail.FileItem(
+                                        id = file.id,
+                                        postId = PostId(body.id),
                                         extension = file.extension,
                                         name = file.name,
                                         size = file.size,
@@ -180,7 +184,7 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                         }
 
                         else -> {
-                            Timber.d("FanboxPostDetailEntity translate error: Unknown block type. $it")
+                            Timber.w("FanboxPostDetailEntity translate error: Unknown block type. $it")
                             null
                         }
                     }
@@ -197,6 +201,8 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                 text = body.body?.text.orEmpty(),
                 images = blocks.map {
                     FanboxPostDetail.ImageItem(
+                        id = it.id,
+                        postId = PostId(body.id),
                         extension = it.extension,
                         originalUrl = it.originalUrl,
                         thumbnailUrl = it.thumbnailUrl,
@@ -215,6 +221,8 @@ internal fun FanboxPostDetailEntity.translate(): FanboxPostDetail {
                 text = body.body?.text.orEmpty(),
                 files = blocks.map {
                     FanboxPostDetail.FileItem(
+                        id = it.id,
+                        postId = PostId(body.id),
                         name = it.name,
                         extension = it.extension,
                         size = it.size,
