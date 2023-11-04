@@ -68,7 +68,7 @@ class PostDownloadService : Service() {
 
             val name = "file-${fileItem.postId}-${fileItem.id}"
 
-            setForegroundService(true, "${name}.${fileItem.extension}")
+            setForegroundService(true, "$name.${fileItem.extension}")
 
             fanboxRepository.downloadFile(
                 url = fileItem.url,
