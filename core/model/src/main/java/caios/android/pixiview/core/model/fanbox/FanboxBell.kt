@@ -15,7 +15,7 @@ sealed interface FanboxBell {
         val postTitle: String,
         val userName: String,
         val userProfileIconUrl: String,
-    ): FanboxBell
+    ) : FanboxBell
 
     data class Like(
         val id: String,
@@ -24,11 +24,11 @@ sealed interface FanboxBell {
         val creatorId: CreatorId,
         val postId: PostId,
         val count: Int,
-    ): FanboxBell
+    ) : FanboxBell
 
     data class PostPublished(
         val id: PostId,
         val notifiedDatetime: String,
         val post: FanboxPost,
-    ): FanboxBell
+    ) : FanboxBell
 }

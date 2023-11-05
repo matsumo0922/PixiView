@@ -411,7 +411,7 @@ internal fun FanboxBellItemsEntity.translate(): List<FanboxBell> {
                 FanboxBell.PostPublished(
                     id = PostId(it.post!!.id),
                     notifiedDatetime = it.notifiedDatetime,
-                    post = it.post!!.translate()
+                    post = it.post!!.translate(),
                 )
             }
             "post_comment" -> {

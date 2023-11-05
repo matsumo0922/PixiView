@@ -1,20 +1,19 @@
 package caios.android.pixiview.core.model.fanbox.entity
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class FanboxBellItemsEntity(
     @SerialName("body")
-    val body: Body
+    val body: Body,
 ) {
     @Serializable
     data class Body(
         @SerialName("items")
         val items: List<Item>,
         @SerialName("nextUrl")
-        val nextUrl: String
+        val nextUrl: String,
     ) {
         @Serializable
         data class Item(
@@ -45,7 +44,7 @@ data class FanboxBellItemsEntity(
             @SerialName("userName")
             val userName: String?,
             @SerialName("userProfileImg")
-            val userProfileImg: String?
+            val userProfileImg: String?,
         )
     }
 }
