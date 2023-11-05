@@ -6,6 +6,7 @@ import android.os.Environment
 import android.webkit.MimeTypeMap
 import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
 import caios.android.pixiview.core.model.PageInfo
+import caios.android.pixiview.core.model.fanbox.FanboxBell
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlanDetail
@@ -15,6 +16,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxNewsLetter
 import caios.android.pixiview.core.model.fanbox.FanboxPaidRecord
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
+import caios.android.pixiview.core.model.fanbox.entity.FanboxBellItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlanEntity
@@ -72,7 +74,9 @@ interface FanboxRepository {
     suspend fun getPaidRecords(): List<FanboxPaidRecord>
     suspend fun getUnpaidRecords(): List<FanboxPaidRecord>
 
-    suspend fun getNewsLetters(): List<FanboxNewsLetter>?
+    suspend fun getNewsLetters(): List<FanboxNewsLetter>
+
+    suspend fun getBells(page: Int = 1): List<FanboxBell>
 
     suspend fun downloadImage(url: String, name: String, extension: String)
     suspend fun downloadFile(url: String, name: String, extension: String)
@@ -187,8 +191,18 @@ class FanboxRepositoryImpl(
         get("payment.listUnpaid").parse<FanboxPaidRecordEntity>()!!.translate()
     }
 
-    override suspend fun getNewsLetters(): List<FanboxNewsLetter>? = withContext(ioDispatcher) {
-        get("newsletter.list").parse<FanboxNewsLattersEntity>()?.translate()
+    override suspend fun getNewsLetters(): List<FanboxNewsLetter> = withContext(ioDispatcher) {
+        get("newsletter.list").parse<FanboxNewsLattersEntity>()!!.translate()
+    }
+
+    override suspend fun getBells(page: Int): List<FanboxBell> = withContext(ioDispatcher) {
+        buildMap {
+            put("page", page.toString())
+            put("skipConvertUnreadNotification", "0")
+            put("commentOnly", "0")
+        }.let {
+            get("bell.list", it).parse<FanboxBellItemsEntity>()!!.translate()
+        }
     }
 
     override suspend fun downloadImage(url: String, name: String, extension: String) = withContext(ioDispatcher) {

@@ -4,6 +4,7 @@ import android.webkit.CookieManager
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.repository.FanboxRepository
@@ -44,9 +45,11 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/").also {
-                fanboxRepository.updateCookie(it.orEmpty())
-                fanboxRepository.getNewsLetters().also { newsLetters ->
-                    isLoggedInFlow.emit(newsLetters != null)
+                suspendRunCatching {
+                    fanboxRepository.updateCookie(it.orEmpty())
+                    fanboxRepository.getNewsLetters()
+                }.isSuccess.also {
+                    isLoggedInFlow.emit(it)
                 }
             }
         }

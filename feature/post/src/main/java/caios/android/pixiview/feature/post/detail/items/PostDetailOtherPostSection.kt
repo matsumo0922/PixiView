@@ -129,7 +129,7 @@ private fun NextPostButton(
         }
 
         Icon(
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(20.dp),
             imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
             contentDescription = null,
         )
@@ -150,7 +150,7 @@ private fun PreviousPostButton(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(20.dp),
             imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
             contentDescription = null,
         )

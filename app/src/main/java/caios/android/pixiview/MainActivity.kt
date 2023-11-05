@@ -154,7 +154,6 @@ class MainActivity : ComponentActivity(), PostDownloader {
                 ThemeConfig.Dark -> true
                 else -> isSystemInDarkTheme()
             }
-
             else -> isSystemInDarkTheme()
         }
     }

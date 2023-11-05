@@ -3,6 +3,7 @@ package caios.android.pixiview.feature.welcome.login
 import android.webkit.CookieManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.repository.FanboxRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,9 +27,11 @@ class WelcomeLoginViewModel @Inject constructor(
     fun fetchLoggedIn() {
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/").also {
-                fanboxRepository.updateCookie(it.orEmpty())
-                fanboxRepository.getNewsLetters().also { newsLetters ->
-                    _isLoggedInFlow.emit(newsLetters != null)
+                suspendRunCatching {
+                    fanboxRepository.updateCookie(it.orEmpty())
+                    fanboxRepository.getNewsLetters()
+                }.isSuccess.also {
+                    _isLoggedInFlow.emit(it)
                 }
             }
         }

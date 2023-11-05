@@ -2,6 +2,7 @@ package caios.android.pixiview.core.repository.utils
 
 import androidx.core.net.toUri
 import caios.android.pixiview.core.model.PageInfo
+import caios.android.pixiview.core.model.fanbox.FanboxBell
 import caios.android.pixiview.core.model.fanbox.FanboxCover
 import caios.android.pixiview.core.model.fanbox.FanboxCreator
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
@@ -14,6 +15,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxPaidRecord
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.FanboxUser
+import caios.android.pixiview.core.model.fanbox.entity.FanboxBellItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlanEntity
@@ -23,6 +25,7 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxNewsLattersEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPaidRecordEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
+import caios.android.pixiview.core.model.fanbox.id.CommentId
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.NewsLetterId
 import caios.android.pixiview.core.model.fanbox.id.PlanId
@@ -398,6 +401,47 @@ internal fun FanboxNewsLattersEntity.translate(): List<FanboxNewsLetter> {
             id = NewsLetterId(it.id),
             isRead = it.isRead,
         )
+    }
+}
+
+internal fun FanboxBellItemsEntity.translate(): List<FanboxBell> {
+    return body.items.mapNotNull {
+        when (it.type) {
+            "on_post_published" -> {
+                FanboxBell.PostPublished(
+                    id = PostId(it.post!!.id),
+                    notifiedDatetime = it.notifiedDatetime,
+                    post = it.post!!.translate()
+                )
+            }
+            "post_comment" -> {
+                FanboxBell.Comment(
+                    id = CommentId(it.id),
+                    notifiedDatetime = it.notifiedDatetime,
+                    comment = it.postCommentBody!!,
+                    isRootComment = it.isRootComment!!,
+                    creatorId = CreatorId(it.creatorId!!),
+                    postId = PostId(it.postId!!),
+                    postTitle = it.postTitle!!,
+                    userName = it.userName!!,
+                    userProfileIconUrl = it.userProfileImg!!,
+                )
+            }
+            "post_comment_like" -> {
+                FanboxBell.Like(
+                    id = it.id,
+                    notifiedDatetime = it.notifiedDatetime,
+                    comment = it.postCommentBody!!,
+                    creatorId = CreatorId(it.creatorId!!),
+                    postId = PostId(it.postId!!),
+                    count = it.count!!,
+                )
+            }
+            else -> {
+                Timber.w("FanboxBellItemsEntity translate error: Unknown bell type. $it")
+                null
+            }
+        }
     }
 }
 
