@@ -61,6 +61,7 @@ import java.time.format.DateTimeFormatter
 internal fun PostDetailRoute(
     postId: PostId,
     navigateToPostDetail: (PostId) -> Unit,
+    navigateToCreatorTop: (CreatorId) -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PostDetailViewModel = hiltViewModel(),
@@ -88,7 +89,7 @@ internal fun PostDetailRoute(
             onClickWebBrowser = { },
             onClickShare = { },
             onClickCreatorPosts = { _, _ -> },
-            onClickCreatorPlans = { },
+            onClickCreatorPlans = navigateToCreatorTop,
             onTerminate = terminate,
         )
 

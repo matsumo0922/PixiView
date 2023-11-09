@@ -5,6 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import caios.android.pixiview.feature.creator.creatorTopScreen
+import caios.android.pixiview.feature.creator.navigateToCreatorTop
 import caios.android.pixiview.feature.library.LibraryRoute
 import caios.android.pixiview.feature.library.libraryScreen
 import caios.android.pixiview.feature.post.detail.navigateToPostDetail
@@ -28,6 +30,11 @@ internal fun PixiViewNavHost(
 
         postDetailScreen(
             navigateToPostDetail = { navController.navigateToPostDetail(it) },
+            navigateToCreatorTop = { navController.navigateToCreatorTop(it) },
+            terminate = { navController.popBackStack() },
+        )
+
+        creatorTopScreen(
             terminate = { navController.popBackStack() },
         )
     }
