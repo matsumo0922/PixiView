@@ -2,49 +2,37 @@ package caios.android.pixiview.feature.creator
 
 import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.ui.AsyncLoadContents
-import caios.android.pixiview.core.ui.component.CoordinatorScaffold
-import caios.android.pixiview.feature.creator.items.CreatorTopDescriptionSection
 import caios.android.pixiview.feature.creator.items.CreatorTopHeader
 import caios.android.pixiview.feature.creator.items.CreatorTopPlansScreen
-import caios.android.pixiview.feature.creator.items.CreatorTopPlansSection
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
@@ -72,7 +60,7 @@ internal fun CreatorTopRoute(
         CreatorTopScreen(
             modifier = Modifier.fillMaxSize(),
             creatorDetail = uiState.creatorDetail,
-            creatorPlans = uiState.creatorPlans,
+            creatorPlans = uiState.creatorPlans.toImmutableList(),
             onClickPlan = { context.startActivity(Intent(Intent.ACTION_VIEW, it.detailUri)) },
             onTerminate = terminate,
         )
@@ -83,7 +71,7 @@ internal fun CreatorTopRoute(
 @Composable
 private fun CreatorTopScreen(
     creatorDetail: FanboxCreatorDetail,
-    creatorPlans: List<FanboxCreatorPlan>,
+    creatorPlans: ImmutableList<FanboxCreatorPlan>,
     onClickPlan: (FanboxCreatorPlan) -> Unit,
     onTerminate: () -> Unit,
     modifier: Modifier = Modifier,
@@ -104,7 +92,7 @@ private fun CreatorTopScreen(
             Spacer(
                 modifier = Modifier
                     .statusBarsPadding()
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             )
 
             CreatorTopHeader(
@@ -142,7 +130,6 @@ private fun CreatorTopScreen(
             HorizontalPager(pagerState) {
                 when (tabs[it]) {
                     CreatorTab.POSTS -> {
-
                     }
 
                     CreatorTab.PLANS -> {

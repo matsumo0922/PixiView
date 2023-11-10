@@ -7,5 +7,4 @@ import androidx.compose.ui.Modifier
 internal fun CreatorTopPostsSection(
     modifier: Modifier = Modifier,
 ) {
-
 }

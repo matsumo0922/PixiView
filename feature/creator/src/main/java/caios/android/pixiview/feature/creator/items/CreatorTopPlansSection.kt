@@ -20,27 +20,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
-import caios.android.pixiview.core.ui.R
 import caios.android.pixiview.core.ui.extensition.SimmerPlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.core.ui.theme.bold
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun CreatorTopPlansSection(
-    creatorPlans: List<FanboxCreatorPlan>,
+    creatorPlans: ImmutableList<FanboxCreatorPlan>,
     onClickPlan: (FanboxCreatorPlan) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         for (plan in creatorPlans) {
             Card(
@@ -74,7 +72,7 @@ internal fun CreatorTopPlansSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),

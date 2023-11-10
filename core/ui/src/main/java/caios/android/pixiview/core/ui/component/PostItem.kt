@@ -171,7 +171,7 @@ private fun UserSection(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Row (
+        Row(
             modifier = Modifier
                 .weight(1f)
                 .clip(RoundedCornerShape(4.dp))

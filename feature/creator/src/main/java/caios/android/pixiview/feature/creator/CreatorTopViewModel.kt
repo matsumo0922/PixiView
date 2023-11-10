@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreatorTopViewModel @Inject constructor(
-    private val fanboxRepository: FanboxRepository
+    private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
 
     private val _screenState = MutableStateFlow<ScreenState<CreatorTopUiState>>(ScreenState.Loading)
@@ -34,7 +34,7 @@ class CreatorTopViewModel @Inject constructor(
                 )
             }.fold(
                 onSuccess = { ScreenState.Idle(it) },
-                onFailure = { ScreenState.Error(R.string.error_network) }
+                onFailure = { ScreenState.Error(R.string.error_network) },
             )
         }
     }

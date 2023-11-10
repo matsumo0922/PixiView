@@ -23,11 +23,12 @@ import caios.android.pixiview.core.ui.extensition.SimmerPlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun CreatorTopPlansScreen(
     creatorDetail: FanboxCreatorDetail,
-    creatorPlans: List<FanboxCreatorPlan>,
+    creatorPlans: ImmutableList<FanboxCreatorPlan>,
     onClickPlan: (FanboxCreatorPlan) -> Unit,
     modifier: Modifier = Modifier,
 ) {
