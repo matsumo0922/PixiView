@@ -225,6 +225,7 @@ balloon = { module = "com.github.skydoves:balloon", version.ref = "balloon" }
 balloon-compose = { module = "com.github.skydoves:balloon-compose", version.ref = "balloon" }
 spell-checker = { module = "org.apache.lucene:lucene-spellchecker", version = "3.6.2" }
 reorderble-compose = { module = "org.burnoutcrew.composereorderable:reorderable", version = "0.9.6" }
+collapsing-toolbar-compose = { module = "me.onebone:toolbar-compose", version = "2.3.5" }
 unifile = { module = "com.github.tachiyomiorg:unifile", version = "17bec43" }
 ffmpeg = { module = "com.arthenica:ffmpeg-kit-audio", version.ref = "ffmpeg" }
 libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "libraries" }

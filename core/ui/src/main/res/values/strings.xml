@@ -57,6 +57,10 @@
     <string name="home_tab_home">フォロー中</string>
     <string name="home_tab_supported">支援中</string>
 
+    <!-- Creator -->
+    <string name="creator_tab_posts">投稿</string>
+    <string name="creator_tab_plans">プラン</string>
+
     <!-- PostDetail -->
     <string name="post_detail_title">投稿詳細</string>
     <string name="post_detail_download_images">画像を全てダウンロード (%1$d枚)</string>

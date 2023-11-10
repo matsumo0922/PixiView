@@ -19,6 +19,7 @@ fun NavController.navigateToLibraryHome(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.libraryHomeScreen(
     openDrawer: () -> Unit,
     navigateToPostDetail: (PostId) -> Unit,
+    navigateToCreatorTop: (CreatorId) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
 ) {
     composable(
@@ -30,6 +31,7 @@ fun NavGraphBuilder.libraryHomeScreen(
             modifier = Modifier.fillMaxSize(),
             openDrawer = openDrawer,
             navigateToPostDetail = navigateToPostDetail,
+            navigateToCreatorTop = navigateToCreatorTop,
             navigateToCreatorPlans = navigateToCreatorPlans,
         )
     }

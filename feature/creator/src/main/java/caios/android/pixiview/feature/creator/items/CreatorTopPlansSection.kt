@@ -39,7 +39,7 @@ internal fun CreatorTopPlansSection(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         for (plan in creatorPlans) {

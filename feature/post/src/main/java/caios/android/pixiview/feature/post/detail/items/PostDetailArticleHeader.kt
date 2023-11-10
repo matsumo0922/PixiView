@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
+import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.component.PostItem
 
@@ -16,6 +17,7 @@ import caios.android.pixiview.core.ui.component.PostItem
 internal fun PostDetailArticleHeader(
     content: FanboxPostDetail.Body.Article,
     onClickPost: (PostId) -> Unit,
+    onClickCreator: (CreatorId) -> Unit,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
     onClickFile: (FanboxPostDetail.FileItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -51,6 +53,7 @@ internal fun PostDetailArticleHeader(
                         modifier = Modifier.fillMaxWidth(),
                         item = item,
                         onClickPost = onClickPost,
+                        onClickCreator = onClickCreator,
                     )
                 }
             }
@@ -75,6 +78,7 @@ private fun ArticleTextItem(
 private fun ArticleLinkItem(
     item: FanboxPostDetail.Body.Article.Block.Link,
     onClickPost: (PostId) -> Unit,
+    onClickCreator: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     item.post?.also {
@@ -82,6 +86,7 @@ private fun ArticleLinkItem(
             modifier = modifier.padding(16.dp),
             post = it,
             onClickPost = onClickPost,
+            onClickCreator = onClickCreator,
             onClickPlanList = {},
         )
     }

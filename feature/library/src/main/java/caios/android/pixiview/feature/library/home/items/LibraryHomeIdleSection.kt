@@ -21,6 +21,7 @@ import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 internal fun LibraryHomeIdleSection(
     pagingAdapter: LazyPagingItems<FanboxPost>,
     onClickPost: (PostId) -> Unit,
+    onClickCreator: (CreatorId) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -42,6 +43,7 @@ internal fun LibraryHomeIdleSection(
                     modifier = Modifier.fillMaxWidth(),
                     post = post,
                     onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
+                    onClickCreator = onClickCreator,
                     onClickPlanList = onClickPlanList,
                 )
             }

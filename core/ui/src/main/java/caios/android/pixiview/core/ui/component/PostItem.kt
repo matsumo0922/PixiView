@@ -48,6 +48,7 @@ import java.time.format.DateTimeFormatter
 fun PostItem(
     post: FanboxPost,
     onClickPost: (PostId) -> Unit,
+    onClickCreator: (CreatorId) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -60,7 +61,7 @@ fun PostItem(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             when {
                 post.isRestricted -> {
@@ -96,14 +97,15 @@ fun PostItem(
 
             UserSection(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 8.dp)
                     .fillMaxWidth(),
                 post = post,
+                onClickCreator = onClickCreator,
             )
 
             Text(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
                     .fillMaxWidth(),
                 text = post.title,
                 style = MaterialTheme.typography.titleMedium.bold(),
@@ -116,6 +118,7 @@ fun PostItem(
                 RestrictCardItem(
                     modifier = Modifier
                         .padding(
+                            top = 8.dp,
                             start = 16.dp,
                             end = 16.dp,
                             bottom = 16.dp,
@@ -129,7 +132,7 @@ fun PostItem(
                 if (post.excerpt.isNotBlank()) {
                     Text(
                         modifier = Modifier
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                             .fillMaxWidth(),
                         text = post.excerpt,
                         style = MaterialTheme.typography.bodySmall,
@@ -143,6 +146,7 @@ fun PostItem(
                     modifier = Modifier
                         .align(Alignment.End)
                         .padding(
+                            top = 8.dp,
                             start = 16.dp,
                             end = 16.dp,
                             bottom = 16.dp,
@@ -159,6 +163,7 @@ fun PostItem(
 @Composable
 private fun UserSection(
     post: FanboxPost,
+    onClickCreator: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -166,35 +171,45 @@ private fun UserSection(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        AsyncImage(
+        Row (
             modifier = Modifier
-                .size(32.dp)
-                .clip(RoundedCornerShape(50)),
-            model = ImageRequest.Builder(LocalContext.current)
-                .error(R.drawable.im_default_user)
-                .data(post.user.iconUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-        )
-
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+                .weight(1f)
+                .clip(RoundedCornerShape(4.dp))
+                .clickable { onClickCreator.invoke(post.user.creatorId) }
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = post.user.name,
-                style = MaterialTheme.typography.bodyMedium.bold(),
-                color = MaterialTheme.colorScheme.onSurface,
+            AsyncImage(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(RoundedCornerShape(50)),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .error(R.drawable.im_default_user)
+                    .data(post.user.iconUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
             )
 
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = post.publishedDatetime.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = post.user.name,
+                    style = MaterialTheme.typography.bodyMedium.bold(),
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = post.publishedDatetime.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
 
         Card(
@@ -338,6 +353,7 @@ private fun PostItemPreview1() {
         post = FanboxPost.dummy(),
         onClickPost = {},
         onClickPlanList = {},
+        onClickCreator = {},
     )
 }
 
@@ -348,5 +364,6 @@ private fun PostItemPreview2() {
         post = FanboxPost.dummy().copy(isRestricted = true),
         onClickPost = {},
         onClickPlanList = {},
+        onClickCreator = {},
     )
 }

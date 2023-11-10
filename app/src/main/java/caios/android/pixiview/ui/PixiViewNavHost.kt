@@ -25,6 +25,7 @@ internal fun PixiViewNavHost(
     ) {
         libraryScreen(
             navigateToPostDetail = { navController.navigateToPostDetail(it) },
+            navigateToCreatorTop = { navController.navigateToCreatorTop(it) },
             navigateToCreatorPlans = {},
         )
 

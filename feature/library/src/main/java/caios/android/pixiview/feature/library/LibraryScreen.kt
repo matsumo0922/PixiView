@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LibraryScreen(
     navigateToPostDetail: (postId: PostId) -> Unit,
+    navigateToCreatorTop: (creatorId: CreatorId) -> Unit,
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -68,6 +69,7 @@ fun LibraryScreen(
                     }
                 },
                 navigateToPostDetail = navigateToPostDetail,
+                navigateToCreatorTop = navigateToCreatorTop,
                 navigateToCreatorPlans = navigateToCreatorPlans,
             )
         }

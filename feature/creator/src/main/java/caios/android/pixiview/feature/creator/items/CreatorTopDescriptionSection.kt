@@ -45,7 +45,7 @@ internal fun CreatorTopDescriptionSection(
     val descriptionFontColor = MaterialTheme.colorScheme.onSurface
 
     Card(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier,
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)),
     ) {
@@ -55,31 +55,6 @@ internal fun CreatorTopDescriptionSection(
                 .padding(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                items(creatorDetail.profileItems) {
-                    SubcomposeAsyncImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .clip(RoundedCornerShape(4.dp)),
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .fanboxHeader()
-                            .crossfade(true)
-                            .data(it.thumbnailUrl)
-                            .build(),
-                        loading = {
-                            SimmerPlaceHolder()
-                        },
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null,
-                    )
-                }
-            }
-
             AndroidView(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 factory = { context ->

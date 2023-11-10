@@ -1,18 +1,39 @@
 package caios.android.pixiview.feature.creator
 
 import android.content.Intent
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
@@ -22,7 +43,12 @@ import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.core.ui.component.CoordinatorScaffold
 import caios.android.pixiview.feature.creator.items.CreatorTopDescriptionSection
 import caios.android.pixiview.feature.creator.items.CreatorTopHeader
+import caios.android.pixiview.feature.creator.items.CreatorTopPlansScreen
 import caios.android.pixiview.feature.creator.items.CreatorTopPlansSection
+import kotlinx.coroutines.launch
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 internal fun CreatorTopRoute(
@@ -53,6 +79,7 @@ internal fun CreatorTopRoute(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun CreatorTopScreen(
     creatorDetail: FanboxCreatorDetail,
@@ -61,35 +88,99 @@ private fun CreatorTopScreen(
     onTerminate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    CoordinatorScaffold(
+    val state = rememberCollapsingToolbarScaffoldState()
+    val pagerState = rememberPagerState { 2 }
+    val scope = rememberCoroutineScope()
+
+    val tabs = listOf(
+        CreatorTab.PLANS,
+        CreatorTab.POSTS,
+    )
+
+    CollapsingToolbarScaffold(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        onClickNavigateUp = onTerminate,
-        onClickMenu = {},
-        header = {
+        state = state,
+        toolbar = {
+            Spacer(
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .fillMaxWidth()
+            )
+
             CreatorTopHeader(
-                modifier = it,
+                modifier = Modifier
+                    .parallax(0.5f)
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        alpha = state.toolbarState.progress
+                    },
                 creatorDetail = creatorDetail,
+                onClickTerminate = onTerminate,
+                onClickMenu = {},
             )
         },
+        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
     ) {
-        item {
-            CreatorTopDescriptionSection(
+        Column(Modifier.fillMaxSize()) {
+            PrimaryTabRow(
                 modifier = Modifier.fillMaxWidth(),
-                creatorDetail = creatorDetail,
-            )
-        }
+                selectedTabIndex = pagerState.currentPage,
+            ) {
+                tabs.forEachIndexed { index, tab ->
+                    CreatorTab(
+                        isSelected = pagerState.currentPage == index,
+                        label = stringResource(tab.titleRes),
+                        onClick = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                    )
+                }
+            }
 
-        item {
-            CreatorTopPlansSection(
-                modifier = Modifier.fillMaxWidth(),
-                creatorPlans = creatorPlans,
-                onClickPlan = onClickPlan,
-            )
-        }
-        
-        item {
-            Spacer(modifier = Modifier.height(128.dp))
+            HorizontalPager(pagerState) {
+                when (tabs[it]) {
+                    CreatorTab.POSTS -> {
+
+                    }
+
+                    CreatorTab.PLANS -> {
+                        CreatorTopPlansScreen(
+                            modifier = Modifier.fillMaxWidth(),
+                            creatorDetail = creatorDetail,
+                            creatorPlans = creatorPlans,
+                            onClickPlan = onClickPlan,
+                        )
+                    }
+                }
+            }
         }
     }
+}
+
+@Composable
+private fun CreatorTab(
+    isSelected: Boolean,
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Tab(
+        modifier = modifier,
+        text = {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal),
+                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+            )
+        },
+        selected = isSelected,
+        onClick = onClick,
+    )
+}
+
+private enum class CreatorTab(val titleRes: Int) {
+    POSTS(R.string.creator_tab_posts),
+    PLANS(R.string.creator_tab_plans),
 }

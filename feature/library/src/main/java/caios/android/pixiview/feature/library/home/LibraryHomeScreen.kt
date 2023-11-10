@@ -48,6 +48,7 @@ internal fun LibraryHomeScreen(
     openDrawer: () -> Unit,
     navigateToPostDetail: (PostId) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
+    navigateToCreatorTop: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LibraryHomeViewModel = hiltViewModel(),
 ) {
@@ -126,6 +127,7 @@ internal fun LibraryHomeScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = homePager,
                                 onClickPost = navigateToPostDetail,
+                                onClickCreator = navigateToCreatorTop,
                                 onClickPlanList = navigateToCreatorPlans,
                             )
                         }
@@ -141,6 +143,7 @@ internal fun LibraryHomeScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = supportedPager,
                                 onClickPost = navigateToPostDetail,
+                                onClickCreator = navigateToCreatorTop,
                                 onClickPlanList = navigateToCreatorPlans,
                             )
                         }

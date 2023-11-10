@@ -83,12 +83,13 @@ internal fun PostDetailRoute(
             modifier = Modifier.fillMaxSize(),
             postDetail = uiState.postDetail,
             onClickPost = navigateToPostDetail,
+            onClickCreator = navigateToCreatorTop,
             onClickImage = { },
             onClickFile = postDownloader::onDownloadFile,
             onClickDownloadImages = postDownloader::onDownloadImages,
             onClickWebBrowser = { },
             onClickShare = { },
-            onClickCreatorPosts = { _, _ -> },
+            onClickCreatorPosts = { creatorId, _ -> navigateToCreatorTop.invoke(creatorId) },
             onClickCreatorPlans = navigateToCreatorTop,
             onTerminate = terminate,
         )
@@ -103,6 +104,7 @@ internal fun PostDetailRoute(
 private fun PostDetailScreen(
     postDetail: FanboxPostDetail,
     onClickPost: (PostId) -> Unit,
+    onClickCreator: (CreatorId) -> Unit,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
     onClickFile: (FanboxPostDetail.FileItem) -> Unit,
     onClickDownloadImages: (List<FanboxPostDetail.ImageItem>) -> Unit,
@@ -129,6 +131,7 @@ private fun PostDetailScreen(
                 PostDetailContent(
                     modifier = it,
                     post = postDetail,
+                    onClickCreator = onClickCreator,
                     onClickPost = onClickPost,
                     onClickImage = onClickImage,
                     onClickFile = onClickFile,
@@ -146,6 +149,7 @@ private fun PostDetailScreen(
                 PostDetailContent(
                     modifier = Modifier.fillMaxWidth(),
                     post = postDetail,
+                    onClickCreator = onClickCreator,
                     onClickPost = onClickPost,
                     onClickImage = onClickImage,
                     onClickFile = onClickFile,
@@ -310,6 +314,7 @@ private fun PostDetailHeader(
 private fun PostDetailContent(
     post: FanboxPostDetail,
     onClickPost: (PostId) -> Unit,
+    onClickCreator: (CreatorId) -> Unit,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
     onClickFile: (FanboxPostDetail.FileItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -321,6 +326,7 @@ private fun PostDetailContent(
                     modifier = Modifier.fillMaxWidth(),
                     content = content,
                     onClickPost = onClickPost,
+                    onClickCreator = onClickCreator,
                     onClickImage = onClickImage,
                     onClickFile = onClickFile,
                 )

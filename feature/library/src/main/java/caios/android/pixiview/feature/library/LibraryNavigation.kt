@@ -17,6 +17,7 @@ fun NavController.navigateToLibrary() {
 
 fun NavGraphBuilder.libraryScreen(
     navigateToPostDetail: (postId: PostId) -> Unit,
+    navigateToCreatorTop: (creatorId: CreatorId) -> Unit,
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
 ) {
     composable(
@@ -49,6 +50,7 @@ fun NavGraphBuilder.libraryScreen(
         LibraryScreen(
             modifier = Modifier.fillMaxSize(),
             navigateToPostDetail = navigateToPostDetail,
+            navigateToCreatorTop = navigateToCreatorTop,
             navigateToCreatorPlans = navigateToCreatorPlans,
         )
     }

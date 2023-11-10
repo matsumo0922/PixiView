@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -42,6 +44,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.ui.theme.applyTonalElevation
@@ -63,6 +67,7 @@ fun CoordinatorScaffold(
 ) {
     var appBarAlpha by remember { mutableFloatStateOf(0f) }
     var topSectionHeight by remember { mutableIntStateOf(100) }
+    var toolBarHeight by remember { mutableIntStateOf(64) }
 
     Box(modifier.background(color)) {
         LazyColumn(
@@ -84,7 +89,9 @@ fun CoordinatorScaffold(
         }
 
         CoordinatorToolBar(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onGloballyPositioned { toolBarHeight = it.size.height },
             color = MaterialTheme.colorScheme.applyTonalElevation(
                 backgroundColor = MaterialTheme.colorScheme.surface,
                 elevation = 3.dp,
@@ -156,6 +163,7 @@ private fun CoordinatorToolBar(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 private fun CoordinatorScaffoldPreview() {
@@ -170,6 +178,15 @@ private fun CoordinatorScaffoldPreview() {
             )
         },
         content = {
+            stickyHeader {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(128.dp)
+                        .background(Color.LightGray),
+                )
+            }
+
             items(listOf(Color.Blue, Color.Red, Color.Yellow, Color.Cyan)) {
                 Box(
                     modifier = Modifier
