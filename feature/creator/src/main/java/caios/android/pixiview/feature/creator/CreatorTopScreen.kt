@@ -25,12 +25,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
+import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.AsyncLoadContents
+import caios.android.pixiview.core.ui.LazyPagingItemsLoadSurface
 import caios.android.pixiview.feature.creator.items.CreatorTopHeader
 import caios.android.pixiview.feature.creator.items.CreatorTopPlansScreen
+import caios.android.pixiview.feature.creator.items.CreatorTopPostsScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
@@ -41,6 +47,8 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 @Composable
 internal fun CreatorTopRoute(
     creatorId: CreatorId,
+    isPosts: Boolean,
+    navigateToPostDetail: (PostId) -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CreatorTopViewModel = hiltViewModel(),
@@ -59,8 +67,11 @@ internal fun CreatorTopRoute(
     ) { uiState ->
         CreatorTopScreen(
             modifier = Modifier.fillMaxSize(),
+            isPosts = isPosts,
             creatorDetail = uiState.creatorDetail,
             creatorPlans = uiState.creatorPlans.toImmutableList(),
+            creatorPostsPaging = uiState.creatorPostsPaging.collectAsLazyPagingItems(),
+            onClickPost = navigateToPostDetail,
             onClickPlan = { context.startActivity(Intent(Intent.ACTION_VIEW, it.detailUri)) },
             onTerminate = terminate,
         )
@@ -70,14 +81,17 @@ internal fun CreatorTopRoute(
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun CreatorTopScreen(
+    isPosts: Boolean,
     creatorDetail: FanboxCreatorDetail,
     creatorPlans: ImmutableList<FanboxCreatorPlan>,
+    creatorPostsPaging: LazyPagingItems<FanboxPost>,
+    onClickPost: (PostId) -> Unit,
     onClickPlan: (FanboxCreatorPlan) -> Unit,
     onTerminate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state = rememberCollapsingToolbarScaffoldState()
-    val pagerState = rememberPagerState { 2 }
+    val pagerState = rememberPagerState(initialPage = if (isPosts) 1 else 0) { 2 }
     val scope = rememberCoroutineScope()
 
     val tabs = listOf(
@@ -130,8 +144,27 @@ private fun CreatorTopScreen(
             HorizontalPager(pagerState) {
                 when (tabs[it]) {
                     CreatorTab.POSTS -> {
+                        LazyPagingItemsLoadSurface(
+                            modifier = Modifier.fillMaxWidth(),
+                            lazyPagingItems = creatorPostsPaging,
+                        ) {
+                            CreatorTopPostsScreen(
+                                modifier = Modifier.fillMaxSize(),
+                                pagingAdapter = creatorPostsPaging,
+                                onClickPost = onClickPost,
+                                onClickCreator = {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(0)
+                                    }
+                                },
+                                onClickPlanList = {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(0)
+                                    }
+                                },
+                            )
+                        }
                     }
-
                     CreatorTab.PLANS -> {
                         CreatorTopPlansScreen(
                             modifier = Modifier.fillMaxWidth(),

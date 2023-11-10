@@ -25,17 +25,19 @@ internal fun PixiViewNavHost(
     ) {
         libraryScreen(
             navigateToPostDetail = { navController.navigateToPostDetail(it) },
-            navigateToCreatorTop = { navController.navigateToCreatorTop(it) },
-            navigateToCreatorPlans = {},
+            navigateToCreatorPosts = { navController.navigateToCreatorTop(it) },
+            navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
         )
 
         postDetailScreen(
             navigateToPostDetail = { navController.navigateToPostDetail(it) },
-            navigateToCreatorTop = { navController.navigateToCreatorTop(it) },
+            navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
+            navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
             terminate = { navController.popBackStack() },
         )
 
         creatorTopScreen(
+            navigateToPostDetail = { navController.navigateToPostDetail(it) },
             terminate = { navController.popBackStack() },
         )
     }

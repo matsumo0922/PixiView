@@ -20,7 +20,8 @@ fun NavController.navigateToPostDetail(postId: PostId) {
 
 fun NavGraphBuilder.postDetailScreen(
     navigateToPostDetail: (PostId) -> Unit,
-    navigateToCreatorTop: (CreatorId) -> Unit,
+    navigateToCreatorPosts: (CreatorId) -> Unit,
+    navigateToCreatorPlans: (CreatorId) -> Unit,
     terminate: () -> Unit,
 ) {
     composable(
@@ -35,7 +36,8 @@ fun NavGraphBuilder.postDetailScreen(
             modifier = Modifier.fillMaxSize(),
             postId = PostId(it.arguments?.getString(PostDetailId) ?: ""),
             navigateToPostDetail = navigateToPostDetail,
-            navigateToCreatorTop = navigateToCreatorTop,
+            navigateToCreatorPosts = navigateToCreatorPosts,
+            navigateToCreatorPlans = navigateToCreatorPlans,
             terminate = terminate,
         )
     }

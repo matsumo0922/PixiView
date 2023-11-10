@@ -12,11 +12,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,11 +36,10 @@ internal fun PostDetailOtherPostSection(
     previousPost: FanboxPostDetail.OtherPost?,
     onClickNextPost: (PostId) -> Unit,
     onClickPreviousPost: (PostId) -> Unit,
+    onClickAllPosts: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
-        HorizontalDivider()
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,8 +63,6 @@ internal fun PostDetailOtherPostSection(
                 )
             }
 
-            VerticalDivider()
-
             if (nextPost != null) {
                 NextPostButton(
                     modifier = Modifier.weight(1f),
@@ -86,7 +81,15 @@ internal fun PostDetailOtherPostSection(
             }
         }
 
-        HorizontalDivider()
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClickAllPosts.invoke() }
+                .padding(16.dp),
+            text = stringResource(R.string.post_detail_all_posts),
+            style = MaterialTheme.typography.bodyMedium.center(),
+            color = MaterialTheme.colorScheme.onSurface,
+        )
     }
 }
 

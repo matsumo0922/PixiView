@@ -58,7 +58,7 @@ interface FanboxRepository {
 
     suspend fun getHomePosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>
     suspend fun getSupportedPosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>
-    suspend fun getCreatorPosts(creatorId: String, cursor: FanboxCursor? = null): PageInfo<FanboxPost>
+    suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor? = null): PageInfo<FanboxPost>
     suspend fun getPost(postId: PostId): FanboxPostDetail
 
     suspend fun getFollowingCreators(): List<FanboxCreatorDetail>
@@ -137,9 +137,9 @@ class FanboxRepositoryImpl(
         }
     }
 
-    override suspend fun getCreatorPosts(creatorId: String, cursor: FanboxCursor?): PageInfo<FanboxPost> = withContext(ioDispatcher) {
+    override suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor?): PageInfo<FanboxPost> = withContext(ioDispatcher) {
         buildMap {
-            put("creatorId", creatorId)
+            put("creatorId", creatorId.value)
             put("limit", PAGE_LIMIT)
 
             if (cursor != null) {

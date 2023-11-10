@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -44,7 +46,6 @@ import caios.android.pixiview.core.ui.extensition.marquee
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
 import caios.android.pixiview.feature.post.detail.items.PostDetailArticleHeader
-import caios.android.pixiview.feature.post.detail.items.PostDetailBottomSection
 import caios.android.pixiview.feature.post.detail.items.PostDetailCommentLikeButton
 import caios.android.pixiview.feature.post.detail.items.PostDetailCommentSection
 import caios.android.pixiview.feature.post.detail.items.PostDetailCreatorSection
@@ -61,7 +62,8 @@ import java.time.format.DateTimeFormatter
 internal fun PostDetailRoute(
     postId: PostId,
     navigateToPostDetail: (PostId) -> Unit,
-    navigateToCreatorTop: (CreatorId) -> Unit,
+    navigateToCreatorPlans: (CreatorId) -> Unit,
+    navigateToCreatorPosts: (CreatorId) -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PostDetailViewModel = hiltViewModel(),
@@ -83,14 +85,12 @@ internal fun PostDetailRoute(
             modifier = Modifier.fillMaxSize(),
             postDetail = uiState.postDetail,
             onClickPost = navigateToPostDetail,
-            onClickCreator = navigateToCreatorTop,
+            onClickCreator = navigateToCreatorPlans,
             onClickImage = { },
             onClickFile = postDownloader::onDownloadFile,
             onClickDownloadImages = postDownloader::onDownloadImages,
-            onClickWebBrowser = { },
-            onClickShare = { },
-            onClickCreatorPosts = { creatorId, _ -> navigateToCreatorTop.invoke(creatorId) },
-            onClickCreatorPlans = navigateToCreatorTop,
+            onClickCreatorPosts = navigateToCreatorPosts,
+            onClickCreatorPlans = navigateToCreatorPlans,
             onTerminate = terminate,
         )
 
@@ -108,9 +108,7 @@ private fun PostDetailScreen(
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
     onClickFile: (FanboxPostDetail.FileItem) -> Unit,
     onClickDownloadImages: (List<FanboxPostDetail.ImageItem>) -> Unit,
-    onClickWebBrowser: () -> Unit,
-    onClickShare: () -> Unit,
-    onClickCreatorPosts: (CreatorId, String) -> Unit,
+    onClickCreatorPosts: (CreatorId) -> Unit,
     onClickCreatorPlans: (CreatorId) -> Unit,
     onTerminate: () -> Unit,
     modifier: Modifier = Modifier,
@@ -168,7 +166,7 @@ private fun PostDetailScreen(
                 TagItems(
                     modifier = Modifier.weight(1f),
                     tags = postDetail.tags.toImmutableList(),
-                    onClickTag = { onClickCreatorPosts.invoke(postDetail.user.creatorId, it) },
+                    onClickTag = {  },
                 )
 
                 PostDetailCommentLikeButton(
@@ -205,7 +203,7 @@ private fun PostDetailScreen(
             PostDetailCreatorSection(
                 modifier = Modifier.fillMaxWidth(),
                 post = postDetail,
-                onClickCreator = { onClickCreatorPosts.invoke(it, "") },
+                onClickCreator = { onClickCreatorPlans.invoke(it) },
             )
         }
 
@@ -227,16 +225,12 @@ private fun PostDetailScreen(
                 previousPost = postDetail.prevPost,
                 onClickNextPost = onClickPost,
                 onClickPreviousPost = onClickPost,
+                onClickAllPosts = { onClickCreatorPosts.invoke(postDetail.user.creatorId) },
             )
         }
 
         item {
-            PostDetailBottomSection(
-                modifier = Modifier.fillMaxWidth(),
-                onClickWebBrowser = onClickWebBrowser,
-                onClickShare = onClickShare,
-                onClickPlans = { onClickCreatorPlans.invoke(postDetail.user.creatorId) },
-            )
+            Spacer(modifier = Modifier.height(128.dp))
         }
     }
 }

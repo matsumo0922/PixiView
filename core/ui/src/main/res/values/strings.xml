@@ -68,6 +68,7 @@
     <string name="post_detail_comment_title">コメント</string>
     <string name="post_detail_oldest_post">前の投稿はありません</string>
     <string name="post_detail_newest_post">次の投稿はありません</string>
+    <string name="post_detail_all_posts">すべての投稿を見る</string>
     <string name="post_detail_downloading">ダウンロード中…</string>
 
     <!-- Report -->
