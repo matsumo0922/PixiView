@@ -3,7 +3,9 @@ package caios.android.pixiview.core.ui.component
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,6 +37,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -42,6 +45,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.ui.theme.applyTonalElevation
+import kotlinx.serialization.json.JsonNull.content
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -52,6 +56,9 @@ fun CoordinatorScaffold(
     color: Color = MaterialTheme.colorScheme.surface,
     onClickNavigateUp: () -> Unit = {},
     onClickMenu: () -> Unit = {},
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: LazyListScope.() -> Unit,
 ) {
     var appBarAlpha by remember { mutableFloatStateOf(0f) }
@@ -60,6 +67,9 @@ fun CoordinatorScaffold(
     Box(modifier.background(color)) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
+            contentPadding = contentPadding,
+            verticalArrangement = verticalArrangement,
+            horizontalAlignment = horizontalAlignment,
             state = listState,
         ) {
             item {

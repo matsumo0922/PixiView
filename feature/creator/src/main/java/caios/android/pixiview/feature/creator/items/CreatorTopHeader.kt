@@ -39,7 +39,7 @@ internal fun CreatorTopHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(4 / 3f)
-                .blur(16.dp),
+                .blur(12.dp),
             model = ImageRequest.Builder(LocalContext.current)
                 .fanboxHeader()
                 .crossfade(true)
@@ -63,18 +63,18 @@ internal fun CreatorTopHeader(
         Card(
             modifier = Modifier
                 .align(Alignment.Center)
-                .size(224.dp)
+                .size(200.dp)
                 .aspectRatio(1f),
             shape = RoundedCornerShape(8.dp),
         ) {
             SubcomposeAsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(4 / 3f),
+                    .aspectRatio(1f),
                 model = ImageRequest.Builder(LocalContext.current)
                     .fanboxHeader()
                     .crossfade(true)
-                    .data(creatorDetail.coverImageUrl)
+                    .data(creatorDetail.user.iconUrl)
                     .build(),
                 loading = {
                     SimmerPlaceHolder()
@@ -86,8 +86,8 @@ internal fun CreatorTopHeader(
 
         Text(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
                 .padding(horizontal = 24.dp, vertical = 16.dp)
+                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .marquee(),
             text = creatorDetail.user.name,

@@ -113,15 +113,15 @@ internal fun LibraryHomeScreen(
                 }
             }
 
-            LazyPagingItemsLoadSurface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                lazyPagingItems = homePager,
-            ) {
-                HorizontalPager(pagerState) {
-                    when (tabs[it]) {
-                        HomeTabs.Home -> {
+            HorizontalPager(pagerState) {
+                when (tabs[it]) {
+                    HomeTabs.Home -> {
+                        LazyPagingItemsLoadSurface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            lazyPagingItems = homePager,
+                        ) {
                             LibraryHomeIdleSection(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = homePager,
@@ -129,8 +129,14 @@ internal fun LibraryHomeScreen(
                                 onClickPlanList = navigateToCreatorPlans,
                             )
                         }
-
-                        HomeTabs.Supported -> {
+                    }
+                    HomeTabs.Supported -> {
+                        LazyPagingItemsLoadSurface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            lazyPagingItems = supportedPager,
+                        ) {
                             LibrarySupportedIdleSection(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = supportedPager,

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
+import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.repository.FanboxRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,9 +28,12 @@ class CreatorTopViewModel @Inject constructor(
         viewModelScope.launch {
             _screenState.value = ScreenState.Loading
             _screenState.value = suspendRunCatching {
-                fanboxRepository.getCreator(creatorId)
+                CreatorTopUiState(
+                    creatorDetail = fanboxRepository.getCreator(creatorId),
+                    creatorPlans = fanboxRepository.getCreatorPlans(creatorId),
+                )
             }.fold(
-                onSuccess = { ScreenState.Idle(CreatorTopUiState(it)) },
+                onSuccess = { ScreenState.Idle(it) },
                 onFailure = { ScreenState.Error(R.string.error_network) }
             )
         }
@@ -38,5 +42,6 @@ class CreatorTopViewModel @Inject constructor(
 
 @Stable
 data class CreatorTopUiState(
-    val creator: FanboxCreatorDetail,
+    val creatorDetail: FanboxCreatorDetail,
+    val creatorPlans: List<FanboxCreatorPlan>,
 )
