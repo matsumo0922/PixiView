@@ -6,10 +6,7 @@ import caios.android.pixiview.core.model.fanbox.id.PostId
 import java.time.OffsetDateTime
 
 sealed interface FanboxBell {
-    val nextPage: Int?
-
     data class Comment(
-        override val nextPage: Int?,
         val id: CommentId,
         val notifiedDatetime: OffsetDateTime,
         val comment: String,
@@ -22,7 +19,6 @@ sealed interface FanboxBell {
     ) : FanboxBell
 
     data class Like(
-        override val nextPage: Int?,
         val id: String,
         val notifiedDatetime: OffsetDateTime,
         val comment: String,
@@ -32,7 +28,6 @@ sealed interface FanboxBell {
     ) : FanboxBell
 
     data class PostPublished(
-        override val nextPage: Int?,
         val id: PostId,
         val notifiedDatetime: OffsetDateTime,
         val post: FanboxPost,

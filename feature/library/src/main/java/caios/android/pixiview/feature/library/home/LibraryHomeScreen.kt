@@ -48,8 +48,8 @@ internal fun LibraryHomeScreen(
     modifier: Modifier = Modifier,
     viewModel: LibraryHomeViewModel = hiltViewModel(),
 ) {
-    val homeUiState by viewModel.homeScreenState.collectAsStateWithLifecycle()
-    val supportedUiState by viewModel.supportedScreenState.collectAsStateWithLifecycle()
+    val homeUiState by viewModel.homeUiState.collectAsStateWithLifecycle()
+    val supportedUiState by viewModel.supportedUiState.collectAsStateWithLifecycle()
 
     val homePager = homeUiState.paging.collectAsLazyPagingItems()
     val supportedPager = supportedUiState.paging.collectAsLazyPagingItems()

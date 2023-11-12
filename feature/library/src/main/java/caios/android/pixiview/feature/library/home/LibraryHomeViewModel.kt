@@ -26,8 +26,8 @@ class LibraryHomeViewModel @Inject constructor(
     private val _homeUiState = MutableStateFlow(LibraryHomeUiState(emptyPaging()))
     private val _supportedUiState = MutableStateFlow(LibrarySupportedUiState(emptyPaging()))
 
-    val homeScreenState = _homeUiState.asStateFlow()
-    val supportedScreenState = _supportedUiState.asStateFlow()
+    val homeUiState = _homeUiState.asStateFlow()
+    val supportedUiState = _supportedUiState.asStateFlow()
 
     init {
         Pager(

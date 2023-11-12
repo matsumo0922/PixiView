@@ -2,7 +2,8 @@ package caios.android.pixiview.core.repository.utils
 
 import android.net.Uri
 import androidx.core.net.toUri
-import caios.android.pixiview.core.model.PageInfo
+import caios.android.pixiview.core.model.PageCursorInfo
+import caios.android.pixiview.core.model.PageNumberInfo
 import caios.android.pixiview.core.model.fanbox.FanboxBell
 import caios.android.pixiview.core.model.fanbox.FanboxCover
 import caios.android.pixiview.core.model.fanbox.FanboxCreator
@@ -34,8 +35,8 @@ import caios.android.pixiview.core.model.fanbox.id.PostId
 import timber.log.Timber
 import java.time.OffsetDateTime
 
-internal fun FanboxPostItemsEntity.translate(): PageInfo<FanboxPost> {
-    return PageInfo(
+internal fun FanboxPostItemsEntity.translate(): PageCursorInfo<FanboxPost> {
+    return PageCursorInfo(
         contents = body.items.map { it.translate() },
         cursor = body.nextUrl?.translateToCursor(),
     )
@@ -405,50 +406,51 @@ internal fun FanboxNewsLattersEntity.translate(): List<FanboxNewsLetter> {
     }
 }
 
-internal fun FanboxBellItemsEntity.translate(): List<FanboxBell> {
-    val nextPage = Uri.parse(body.nextUrl).getQueryParameter("page")?.toIntOrNull()
+internal fun FanboxBellItemsEntity.translate(): PageNumberInfo<FanboxBell> {
+    return PageNumberInfo(
+        contents = body.items.mapNotNull {
+            when (it.type) {
+                "on_post_published" -> {
+                    FanboxBell.PostPublished(
+                        id = PostId(it.post!!.id),
+                        notifiedDatetime = OffsetDateTime.parse(it.notifiedDatetime),
+                        post = it.post!!.translate(),
+                    )
+                }
 
-    return body.items.mapNotNull {
-        when (it.type) {
-            "on_post_published" -> {
-                FanboxBell.PostPublished(
-                    id = PostId(it.post!!.id),
-                    notifiedDatetime = OffsetDateTime.parse(it.notifiedDatetime),
-                    post = it.post!!.translate(),
-                    nextPage = nextPage,
-                )
+                "post_comment" -> {
+                    FanboxBell.Comment(
+                        id = CommentId(it.id),
+                        notifiedDatetime = OffsetDateTime.parse(it.notifiedDatetime),
+                        comment = it.postCommentBody!!,
+                        isRootComment = it.isRootComment!!,
+                        creatorId = CreatorId(it.creatorId!!),
+                        postId = PostId(it.postId!!),
+                        postTitle = it.postTitle!!,
+                        userName = it.userName!!,
+                        userProfileIconUrl = it.userProfileImg!!,
+                    )
+                }
+
+                "post_comment_like" -> {
+                    FanboxBell.Like(
+                        id = it.id,
+                        notifiedDatetime = OffsetDateTime.parse(it.notifiedDatetime),
+                        comment = it.postCommentBody!!,
+                        creatorId = CreatorId(it.creatorId!!),
+                        postId = PostId(it.postId!!),
+                        count = it.count!!,
+                    )
+                }
+
+                else -> {
+                    Timber.w("FanboxBellItemsEntity translate error: Unknown bell type. $it")
+                    null
+                }
             }
-            "post_comment" -> {
-                FanboxBell.Comment(
-                    id = CommentId(it.id),
-                    notifiedDatetime = OffsetDateTime.parse(it.notifiedDatetime),
-                    comment = it.postCommentBody!!,
-                    isRootComment = it.isRootComment!!,
-                    creatorId = CreatorId(it.creatorId!!),
-                    postId = PostId(it.postId!!),
-                    postTitle = it.postTitle!!,
-                    userName = it.userName!!,
-                    userProfileIconUrl = it.userProfileImg!!,
-                    nextPage = nextPage,
-                )
-            }
-            "post_comment_like" -> {
-                FanboxBell.Like(
-                    id = it.id,
-                    notifiedDatetime = OffsetDateTime.parse(it.notifiedDatetime),
-                    comment = it.postCommentBody!!,
-                    creatorId = CreatorId(it.creatorId!!),
-                    postId = PostId(it.postId!!),
-                    count = it.count!!,
-                    nextPage = nextPage,
-                )
-            }
-            else -> {
-                Timber.w("FanboxBellItemsEntity translate error: Unknown bell type. $it")
-                null
-            }
-        }
-    }
+        },
+        nextPage = Uri.parse(body.nextUrl).getQueryParameter("page")?.toIntOrNull(),
+    )
 }
 
 private fun String.translateToCursor(): FanboxCursor {

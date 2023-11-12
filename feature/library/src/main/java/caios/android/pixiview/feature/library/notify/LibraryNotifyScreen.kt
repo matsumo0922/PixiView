@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,15 +23,17 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import caios.android.pixiview.core.model.fanbox.FanboxBell
 import caios.android.pixiview.core.model.fanbox.id.PostId
-import caios.android.pixiview.core.ui.AsyncLoadContents
+import caios.android.pixiview.core.ui.LazyPagingItemsLoadSurface
 import caios.android.pixiview.core.ui.component.PixiViewTopBar
+import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 import caios.android.pixiview.feature.library.R
 import caios.android.pixiview.feature.library.notify.items.LibraryNotifyBellItem
-import caios.android.pixiview.feature.library.notify.items.LibraryNotifyLoadMoreButton
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun LibraryNotifyRoute(
@@ -40,19 +42,18 @@ internal fun LibraryNotifyRoute(
     modifier: Modifier = Modifier,
     viewModel: LibraryNotifyViewModel = hiltViewModel(),
 ) {
-    val screenState by viewModel.screenState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val paging = uiState.paging.collectAsLazyPagingItems()
 
-    AsyncLoadContents(
+    LazyPagingItemsLoadSurface(
         modifier = modifier,
-        screenState = screenState,
-        retryAction = { viewModel.fetch() },
-    ) { uiState ->
+        lazyPagingItems = paging,
+    ) {
         LibraryNotifyScreen(
             modifier = Modifier.fillMaxSize(),
             openDrawer = openDrawer,
             onClickBell = navigateToPostDetail,
-            onClickLoadMore = viewModel::loadMore,
-            bells = uiState.bells.toImmutableList(),
+            pagingAdapter = paging,
         )
     }
 }
@@ -60,12 +61,12 @@ internal fun LibraryNotifyRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LibraryNotifyScreen(
-    bells: ImmutableList<FanboxBell>,
+    pagingAdapter: LazyPagingItems<FanboxBell>,
     openDrawer: () -> Unit,
     onClickBell: (PostId) -> Unit,
-    onClickLoadMore: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val state = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
@@ -100,33 +101,30 @@ private fun LibraryNotifyScreen(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->
         LazyColumn(
-            modifier = Modifier.padding(padding),
+            modifier = Modifier
+                .padding(padding)
+                .drawVerticalScrollbar(state),
+            state = state,
         ) {
             items(
-                items = bells,
-                key = {
+                count = pagingAdapter.itemCount,
+                key = pagingAdapter.itemKey {
                     when (it) {
                         is FanboxBell.Comment -> "comment-${it.id}"
                         is FanboxBell.Like -> "like-${it.id}"
                         is FanboxBell.PostPublished -> "post-${it.id}"
                     }
                 },
-            ) {
-                LibraryNotifyBellItem(
-                    modifier = Modifier.fillMaxWidth(),
-                    bell = it,
-                    onClickBell = onClickBell,
-                )
-
-                HorizontalDivider()
-            }
-
-            bells.lastOrNull()?.nextPage?.also {
-                item {
-                    LibraryNotifyLoadMoreButton(
+                contentType = pagingAdapter.itemContentType(),
+            ) { index ->
+                pagingAdapter[index]?.let { bell ->
+                    LibraryNotifyBellItem(
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = { onClickLoadMore.invoke(it) },
+                        bell = bell,
+                        onClickBell = onClickBell,
                     )
+
+                    HorizontalDivider()
                 }
             }
         }

@@ -5,7 +5,8 @@ import android.media.MediaScannerConnection
 import android.os.Environment
 import android.webkit.MimeTypeMap
 import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
-import caios.android.pixiview.core.model.PageInfo
+import caios.android.pixiview.core.model.PageCursorInfo
+import caios.android.pixiview.core.model.PageNumberInfo
 import caios.android.pixiview.core.model.fanbox.FanboxBell
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
@@ -56,9 +57,9 @@ interface FanboxRepository {
 
     suspend fun updateCookie(cookie: String)
 
-    suspend fun getHomePosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>
-    suspend fun getSupportedPosts(cursor: FanboxCursor? = null): PageInfo<FanboxPost>
-    suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor? = null): PageInfo<FanboxPost>
+    suspend fun getHomePosts(cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
+    suspend fun getSupportedPosts(cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
+    suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
     suspend fun getPost(postId: PostId): FanboxPostDetail
 
     suspend fun getFollowingCreators(): List<FanboxCreatorDetail>
@@ -76,7 +77,7 @@ interface FanboxRepository {
 
     suspend fun getNewsLetters(): List<FanboxNewsLetter>
 
-    suspend fun getBells(page: Int = 1): List<FanboxBell>
+    suspend fun getBells(page: Int = 1): PageNumberInfo<FanboxBell>
 
     suspend fun downloadImage(url: String, name: String, extension: String)
     suspend fun downloadFile(url: String, name: String, extension: String)
@@ -111,7 +112,7 @@ class FanboxRepositoryImpl(
         fanboxCookiePreference.save(cookie)
     }
 
-    override suspend fun getHomePosts(cursor: FanboxCursor?): PageInfo<FanboxPost> = withContext(ioDispatcher) {
+    override suspend fun getHomePosts(cursor: FanboxCursor?): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
         buildMap {
             put("limit", PAGE_LIMIT)
 
@@ -124,7 +125,7 @@ class FanboxRepositoryImpl(
         }
     }
 
-    override suspend fun getSupportedPosts(cursor: FanboxCursor?): PageInfo<FanboxPost> = withContext(ioDispatcher) {
+    override suspend fun getSupportedPosts(cursor: FanboxCursor?): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
         buildMap {
             put("limit", PAGE_LIMIT)
 
@@ -137,7 +138,7 @@ class FanboxRepositoryImpl(
         }
     }
 
-    override suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor?): PageInfo<FanboxPost> = withContext(ioDispatcher) {
+    override suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor?): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
         buildMap {
             put("creatorId", creatorId.value)
             put("limit", PAGE_LIMIT)
@@ -195,7 +196,7 @@ class FanboxRepositoryImpl(
         get("newsletter.list").parse<FanboxNewsLattersEntity>()!!.translate()
     }
 
-    override suspend fun getBells(page: Int): List<FanboxBell> = withContext(ioDispatcher) {
+    override suspend fun getBells(page: Int): PageNumberInfo<FanboxBell> = withContext(ioDispatcher) {
         buildMap {
             put("page", page.toString())
             put("skipConvertUnreadNotification", "0")
