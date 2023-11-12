@@ -222,8 +222,8 @@ class FanboxRepositoryImpl(
 
     override suspend fun downloadFile(url: String, name: String, extension: String) = withContext(ioDispatcher) {
         val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-        val pictureFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val pixiViewFile = pictureFile.resolve("PixiView")
+        val downloadFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val pixiViewFile = downloadFile.resolve("PixiView")
 
         if (!pixiViewFile.exists()) {
             pixiViewFile.mkdirs()

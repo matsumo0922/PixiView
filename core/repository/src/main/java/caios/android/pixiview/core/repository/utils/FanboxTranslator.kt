@@ -1,5 +1,6 @@
 package caios.android.pixiview.core.repository.utils
 
+import android.net.Uri
 import androidx.core.net.toUri
 import caios.android.pixiview.core.model.PageInfo
 import caios.android.pixiview.core.model.fanbox.FanboxBell
@@ -405,19 +406,22 @@ internal fun FanboxNewsLattersEntity.translate(): List<FanboxNewsLetter> {
 }
 
 internal fun FanboxBellItemsEntity.translate(): List<FanboxBell> {
+    val nextPage = Uri.parse(body.nextUrl).getQueryParameter("page")?.toIntOrNull()
+
     return body.items.mapNotNull {
         when (it.type) {
             "on_post_published" -> {
                 FanboxBell.PostPublished(
                     id = PostId(it.post!!.id),
-                    notifiedDatetime = it.notifiedDatetime,
+                    notifiedDatetime = OffsetDateTime.parse(it.notifiedDatetime),
                     post = it.post!!.translate(),
+                    nextPage = nextPage,
                 )
             }
             "post_comment" -> {
                 FanboxBell.Comment(
                     id = CommentId(it.id),
-                    notifiedDatetime = it.notifiedDatetime,
+                    notifiedDatetime = OffsetDateTime.parse(it.notifiedDatetime),
                     comment = it.postCommentBody!!,
                     isRootComment = it.isRootComment!!,
                     creatorId = CreatorId(it.creatorId!!),
@@ -425,16 +429,18 @@ internal fun FanboxBellItemsEntity.translate(): List<FanboxBell> {
                     postTitle = it.postTitle!!,
                     userName = it.userName!!,
                     userProfileIconUrl = it.userProfileImg!!,
+                    nextPage = nextPage,
                 )
             }
             "post_comment_like" -> {
                 FanboxBell.Like(
                     id = it.id,
-                    notifiedDatetime = it.notifiedDatetime,
+                    notifiedDatetime = OffsetDateTime.parse(it.notifiedDatetime),
                     comment = it.postCommentBody!!,
                     creatorId = CreatorId(it.creatorId!!),
                     postId = PostId(it.postId!!),
                     count = it.count!!,
+                    nextPage = nextPage,
                 )
             }
             else -> {

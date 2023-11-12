@@ -40,7 +40,10 @@ fun LibraryNavHost(
 
         libraryDiscoveryScreen()
 
-        libraryNotifyScreen()
+        libraryNotifyScreen(
+            openDrawer = openDrawer,
+            navigateToPostDetail = navigateToPostDetail,
+        )
 
         libraryMessageScreen()
     }

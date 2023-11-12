@@ -1,7 +1,6 @@
 package caios.android.pixiview.feature.creator.items
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
@@ -10,21 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -32,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
+import caios.android.pixiview.core.ui.component.PixiViewTopBar
 import caios.android.pixiview.core.ui.extensition.SimmerPlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.core.ui.extensition.marquee
@@ -113,39 +106,14 @@ internal fun CreatorTopHeader(
             overflow = TextOverflow.Ellipsis,
         )
 
-        TopAppBar(
+        PixiViewTopBar(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .statusBarsPadding(),
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.Transparent,
-                scrolledContainerColor = Color.Transparent,
-            ),
+            isTransparent = true,
             windowInsets = WindowInsets(0, 0, 0, 0),
-            title = { /* do nothing */ },
-            navigationIcon = {
-                Icon(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(50))
-                        .clickable { onClickTerminate.invoke() }
-                        .padding(6.dp),
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null,
-                )
-            },
-            actions = {
-                Icon(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .aspectRatio(1f)
-                        .clip(RoundedCornerShape(50))
-                        .clickable { onClickMenu.invoke() }
-                        .padding(6.dp),
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = null,
-                )
-            },
+            onClickNavigation = onClickTerminate,
+            onClickActions = onClickMenu,
         )
     }
 }
