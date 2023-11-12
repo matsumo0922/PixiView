@@ -74,13 +74,13 @@ private fun LibraryNotifyScreen(
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = {
-                    Text(stringResource(R.string.library_navigation_notify),)
+                    Text(stringResource(R.string.library_navigation_notify))
                 },
                 navigationIcon = {
                     IconButton(onClick = openDrawer) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },

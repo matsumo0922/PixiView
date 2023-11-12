@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LibraryNotifyViewModel @Inject constructor(
     private val fanboxRepository: FanboxRepository,
-): ViewModel() {
+) : ViewModel() {
 
     private val _screenState = MutableStateFlow<ScreenState<LibraryNotifyUiState>>(ScreenState.Loading)
 
@@ -32,7 +32,7 @@ class LibraryNotifyViewModel @Inject constructor(
             _screenState.value = ScreenState.Loading
             _screenState.value = suspendRunCatching {
                 LibraryNotifyUiState(
-                    bells = fanboxRepository.getBells()
+                    bells = fanboxRepository.getBells(),
                 )
             }.fold(
                 onSuccess = { ScreenState.Idle(it) },
@@ -46,7 +46,7 @@ class LibraryNotifyViewModel @Inject constructor(
             viewModelScope.launch {
                 _screenState.value = suspendRunCatching {
                     LibraryNotifyUiState(
-                        bells = it.data.bells + fanboxRepository.getBells(page)
+                        bells = it.data.bells + fanboxRepository.getBells(page),
                     )
                 }.fold(
                     onSuccess = { ScreenState.Idle(it) },
@@ -59,5 +59,5 @@ class LibraryNotifyViewModel @Inject constructor(
 
 @Stable
 data class LibraryNotifyUiState(
-    val bells: List<FanboxBell>
+    val bells: List<FanboxBell>,
 )

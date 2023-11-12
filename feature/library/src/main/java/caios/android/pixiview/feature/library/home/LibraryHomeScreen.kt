@@ -76,7 +76,7 @@ internal fun LibraryHomeScreen(
                     IconButton(onClick = openDrawer) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },

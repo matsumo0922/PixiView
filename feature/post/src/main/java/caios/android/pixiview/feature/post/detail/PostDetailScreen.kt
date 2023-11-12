@@ -166,7 +166,7 @@ private fun PostDetailScreen(
                 TagItems(
                     modifier = Modifier.weight(1f),
                     tags = postDetail.tags.toImmutableList(),
-                    onClickTag = {  },
+                    onClickTag = { },
                 )
 
                 PostDetailCommentLikeButton(

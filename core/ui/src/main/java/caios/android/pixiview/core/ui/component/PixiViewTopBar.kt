@@ -29,7 +29,7 @@ fun PixiViewTopBar(
     scrollBehavior: TopAppBarScrollBehavior? = null,
     isTransparent: Boolean = false,
     onClickNavigation: (() -> Unit)? = null,
-    onClickActions: (() -> Unit)? = null
+    onClickActions: (() -> Unit)? = null,
 ) {
     val colors = if (isTransparent) {
         TopAppBarDefaults.topAppBarColors(
@@ -57,7 +57,7 @@ fun PixiViewTopBar(
                 IconButton(onClick = onClickNavigation) {
                     Icon(
                         imageVector = navigationIcon,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
@@ -67,7 +67,7 @@ fun PixiViewTopBar(
                 IconButton(onClick = onClickActions) {
                     Icon(
                         imageVector = actionsIcon,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
@@ -87,7 +87,7 @@ fun PixiViewCenterAlignedTopBar(
     scrollBehavior: TopAppBarScrollBehavior? = null,
     isTransparent: Boolean = false,
     onClickNavigation: (() -> Unit)? = null,
-    onClickActions: (() -> Unit)? = null
+    onClickActions: (() -> Unit)? = null,
 ) {
     val colors = if (isTransparent) {
         TopAppBarDefaults.topAppBarColors(
@@ -115,7 +115,7 @@ fun PixiViewCenterAlignedTopBar(
                 IconButton(onClick = onClickNavigation) {
                     Icon(
                         imageVector = navigationIcon,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
@@ -125,7 +125,7 @@ fun PixiViewCenterAlignedTopBar(
                 IconButton(onClick = onClickActions) {
                     Icon(
                         imageVector = actionsIcon,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }

@@ -52,7 +52,7 @@ internal fun LoginScreen(
         Box(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             WebView(
                 modifier = Modifier.fillMaxSize(),
