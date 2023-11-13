@@ -94,7 +94,7 @@ private fun LibraryDiscoveryScreen(
         ) {
             items(
                 count = pagingAdapter.itemCount,
-                key = pagingAdapter.itemKey { it.creatorId.value },
+                key = pagingAdapter.itemKey(),
                 contentType = pagingAdapter.itemContentType(),
             ) { index ->
                 pagingAdapter[index]?.let { creatorDetail ->
