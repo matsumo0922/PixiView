@@ -45,7 +45,10 @@ fun LibraryNavHost(
             navigateToPostDetail = navigateToPostDetail,
         )
 
-        libraryMessageScreen()
+        libraryMessageScreen(
+            openDrawer = openDrawer,
+            navigateToCreatorPlans = navigateToCreatorPlans,
+        )
     }
 }
 

@@ -1,9 +1,14 @@
 package caios.android.pixiview.core.ui.theme
 
+import android.graphics.Typeface
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontSynthesis
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
@@ -113,3 +118,11 @@ fun TextStyle.italic() = this.merge(TextStyle(fontStyle = FontStyle.Italic))
 
 // Padding
 fun TextStyle.excludeFontPadding() = this.merge(TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)))
+
+@Composable
+fun TextStyle.asTypeface() = LocalFontFamilyResolver.current.resolve(
+    fontFamily = fontFamily,
+    fontWeight = fontWeight ?: FontWeight.Normal,
+    fontStyle = fontStyle ?: FontStyle.Normal,
+    fontSynthesis = fontSynthesis ?: FontSynthesis.All,
+).value as Typeface

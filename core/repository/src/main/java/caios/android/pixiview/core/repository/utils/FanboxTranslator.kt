@@ -390,7 +390,7 @@ internal fun FanboxNewsLattersEntity.translate(): List<FanboxNewsLetter> {
     return body.map {
         FanboxNewsLetter(
             body = it.body,
-            createdAt = it.createdAt,
+            createdAt = OffsetDateTime.parse(it.createdAt),
             creator = FanboxCreator(
                 creatorId = CreatorId(it.creator.creatorId),
                 user = FanboxUser(

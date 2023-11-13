@@ -72,21 +72,6 @@ private fun LibraryNotifyScreen(
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                title = {
-                    Text(stringResource(R.string.library_navigation_notify))
-                },
-                navigationIcon = {
-                    IconButton(onClick = openDrawer) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = null,
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior,
-            )
             PixiViewTopBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.library_navigation_notify),
