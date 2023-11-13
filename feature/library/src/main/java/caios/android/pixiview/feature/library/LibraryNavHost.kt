@@ -38,7 +38,10 @@ fun LibraryNavHost(
             navigateToCreatorPlans = navigateToCreatorPlans,
         )
 
-        libraryDiscoveryScreen()
+        libraryDiscoveryScreen(
+            openDrawer = openDrawer,
+            navigateToCreatorPlans = navigateToCreatorPlans,
+        )
 
         libraryNotifyScreen(
             openDrawer = openDrawer,

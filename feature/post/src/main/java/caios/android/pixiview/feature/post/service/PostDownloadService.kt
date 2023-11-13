@@ -21,6 +21,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,6 +37,9 @@ class PostDownloadService : Service() {
     private val binder = PostDownloadBinder()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+    private val imageMutex = Mutex()
+    private val fileMutex = Mutex()
+
     private val _downloadedEvent = Channel<PostId>()
 
     val downloadedEvent = _downloadedEvent.receiveAsFlow()
@@ -43,41 +48,45 @@ class PostDownloadService : Service() {
 
     fun downloadImages(imageItems: List<FanboxPostDetail.ImageItem>) {
         scope.launch {
-            createNotifyChannel()
+            imageMutex.withLock {
+                createNotifyChannel()
 
-            for (item in imageItems) {
-                val name = "illust-${item.postId}-${item.id}"
+                for (item in imageItems) {
+                    val name = "illust-${item.postId}-${item.id}"
 
-                setForegroundService(true, "$name.${item.extension}")
+                    setForegroundService(true, "$name.${item.extension}")
 
-                fanboxRepository.downloadImage(
-                    url = item.originalUrl,
-                    name = name,
-                    extension = item.extension,
-                )
+                    fanboxRepository.downloadImage(
+                        url = item.originalUrl,
+                        name = name,
+                        extension = item.extension,
+                    )
+                }
+
+                _downloadedEvent.send(imageItems.last().postId)
+                setForegroundService(false)
             }
-
-            _downloadedEvent.send(imageItems.last().postId)
-            setForegroundService(false)
         }
     }
 
     fun downloadFile(fileItem: FanboxPostDetail.FileItem) {
         scope.launch {
-            createNotifyChannel()
+            fileMutex.withLock {
+                createNotifyChannel()
 
-            val name = "file-${fileItem.postId}-${fileItem.id}"
+                val name = "file-${fileItem.postId}-${fileItem.id}"
 
-            setForegroundService(true, "$name.${fileItem.extension}")
+                setForegroundService(true, "$name.${fileItem.extension}")
 
-            fanboxRepository.downloadFile(
-                url = fileItem.url,
-                name = name,
-                extension = fileItem.extension,
-            )
+                fanboxRepository.downloadFile(
+                    url = fileItem.url,
+                    name = name,
+                    extension = fileItem.extension,
+                )
 
-            _downloadedEvent.send(fileItem.postId)
-            setForegroundService(false)
+                _downloadedEvent.send(fileItem.postId)
+                setForegroundService(false)
+            }
         }
     }
 

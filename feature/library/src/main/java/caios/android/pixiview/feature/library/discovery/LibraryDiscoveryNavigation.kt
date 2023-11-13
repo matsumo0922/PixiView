@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.ui.animation.NavigateAnimation
 
 const val LibraryDiscoveryRoute = "libraryDiscovery"
@@ -14,14 +15,19 @@ fun NavController.navigateToLibraryDiscovery(navOptions: NavOptions? = null) {
     this.navigate(LibraryDiscoveryRoute, navOptions)
 }
 
-fun NavGraphBuilder.libraryDiscoveryScreen() {
+fun NavGraphBuilder.libraryDiscoveryScreen(
+    openDrawer: () -> Unit,
+    navigateToCreatorPlans: (CreatorId) -> Unit,
+) {
     composable(
         route = LibraryDiscoveryRoute,
         enterTransition = { NavigateAnimation.Library.enter },
         exitTransition = { NavigateAnimation.Library.exit },
     ) {
-        LibraryDiscoveryScreen(
+        LibraryDiscoveryRoute(
             modifier = Modifier.fillMaxSize(),
+            openDrawer = openDrawer,
+            navigateToCreatorPlans = navigateToCreatorPlans,
         )
     }
 }

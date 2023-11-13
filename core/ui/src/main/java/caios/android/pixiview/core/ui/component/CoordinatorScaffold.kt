@@ -140,7 +140,7 @@ private fun CoordinatorScaffoldPreview() {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(128.dp)
+                        .height(80.dp)
                         .background(Color.LightGray),
                 )
             }

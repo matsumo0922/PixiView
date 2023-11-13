@@ -111,9 +111,7 @@ internal fun LibraryHomeScreen(
                 when (tabs[it]) {
                     HomeTabs.Home -> {
                         LazyPagingItemsLoadSurface(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f),
+                            modifier = Modifier.fillMaxSize(),
                             lazyPagingItems = homePager,
                         ) {
                             LibraryHomeIdleSection(
@@ -127,9 +125,7 @@ internal fun LibraryHomeScreen(
                     }
                     HomeTabs.Supported -> {
                         LazyPagingItemsLoadSurface(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f),
+                            modifier = Modifier.fillMaxSize(),
                             lazyPagingItems = supportedPager,
                         ) {
                             LibrarySupportedIdleSection(

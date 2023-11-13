@@ -33,13 +33,16 @@ import caios.android.pixiview.core.repository.utils.parse
 import caios.android.pixiview.core.repository.utils.translate
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsChannel
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMessageBuilder
+import io.ktor.http.Parameters
 import io.ktor.util.cio.writeChannel
 import io.ktor.utils.io.ByteWriteChannel
 import io.ktor.utils.io.copyAndClose
@@ -47,7 +50,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 interface FanboxRepository {
@@ -78,6 +83,9 @@ interface FanboxRepository {
     suspend fun getNewsLetters(): List<FanboxNewsLetter>
 
     suspend fun getBells(page: Int = 1): PageNumberInfo<FanboxBell>
+
+    suspend fun followCreator(creatorUserId: String)
+    suspend fun unfollowCreator(creatorUserId: String)
 
     suspend fun downloadImage(url: String, name: String, extension: String)
     suspend fun downloadFile(url: String, name: String, extension: String)
@@ -161,7 +169,7 @@ class FanboxRepositoryImpl(
     }
 
     override suspend fun getRecommendedCreators(): List<FanboxCreatorDetail> = withContext(ioDispatcher) {
-        get("creator.listRecommended").parse<FanboxCreatorItemsEntity>()!!.translate()
+        get("creator.listRecommended", mapOf("limit" to PAGE_LIMIT)).parse<FanboxCreatorItemsEntity>()!!.translate()
     }
 
     override suspend fun getCreator(creatorId: CreatorId): FanboxCreatorDetail = withContext(ioDispatcher) {
@@ -206,6 +214,16 @@ class FanboxRepositoryImpl(
         }
     }
 
+    @Deprecated("動作未確認")
+    override suspend fun followCreator(creatorUserId: String): Unit = withContext(ioDispatcher) {
+        post("follow.create", mapOf("creatorUserId" to creatorUserId))
+    }
+
+    @Deprecated("動作未確認")
+    override suspend fun unfollowCreator(creatorUserId: String): Unit = withContext(ioDispatcher) {
+        post("follow.delete", mapOf("creatorUserId" to creatorUserId))
+    }
+
     override suspend fun downloadImage(url: String, name: String, extension: String) = withContext(ioDispatcher) {
         val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
         val pictureFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
@@ -243,6 +261,21 @@ class FanboxRepositoryImpl(
 
             for ((key, value) in parameters) {
                 parameter(key, value)
+            }
+        }
+    }
+
+    private suspend fun post(dir: String, parameters: Map<String, String> = emptyMap()): HttpResponse {
+        return client.submitForm(
+            url = "$API/$dir",
+            formParameters = Parameters.build {
+                for ((key, value) in parameters) {
+                    append(key, value)
+                }
+            },
+        ) {
+            runBlocking {
+                fanboxHeader()
             }
         }
     }
