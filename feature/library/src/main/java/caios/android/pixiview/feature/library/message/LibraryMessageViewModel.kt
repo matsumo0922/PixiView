@@ -32,11 +32,11 @@ class LibraryMessageViewModel @Inject constructor(
             _screenState.value = ScreenState.Loading
             _screenState.value = suspendRunCatching {
                 LibraryMessageUiState(
-                    messages = fanboxRepository.getNewsLetters()
+                    messages = fanboxRepository.getNewsLetters(),
                 )
             }.fold(
                 onSuccess = { ScreenState.Idle(it) },
-                onFailure = { ScreenState.Error(R.string.error_network) }
+                onFailure = { ScreenState.Error(R.string.error_network) },
             )
         }
     }

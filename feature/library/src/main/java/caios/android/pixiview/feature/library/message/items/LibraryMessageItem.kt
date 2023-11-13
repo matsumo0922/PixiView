@@ -1,9 +1,5 @@
 package caios.android.pixiview.feature.library.message.items
 
-import android.os.Build
-import android.text.method.LinkMovementMethod
-import android.text.util.Linkify
-import android.widget.TextView
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,19 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.text.util.LinkifyCompat
 import caios.android.pixiview.core.model.fanbox.FanboxNewsLetter
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.ui.component.AutoLinkText

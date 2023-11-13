@@ -3,7 +3,6 @@ package caios.android.pixiview.core.ui.theme
 import android.graphics.Typeface
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
