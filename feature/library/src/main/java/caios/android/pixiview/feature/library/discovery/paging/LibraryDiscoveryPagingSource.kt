@@ -3,7 +3,6 @@ package caios.android.pixiview.feature.library.discovery.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import caios.android.pixiview.core.common.util.suspendRunCatching
-import caios.android.pixiview.core.model.fanbox.FanboxBell
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.repository.FanboxRepository
 
