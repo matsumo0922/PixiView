@@ -275,13 +275,13 @@ class FanboxRepositoryImpl(
     private fun getUri(context: Context, name: String, parent: String): Uri? {
         val contentResolver = context.contentResolver
         val contentValues = ContentValues().apply {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(MediaStore.Images.ImageColumns.RELATIVE_PATH, "${parent}/PixiView")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.Images.ImageColumns.RELATIVE_PATH, "$parent/PixiView")
             } else {
-                val path = Environment.getExternalStorageDirectory().path + "/${parent}/PixiView/"
+                val path = Environment.getExternalStorageDirectory().path + "/$parent/PixiView/"
                 val dir = File(Environment.getExternalStorageDirectory().path + "/$parent", "PixiView")
 
-                if(!dir.exists()) {
+                if (!dir.exists()) {
                     dir.mkdir()
                 }
 

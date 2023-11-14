@@ -37,7 +37,7 @@ internal fun PostDetailImageItem(
         modifier = modifier
             .aspectRatio(item.aspectRatio)
             .combinedClickable(
-                onClick = { onClickImage.invoke(item)},
+                onClick = { onClickImage.invoke(item) },
                 onLongClick = { isShowMenu = true },
             ),
         model = ImageRequest.Builder(LocalContext.current)

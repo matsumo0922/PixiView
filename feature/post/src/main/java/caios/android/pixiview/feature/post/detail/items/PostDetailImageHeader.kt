@@ -24,7 +24,7 @@ internal fun PostDetailImageHeader(
                 item = item,
                 onClickImage = onClickImage,
                 onClickDownload = { onClickDownload.invoke(listOf(item)) },
-                onClickAllDownload = { onClickDownload.invoke(content.imageItems) }
+                onClickAllDownload = { onClickDownload.invoke(content.imageItems) },
             )
         }
 

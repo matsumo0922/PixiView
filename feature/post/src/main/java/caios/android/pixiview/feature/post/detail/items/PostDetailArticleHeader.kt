@@ -39,7 +39,7 @@ internal fun PostDetailArticleHeader(
                         item = item.item,
                         onClickImage = onClickImage,
                         onClickDownload = { onClickDownload.invoke(listOf(item.item)) },
-                        onClickAllDownload = { onClickDownload.invoke(content.imageItems) }
+                        onClickAllDownload = { onClickDownload.invoke(content.imageItems) },
                     )
                 }
 
