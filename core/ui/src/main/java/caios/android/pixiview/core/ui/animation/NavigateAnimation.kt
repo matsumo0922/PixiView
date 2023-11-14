@@ -23,6 +23,15 @@ object NavigateAnimation {
         val exit = fadeOut(tween(240))
     }
 
+    object Fade {
+        private const val DURATION_FADE = 180
+
+        val enter = fadeIn(tween(DURATION_FADE))
+        val popExit = fadeOut(tween(DURATION_FADE))
+        val popEnter = fadeIn(tween(DURATION_FADE))
+        val exit = fadeOut(tween(DURATION_FADE))
+    }
+
     object Vertical {
         private const val DURATION_FADE = 180
         private const val DURATION_SLIDE = 180

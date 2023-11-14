@@ -11,7 +11,7 @@ import caios.android.pixiview.core.ui.view.ErrorView
 import caios.android.pixiview.core.ui.view.LoadingView
 
 @Composable
-fun <T : Any> LazyPagingItemsLoadSurface(
+fun <T : Any> LazyPagingItemsLoadContents(
     lazyPagingItems: LazyPagingItems<T>,
     modifier: Modifier = Modifier,
     emptyComponent: @Composable () -> Unit = {},

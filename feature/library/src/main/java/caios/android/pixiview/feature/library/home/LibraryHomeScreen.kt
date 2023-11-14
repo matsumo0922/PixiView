@@ -32,7 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
-import caios.android.pixiview.core.ui.LazyPagingItemsLoadSurface
+import caios.android.pixiview.core.ui.LazyPagingItemsLoadContents
 import caios.android.pixiview.feature.library.R
 import caios.android.pixiview.feature.library.home.items.LibraryHomeIdleSection
 import caios.android.pixiview.feature.library.home.items.LibrarySupportedIdleSection
@@ -110,7 +110,7 @@ internal fun LibraryHomeScreen(
             HorizontalPager(pagerState) {
                 when (tabs[it]) {
                     HomeTabs.Home -> {
-                        LazyPagingItemsLoadSurface(
+                        LazyPagingItemsLoadContents(
                             modifier = Modifier.fillMaxSize(),
                             lazyPagingItems = homePager,
                         ) {
@@ -124,7 +124,7 @@ internal fun LibraryHomeScreen(
                         }
                     }
                     HomeTabs.Supported -> {
-                        LazyPagingItemsLoadSurface(
+                        LazyPagingItemsLoadContents(
                             modifier = Modifier.fillMaxSize(),
                             lazyPagingItems = supportedPager,
                         ) {

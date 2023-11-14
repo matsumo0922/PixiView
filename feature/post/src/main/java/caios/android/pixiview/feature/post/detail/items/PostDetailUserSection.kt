@@ -42,7 +42,6 @@ internal fun PostDetailUserSection(
                 .fanboxHeader()
                 .error(R.drawable.im_default_user)
                 .data(post.user.iconUrl)
-                .crossfade(true)
                 .build(),
             contentDescription = null,
         )

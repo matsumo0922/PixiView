@@ -33,7 +33,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.AsyncLoadContents
-import caios.android.pixiview.core.ui.LazyPagingItemsLoadSurface
+import caios.android.pixiview.core.ui.LazyPagingItemsLoadContents
 import caios.android.pixiview.feature.creator.items.CreatorTopHeader
 import caios.android.pixiview.feature.creator.items.CreatorTopPlansScreen
 import caios.android.pixiview.feature.creator.items.CreatorTopPostsScreen
@@ -144,7 +144,7 @@ private fun CreatorTopScreen(
             HorizontalPager(pagerState) {
                 when (tabs[it]) {
                     CreatorTab.POSTS -> {
-                        LazyPagingItemsLoadSurface(
+                        LazyPagingItemsLoadContents(
                             modifier = Modifier.fillMaxWidth(),
                             lazyPagingItems = creatorPostsPaging,
                         ) {

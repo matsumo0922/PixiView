@@ -80,7 +80,6 @@ private fun CreatorItem(
                 .clip(CircleShape)
                 .size(36.dp),
             model = ImageRequest.Builder(LocalContext.current)
-                .crossfade(true)
                 .error(R.drawable.im_default_user)
                 .data(post.user.iconUrl)
                 .build(),

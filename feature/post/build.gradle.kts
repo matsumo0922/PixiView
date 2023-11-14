@@ -17,5 +17,5 @@ dependencies {
     implementation(project(":core:ui"))
 
     implementation(libs.bundles.ui.implementation)
-    kapt(libs.bundles.ui.kapt)
+    implementation(libs.zoomable)
 }

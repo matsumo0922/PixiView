@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.post.detail
+package caios.android.pixiview.feature.post.image
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -16,11 +16,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PostDetailViewModel @Inject constructor(
+class PostImageViewModel @Inject constructor(
     private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
 
-    private val _screenState = MutableStateFlow<ScreenState<PostDetailUiState>>(ScreenState.Loading)
+    private val _screenState = MutableStateFlow<ScreenState<PostImageUiState>>(ScreenState.Loading)
 
     val screenState = _screenState.asStateFlow()
 
@@ -28,9 +28,11 @@ class PostDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _screenState.value = ScreenState.Loading
             _screenState.value = suspendRunCatching {
-                fanboxRepository.getPostCached(postId)
+                PostImageUiState(
+                    postDetail = fanboxRepository.getPostCached(postId),
+                )
             }.fold(
-                onSuccess = { ScreenState.Idle(PostDetailUiState(it)) },
+                onSuccess = { ScreenState.Idle(it) },
                 onFailure = { ScreenState.Error(R.string.error_network) },
             )
         }
@@ -38,7 +40,6 @@ class PostDetailViewModel @Inject constructor(
 }
 
 @Stable
-data class PostDetailUiState(
+data class PostImageUiState(
     val postDetail: FanboxPostDetail,
-    val messageToast: Int? = null,
 )

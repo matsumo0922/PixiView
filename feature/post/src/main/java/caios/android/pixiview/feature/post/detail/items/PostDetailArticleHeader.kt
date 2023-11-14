@@ -20,6 +20,7 @@ internal fun PostDetailArticleHeader(
     onClickCreator: (CreatorId) -> Unit,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
     onClickFile: (FanboxPostDetail.FileItem) -> Unit,
+    onClickDownload: (List<FanboxPostDetail.ImageItem>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -37,6 +38,8 @@ internal fun PostDetailArticleHeader(
                         modifier = Modifier.fillMaxWidth(),
                         item = item.item,
                         onClickImage = onClickImage,
+                        onClickDownload = { onClickDownload.invoke(listOf(item.item)) },
+                        onClickAllDownload = { onClickDownload.invoke(content.imageItems) }
                     )
                 }
 

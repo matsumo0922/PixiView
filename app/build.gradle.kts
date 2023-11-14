@@ -93,8 +93,13 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
+kotlin {
+    sourceSets.all {
+        languageSettings {
+            // Try K2 compiler
+            languageVersion = "2.0"
+        }
+    }
 }
 
 dependencies {
@@ -116,8 +121,6 @@ dependencies {
     implementation(libs.bundles.ui.implementation)
     implementation(libs.bundles.firebase)
     implementation(libs.bundles.ktor)
-
-    kapt(libs.bundles.ui.kapt)
 
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.play.service.oss)

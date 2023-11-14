@@ -50,7 +50,6 @@ internal fun CreatorTopHeader(
                 .blur(8.dp),
             model = ImageRequest.Builder(LocalContext.current)
                 .fanboxHeader()
-                .crossfade(true)
                 .data(creatorDetail.coverImageUrl ?: creatorDetail.user.iconUrl)
                 .build(),
             loading = {
@@ -81,7 +80,6 @@ internal fun CreatorTopHeader(
                     .aspectRatio(1f),
                 model = ImageRequest.Builder(LocalContext.current)
                     .fanboxHeader()
-                    .crossfade(true)
                     .error(R.drawable.im_default_user)
                     .data(creatorDetail.user.iconUrl)
                     .build(),

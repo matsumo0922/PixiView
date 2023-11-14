@@ -14,7 +14,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("kotlin-android")
-                apply("kotlin-kapt")
                 apply("kotlin-parcelize")
                 apply("kotlinx-serialization")
                 apply("project-report")

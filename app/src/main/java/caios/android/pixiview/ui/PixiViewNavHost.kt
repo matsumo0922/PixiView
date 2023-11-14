@@ -11,6 +11,8 @@ import caios.android.pixiview.feature.library.LibraryRoute
 import caios.android.pixiview.feature.library.libraryScreen
 import caios.android.pixiview.feature.post.detail.navigateToPostDetail
 import caios.android.pixiview.feature.post.detail.postDetailScreen
+import caios.android.pixiview.feature.post.image.navigateToPostImage
+import caios.android.pixiview.feature.post.image.postImageScreen
 
 @Composable
 internal fun PixiViewNavHost(
@@ -31,8 +33,13 @@ internal fun PixiViewNavHost(
 
         postDetailScreen(
             navigateToPostDetail = { navController.navigateToPostDetail(it) },
+            navigateToPostImage = { postId, index -> navController.navigateToPostImage(postId, index) },
             navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
             navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+            terminate = { navController.popBackStack() },
+        )
+
+        postImageScreen(
             terminate = { navController.popBackStack() },
         )
 

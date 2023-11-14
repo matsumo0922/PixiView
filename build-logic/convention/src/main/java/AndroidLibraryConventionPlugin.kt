@@ -12,7 +12,6 @@ class AndroidLibraryConventionPlugin: Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.library")
                 apply("kotlin-android")
-                apply("kotlin-kapt")
                 apply("kotlin-parcelize")
                 apply("kotlinx-serialization")
                 apply("project-report")

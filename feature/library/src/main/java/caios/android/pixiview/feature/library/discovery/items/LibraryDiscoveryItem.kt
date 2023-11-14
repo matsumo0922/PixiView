@@ -62,7 +62,6 @@ internal fun LibraryDiscoveryItem(
                             .clip(RoundedCornerShape(4.dp)),
                         model = ImageRequest.Builder(LocalContext.current)
                             .fanboxHeader()
-                            .crossfade(true)
                             .data(it.thumbnailUrl)
                             .build(),
                         loading = {
@@ -86,7 +85,6 @@ internal fun LibraryDiscoveryItem(
                     .clip(CircleShape)
                     .size(36.dp),
                 model = ImageRequest.Builder(LocalContext.current)
-                    .crossfade(true)
                     .error(R.drawable.im_default_user)
                     .data(creatorDetail.user.iconUrl)
                     .build(),

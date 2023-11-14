@@ -14,6 +14,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 internal fun PostDetailImageHeader(
     content: FanboxPostDetail.Body.Image,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
+    onClickDownload: (List<FanboxPostDetail.ImageItem>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -22,6 +23,8 @@ internal fun PostDetailImageHeader(
                 modifier = Modifier.fillMaxWidth(),
                 item = item,
                 onClickImage = onClickImage,
+                onClickDownload = { onClickDownload.invoke(listOf(item)) },
+                onClickAllDownload = { onClickDownload.invoke(content.imageItems) }
             )
         }
 

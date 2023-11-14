@@ -52,7 +52,6 @@ internal fun CreatorTopPlansScreen(
                                 .clip(RoundedCornerShape(4.dp)),
                             model = ImageRequest.Builder(LocalContext.current)
                                 .fanboxHeader()
-                                .crossfade(true)
                                 .data(it.thumbnailUrl)
                                 .build(),
                             loading = {

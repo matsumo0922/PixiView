@@ -25,7 +25,7 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import caios.android.pixiview.core.model.fanbox.FanboxBell
 import caios.android.pixiview.core.model.fanbox.id.PostId
-import caios.android.pixiview.core.ui.LazyPagingItemsLoadSurface
+import caios.android.pixiview.core.ui.LazyPagingItemsLoadContents
 import caios.android.pixiview.core.ui.component.PixiViewTopBar
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 import caios.android.pixiview.feature.library.R
@@ -41,7 +41,7 @@ internal fun LibraryNotifyRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val paging = uiState.paging.collectAsLazyPagingItems()
 
-    LazyPagingItemsLoadSurface(
+    LazyPagingItemsLoadContents(
         modifier = modifier,
         lazyPagingItems = paging,
     ) {

@@ -62,6 +62,7 @@ import java.time.format.DateTimeFormatter
 internal fun PostDetailRoute(
     postId: PostId,
     navigateToPostDetail: (PostId) -> Unit,
+    navigateToPostImage: (PostId, Int) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
     terminate: () -> Unit,
@@ -86,7 +87,11 @@ internal fun PostDetailRoute(
             postDetail = uiState.postDetail,
             onClickPost = navigateToPostDetail,
             onClickCreator = navigateToCreatorPlans,
-            onClickImage = { },
+            onClickImage = { item ->
+                uiState.postDetail.body.imageItems.indexOf(item).let { index ->
+                    navigateToPostImage.invoke(postId, index)
+                }
+            },
             onClickFile = postDownloader::onDownloadFile,
             onClickDownloadImages = postDownloader::onDownloadImages,
             onClickCreatorPosts = navigateToCreatorPosts,
@@ -123,7 +128,6 @@ private fun PostDetailScreen(
     CoordinatorScaffold(
         modifier = modifier,
         onClickNavigateUp = onTerminate,
-        onClickMenu = {},
         header = {
             if (!isShowCoordinateHeader) {
                 PostDetailContent(
@@ -133,6 +137,7 @@ private fun PostDetailScreen(
                     onClickPost = onClickPost,
                     onClickImage = onClickImage,
                     onClickFile = onClickFile,
+                    onClickDownload = onClickDownloadImages,
                 )
             } else {
                 PostDetailHeader(
@@ -151,6 +156,7 @@ private fun PostDetailScreen(
                     onClickPost = onClickPost,
                     onClickImage = onClickImage,
                     onClickFile = onClickFile,
+                    onClickDownload = onClickDownloadImages,
                 )
             }
         }
@@ -248,7 +254,6 @@ private fun PostDetailHeader(
                     .aspectRatio(4 / 3f),
                 model = ImageRequest.Builder(LocalContext.current)
                     .fanboxHeader()
-                    .crossfade(true)
                     .data(post.coverImageUrl)
                     .build(),
                 loading = {
@@ -311,6 +316,7 @@ private fun PostDetailContent(
     onClickCreator: (CreatorId) -> Unit,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
     onClickFile: (FanboxPostDetail.FileItem) -> Unit,
+    onClickDownload: (List<FanboxPostDetail.ImageItem>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier) {
@@ -323,6 +329,7 @@ private fun PostDetailContent(
                     onClickCreator = onClickCreator,
                     onClickImage = onClickImage,
                     onClickFile = onClickFile,
+                    onClickDownload = onClickDownload,
                 )
             }
 
@@ -331,6 +338,7 @@ private fun PostDetailContent(
                     modifier = Modifier.fillMaxWidth(),
                     content = content,
                     onClickImage = onClickImage,
+                    onClickDownload = onClickDownload,
                 )
             }
 

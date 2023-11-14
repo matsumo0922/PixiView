@@ -16,7 +16,6 @@ dependencies {
     implementation(project(":core:datastore"))
 
     implementation(libs.bundles.ui.implementation)
-    kapt(libs.bundles.ui.kapt)
 
     implementation(libs.androidx.palette)
     implementation(libs.reorderble.compose)

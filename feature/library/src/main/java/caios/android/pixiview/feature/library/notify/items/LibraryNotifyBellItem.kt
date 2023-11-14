@@ -88,7 +88,6 @@ private fun PostPublishedItem(
                 .clip(CircleShape)
                 .size(36.dp),
             model = ImageRequest.Builder(LocalContext.current)
-                .crossfade(true)
                 .error(R.drawable.im_default_user)
                 .data(bell.post.user.iconUrl)
                 .build(),
@@ -145,7 +144,6 @@ private fun PostPublishedItem(
                             .clip(RoundedCornerShape(4.dp)),
                         model = ImageRequest.Builder(LocalContext.current)
                             .fanboxHeader()
-                            .crossfade(true)
                             .data(bell.post.cover?.url)
                             .build(),
                         loading = {
@@ -177,7 +175,6 @@ private fun CommentItem(
                 .clip(CircleShape)
                 .size(36.dp),
             model = ImageRequest.Builder(LocalContext.current)
-                .crossfade(true)
                 .error(R.drawable.im_default_user)
                 .data(bell.userProfileIconUrl)
                 .build(),

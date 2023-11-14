@@ -1,8 +1,12 @@
 package caios.android.pixiview.core.repository
 
+import android.content.ContentValues
 import android.content.Context
 import android.media.MediaScannerConnection
+import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
 import caios.android.pixiview.core.model.PageCursorInfo
@@ -42,15 +46,15 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsChannel
 import io.ktor.http.HttpMessageBuilder
 import io.ktor.http.Parameters
-import io.ktor.util.cio.writeChannel
-import io.ktor.utils.io.ByteWriteChannel
-import io.ktor.utils.io.copyAndClose
+import io.ktor.utils.io.jvm.javaio.copyTo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.OutputStream
 import javax.inject.Inject
 
 interface FanboxRepository {
@@ -64,6 +68,7 @@ interface FanboxRepository {
     suspend fun getSupportedPosts(cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
     suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
     suspend fun getPost(postId: PostId): FanboxPostDetail
+    suspend fun getPostCached(postId: PostId): FanboxPostDetail
 
     suspend fun getFollowingCreators(): List<FanboxCreatorDetail>
     suspend fun getRecommendedCreators(): List<FanboxCreatorDetail>
@@ -97,6 +102,8 @@ class FanboxRepositoryImpl(
 ) : FanboxRepository {
 
     override val cookie: SharedFlow<String> = fanboxCookiePreference.data
+
+    private val postCache = mutableMapOf<PostId, FanboxPostDetail>()
 
     @Inject
     constructor(
@@ -159,7 +166,13 @@ class FanboxRepositoryImpl(
     }
 
     override suspend fun getPost(postId: PostId): FanboxPostDetail = withContext(ioDispatcher) {
-        get("post.info", mapOf("postId" to postId.value)).parse<FanboxPostDetailEntity>()!!.translate()
+        get("post.info", mapOf("postId" to postId.value)).parse<FanboxPostDetailEntity>()!!.translate().also {
+            postCache[postId] = it
+        }
+    }
+
+    override suspend fun getPostCached(postId: PostId): FanboxPostDetail = withContext(ioDispatcher) {
+        postCache.getOrPut(postId) { getPost(postId) }
     }
 
     override suspend fun getFollowingCreators(): List<FanboxCreatorDetail> = withContext(ioDispatcher) {
@@ -223,33 +236,62 @@ class FanboxRepositoryImpl(
     }
 
     override suspend fun downloadImage(url: String, name: String, extension: String) = withContext(ioDispatcher) {
-        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-        val pictureFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val pixiViewFile = pictureFile.resolve("PixiView")
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            val itemFile = getExternalFile("$name.$extension", Environment.DIRECTORY_PICTURES)
 
-        if (!pixiViewFile.exists()) {
-            pixiViewFile.mkdirs()
+            download(url, itemFile.outputStream())
+            MediaScannerConnection.scanFile(context, arrayOf(itemFile.absolutePath), arrayOf(mime), null)
+        } else {
+            val uri = getUri(context, "$name.$extension", Environment.DIRECTORY_PICTURES)
+            download(url, context.contentResolver.openOutputStream(uri!!)!!)
         }
-
-        val itemFile = pixiViewFile.resolve("$name.$extension")
-
-        download(url, itemFile.writeChannel())
-        MediaScannerConnection.scanFile(context, arrayOf(itemFile.absolutePath), arrayOf(mime), null)
     }
 
     override suspend fun downloadFile(url: String, name: String, extension: String) = withContext(ioDispatcher) {
-        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-        val downloadFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            val itemFile = getExternalFile("$name.$extension", Environment.DIRECTORY_DOWNLOADS)
+
+            download(url, itemFile.outputStream())
+            MediaScannerConnection.scanFile(context, arrayOf(itemFile.absolutePath), arrayOf(mime), null)
+        } else {
+            val uri = getUri(context, "$name.$extension", Environment.DIRECTORY_DOWNLOADS)
+            download(url, context.contentResolver.openOutputStream(uri!!)!!)
+        }
+    }
+
+    private fun getExternalFile(name: String, parent: String): File {
+        val downloadFile = Environment.getExternalStoragePublicDirectory(parent)
         val pixiViewFile = downloadFile.resolve("PixiView")
 
         if (!pixiViewFile.exists()) {
             pixiViewFile.mkdirs()
         }
 
-        val itemFile = pixiViewFile.resolve("$name.$extension")
+        return pixiViewFile.resolve(name)
+    }
 
-        download(url, itemFile.writeChannel())
-        MediaScannerConnection.scanFile(context, arrayOf(itemFile.absolutePath), arrayOf(mime), null)
+    private fun getUri(context: Context, name: String, parent: String): Uri? {
+        val contentResolver = context.contentResolver
+        val contentValues = ContentValues().apply {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.Images.ImageColumns.RELATIVE_PATH, "${parent}/PixiView")
+            } else {
+                val path = Environment.getExternalStorageDirectory().path + "/${parent}/PixiView/"
+                val dir = File(Environment.getExternalStorageDirectory().path + "/$parent", "PixiView")
+
+                if(!dir.exists()) {
+                    dir.mkdir()
+                }
+
+                put(MediaStore.Images.ImageColumns.DATA, path + name)
+            }
+            put(MediaStore.Images.ImageColumns.DISPLAY_NAME, name)
+            put(MediaStore.Images.ImageColumns.DATE_TAKEN, System.currentTimeMillis())
+        }
+
+        return contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
     }
 
     private suspend fun get(dir: String, parameters: Map<String, String> = emptyMap()): HttpResponse {
@@ -278,13 +320,13 @@ class FanboxRepositoryImpl(
         }
     }
 
-    private suspend fun download(url: String, writeChannel: ByteWriteChannel) {
+    private suspend fun download(url: String, outputStream: OutputStream) {
         client.get {
             url(url)
             fanboxHeader()
         }
             .bodyAsChannel()
-            .copyAndClose(writeChannel)
+            .copyTo(outputStream)
     }
 
     private suspend fun HttpMessageBuilder.fanboxHeader() {

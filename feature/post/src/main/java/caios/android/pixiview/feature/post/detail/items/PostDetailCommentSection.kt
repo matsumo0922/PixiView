@@ -72,7 +72,6 @@ private fun CommentItem(
                 .clip(CircleShape)
                 .size(36.dp),
             model = ImageRequest.Builder(LocalContext.current)
-                .crossfade(true)
                 .error(R.drawable.im_default_user)
                 .data(comment.user.iconUrl)
                 .build(),

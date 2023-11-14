@@ -87,7 +87,6 @@ fun PostItem(
                         model = ImageRequest.Builder(LocalContext.current)
                             .fanboxHeader()
                             .data(post.cover?.url)
-                            .crossfade(true)
                             .build(),
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
@@ -187,7 +186,6 @@ private fun UserSection(
                 model = ImageRequest.Builder(LocalContext.current)
                     .error(R.drawable.im_default_user)
                     .data(post.user.iconUrl)
-                    .crossfade(true)
                     .build(),
                 contentDescription = null,
             )

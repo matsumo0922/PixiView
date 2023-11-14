@@ -41,8 +41,8 @@ fun CoordinatorScaffold(
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
     color: Color = MaterialTheme.colorScheme.surface,
-    onClickNavigateUp: () -> Unit = {},
-    onClickMenu: () -> Unit = {},
+    onClickNavigateUp: (() -> Unit)? = null,
+    onClickMenu: (() -> Unit)? = null,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(0.dp),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
@@ -101,8 +101,8 @@ fun CoordinatorScaffold(
 private fun CoordinatorToolBar(
     color: Color,
     backgroundAlpha: Float,
-    onClickNavigateUp: () -> Unit,
-    onClickMenu: () -> Unit,
+    onClickNavigateUp: (() -> Unit)?,
+    onClickMenu: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     Surface(
