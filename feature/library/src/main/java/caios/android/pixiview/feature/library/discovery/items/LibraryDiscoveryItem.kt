@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
-import caios.android.pixiview.core.ui.extensition.SimmerPlaceHolder
+import caios.android.pixiview.core.ui.extensition.FadePlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.feature.library.R
@@ -65,7 +65,7 @@ internal fun LibraryDiscoveryItem(
                             .data(it.thumbnailUrl)
                             .build(),
                         loading = {
-                            SimmerPlaceHolder()
+                            FadePlaceHolder()
                         },
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
@@ -89,7 +89,7 @@ internal fun LibraryDiscoveryItem(
                     .data(creatorDetail.user.iconUrl)
                     .build(),
                 loading = {
-                    SimmerPlaceHolder()
+                    FadePlaceHolder()
                 },
                 contentDescription = null,
             )

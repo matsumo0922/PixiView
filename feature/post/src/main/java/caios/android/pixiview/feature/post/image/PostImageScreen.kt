@@ -19,11 +19,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.contract.PostDownloader
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.core.ui.component.PixiViewTopBar
+import caios.android.pixiview.core.ui.extensition.IndicatorPlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.feature.post.image.items.PostImageMenuDialog
 import coil.compose.SubcomposeAsyncImage
@@ -44,7 +46,9 @@ internal fun PostImageRoute(
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     LaunchedEffect(postId) {
-        viewModel.fetch(postId)
+        if (screenState !is ScreenState.Idle) {
+            viewModel.fetch(postId)
+        }
     }
 
     AsyncLoadContents(
@@ -89,8 +93,11 @@ private fun PostImageScreen(
                     .zoomable(zoomState),
                 model = ImageRequest.Builder(LocalContext.current)
                     .fanboxHeader()
-                    .data(postDetail.body.imageItems[it].originalUrl)
+                    .data(postDetail.body.imageItems[it].thumbnailUrl)
                     .build(),
+                loading = {
+                    IndicatorPlaceHolder()
+                },
                 contentScale = ContentScale.Fit,
                 contentDescription = null,
             )

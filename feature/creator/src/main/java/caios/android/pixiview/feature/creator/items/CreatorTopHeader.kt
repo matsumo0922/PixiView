@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.ui.component.PixiViewTopBar
-import caios.android.pixiview.core.ui.extensition.SimmerPlaceHolder
+import caios.android.pixiview.core.ui.extensition.FadePlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.core.ui.extensition.marquee
 import caios.android.pixiview.core.ui.theme.bold
@@ -53,7 +53,7 @@ internal fun CreatorTopHeader(
                 .data(creatorDetail.coverImageUrl ?: creatorDetail.user.iconUrl)
                 .build(),
             loading = {
-                SimmerPlaceHolder()
+                FadePlaceHolder()
             },
             contentScale = ContentScale.Crop,
             contentDescription = null,
@@ -84,7 +84,7 @@ internal fun CreatorTopHeader(
                     .data(creatorDetail.user.iconUrl)
                     .build(),
                 loading = {
-                    SimmerPlaceHolder()
+                    FadePlaceHolder()
                 },
                 contentScale = ContentScale.Crop,
                 contentDescription = null,

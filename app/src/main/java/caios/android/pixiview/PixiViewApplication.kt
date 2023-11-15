@@ -8,6 +8,8 @@ import caios.android.pixiview.core.common.PixiViewDebugTree
 import caios.android.pixiview.feature.report.CrushReportActivity
 import coil.Coil
 import coil.ImageLoader
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import com.google.android.material.color.DynamicColors
@@ -68,6 +70,14 @@ class PixiViewApplication : Application() {
                     .maxSizePercent(0.02)
                     .build()
             }
+            .components {
+                if (Build.VERSION.SDK_INT >= 28) {
+                    add(ImageDecoderDecoder.Factory())
+                } else {
+                    add(GifDecoder.Factory())
+                }
+            }
+            .respectCacheHeaders(false)
             .crossfade(true)
             .build()
 

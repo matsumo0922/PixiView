@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
@@ -27,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.FanboxPost
@@ -57,7 +57,9 @@ internal fun CreatorTopRoute(
     val context = LocalContext.current
 
     LaunchedEffect(creatorId) {
-        viewModel.fetch(creatorId)
+        if (screenState !is ScreenState.Idle) {
+            viewModel.fetch(creatorId)
+        }
     }
 
     AsyncLoadContents(
@@ -78,7 +80,7 @@ internal fun CreatorTopRoute(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CreatorTopScreen(
     isPosts: Boolean,

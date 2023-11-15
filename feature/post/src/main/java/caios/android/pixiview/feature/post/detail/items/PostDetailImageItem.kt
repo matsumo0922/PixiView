@@ -1,6 +1,5 @@
 package caios.android.pixiview.feature.post.detail.items
 
-import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.aspectRatio
@@ -15,10 +14,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.ui.extensition.SimmerPlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.feature.post.image.items.PostImageMenuDialog
-import coil.ImageLoader
 import coil.compose.SubcomposeAsyncImage
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -43,15 +39,6 @@ internal fun PostDetailImageItem(
         model = ImageRequest.Builder(LocalContext.current)
             .fanboxHeader()
             .data(loadUrl)
-            .build(),
-        imageLoader = ImageLoader.Builder(LocalContext.current)
-            .components {
-                if (Build.VERSION.SDK_INT >= 28) {
-                    add(ImageDecoderDecoder.Factory())
-                } else {
-                    add(GifDecoder.Factory())
-                }
-            }
             .build(),
         loading = {
             SimmerPlaceHolder()

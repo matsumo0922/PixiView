@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.pixiview.core.common.util.ToastUtil
+import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.contract.PostDownloader
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
@@ -40,7 +41,7 @@ import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.core.ui.component.CoordinatorScaffold
 import caios.android.pixiview.core.ui.component.RestrictCardItem
 import caios.android.pixiview.core.ui.component.TagItems
-import caios.android.pixiview.core.ui.extensition.SimmerPlaceHolder
+import caios.android.pixiview.core.ui.extensition.FadePlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.core.ui.extensition.marquee
 import caios.android.pixiview.core.ui.theme.bold
@@ -74,7 +75,9 @@ internal fun PostDetailRoute(
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     LaunchedEffect(postId) {
-        viewModel.fetch(postId)
+        if (screenState !is ScreenState.Idle) {
+            viewModel.fetch(postId)
+        }
     }
 
     AsyncLoadContents(
@@ -257,7 +260,7 @@ private fun PostDetailHeader(
                     .data(post.coverImageUrl)
                     .build(),
                 loading = {
-                    SimmerPlaceHolder()
+                    FadePlaceHolder()
                 },
                 contentScale = ContentScale.Crop,
                 contentDescription = null,

@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.model.fanbox.FanboxBell
 import caios.android.pixiview.core.model.fanbox.id.PostId
-import caios.android.pixiview.core.ui.extensition.SimmerPlaceHolder
+import caios.android.pixiview.core.ui.extensition.FadePlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.feature.library.R
 import coil.compose.AsyncImage
@@ -147,7 +147,7 @@ private fun PostPublishedItem(
                             .data(bell.post.cover?.url)
                             .build(),
                         loading = {
-                            SimmerPlaceHolder()
+                            FadePlaceHolder()
                         },
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
