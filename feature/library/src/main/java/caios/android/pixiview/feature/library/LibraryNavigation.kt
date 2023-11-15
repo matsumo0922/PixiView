@@ -19,6 +19,8 @@ fun NavGraphBuilder.libraryScreen(
     navigateToPostDetail: (postId: PostId) -> Unit,
     navigateToCreatorPosts: (creatorId: CreatorId) -> Unit,
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
+    navigateToFollowerCreators: () -> Unit,
+    navigateToSupportingCreators: () -> Unit,
 ) {
     composable(
         route = LibraryRoute,
@@ -52,6 +54,8 @@ fun NavGraphBuilder.libraryScreen(
             navigateToPostDetail = navigateToPostDetail,
             navigateToCreatorTop = navigateToCreatorPosts,
             navigateToCreatorPlans = navigateToCreatorPlans,
+            navigateToFollowerCreators = navigateToFollowerCreators,
+            navigateToSupportingCreators = navigateToSupportingCreators,
         )
     }
 }

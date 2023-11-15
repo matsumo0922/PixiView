@@ -1,5 +1,7 @@
 package caios.android.pixiview.feature.post.detail
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +23,9 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -53,6 +58,7 @@ import caios.android.pixiview.feature.post.detail.items.PostDetailCreatorSection
 import caios.android.pixiview.feature.post.detail.items.PostDetailDownloadSection
 import caios.android.pixiview.feature.post.detail.items.PostDetailFileHeader
 import caios.android.pixiview.feature.post.detail.items.PostDetailImageHeader
+import caios.android.pixiview.feature.post.detail.items.PostDetailMenuDialog
 import caios.android.pixiview.feature.post.detail.items.PostDetailOtherPostSection
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
@@ -99,6 +105,7 @@ internal fun PostDetailRoute(
             onClickDownloadImages = postDownloader::onDownloadImages,
             onClickCreatorPosts = navigateToCreatorPosts,
             onClickCreatorPlans = navigateToCreatorPlans,
+            onClickOpenBrowser = { context.startActivity(Intent(Intent.ACTION_VIEW, it)) },
             onTerminate = terminate,
         )
 
@@ -118,9 +125,12 @@ private fun PostDetailScreen(
     onClickDownloadImages: (List<FanboxPostDetail.ImageItem>) -> Unit,
     onClickCreatorPosts: (CreatorId) -> Unit,
     onClickCreatorPlans: (CreatorId) -> Unit,
+    onClickOpenBrowser: (Uri) -> Unit,
     onTerminate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var isShowMenu by remember { mutableStateOf(false) }
+
     val isShowCoordinateHeader = when (val content = postDetail.body) {
         is FanboxPostDetail.Body.Article -> content.blocks.first() !is FanboxPostDetail.Body.Article.Block.Image
         is FanboxPostDetail.Body.File -> true
@@ -131,6 +141,7 @@ private fun PostDetailScreen(
     CoordinatorScaffold(
         modifier = modifier,
         onClickNavigateUp = onTerminate,
+        onClickMenu = { isShowMenu = true },
         header = {
             if (!isShowCoordinateHeader) {
                 PostDetailContent(
@@ -241,6 +252,14 @@ private fun PostDetailScreen(
         item {
             Spacer(modifier = Modifier.height(128.dp))
         }
+    }
+
+    if (isShowMenu) {
+        PostDetailMenuDialog(
+            onClickOpenBrowser = { onClickOpenBrowser.invoke(postDetail.browserUri) },
+            onClickAllDownload = { onClickDownloadImages.invoke(postDetail.body.imageItems) },
+            onDismissRequest = { isShowMenu = false },
+        )
     }
 }
 

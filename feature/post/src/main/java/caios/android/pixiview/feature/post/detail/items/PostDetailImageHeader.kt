@@ -1,5 +1,6 @@
 package caios.android.pixiview.feature.post.detail.items
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,7 +18,10 @@ internal fun PostDetailImageHeader(
     onClickDownload: (List<FanboxPostDetail.ImageItem>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         for (item in content.images) {
             PostDetailImageItem(
                 modifier = Modifier.fillMaxWidth(),

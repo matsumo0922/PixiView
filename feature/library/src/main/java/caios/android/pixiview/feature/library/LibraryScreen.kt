@@ -31,6 +31,8 @@ fun LibraryScreen(
     navigateToPostDetail: (postId: PostId) -> Unit,
     navigateToCreatorTop: (creatorId: CreatorId) -> Unit,
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
+    navigateToFollowerCreators: () -> Unit,
+    navigateToSupportingCreators: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
@@ -44,6 +46,8 @@ fun LibraryScreen(
                 state = drawerState,
                 currentDestination = navController.currentBackStackEntryAsState().value?.destination,
                 onClickLibrary = navController::navigateToLibrary,
+                navigateToFollowingCreators = navigateToFollowerCreators,
+                navigateToSupportingCreators = navigateToSupportingCreators,
                 navigateToSetting = { },
                 navigateToAbout = { },
             )

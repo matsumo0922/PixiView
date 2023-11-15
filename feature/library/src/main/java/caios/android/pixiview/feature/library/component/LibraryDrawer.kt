@@ -21,10 +21,12 @@ import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
@@ -50,6 +52,8 @@ internal fun LibraryDrawer(
     state: DrawerState,
     currentDestination: NavDestination?,
     onClickLibrary: (LibraryDestination) -> Unit,
+    navigateToFollowingCreators: () -> Unit,
+    navigateToSupportingCreators: () -> Unit,
     navigateToSetting: () -> Unit,
     navigateToAbout: () -> Unit,
     modifier: Modifier = Modifier,
@@ -99,6 +103,26 @@ internal fun LibraryDrawer(
                 icon = Icons.Outlined.Mail,
                 selectedIcon = Icons.Default.Mail,
                 onClick = { onClickLibrary.invoke(LibraryDestination.Message) },
+            )
+
+            HorizontalDivider(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .fillMaxWidth(),
+            )
+
+            NavigationDrawerItem(
+                state = state,
+                label = stringResource(R.string.library_navigation_following),
+                icon = Icons.Outlined.PersonAdd,
+                onClick = navigateToFollowingCreators,
+            )
+
+            NavigationDrawerItem(
+                state = state,
+                label = stringResource(R.string.library_navigation_supporting),
+                icon = Icons.Outlined.Group,
+                onClick = navigateToSupportingCreators,
             )
 
             HorizontalDivider(

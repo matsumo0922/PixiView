@@ -35,7 +35,9 @@ internal fun PostDetailArticleHeader(
 
                 is FanboxPostDetail.Body.Article.Block.Image -> {
                     PostDetailImageItem(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .fillMaxWidth(),
                         item = item.item,
                         onClickImage = onClickImage,
                         onClickDownload = { onClickDownload.invoke(listOf(item.item)) },

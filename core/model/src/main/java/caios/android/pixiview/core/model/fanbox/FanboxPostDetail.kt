@@ -1,5 +1,6 @@
 package caios.android.pixiview.core.model.fanbox
 
+import androidx.core.net.toUri
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import java.time.OffsetDateTime
 
@@ -24,6 +25,8 @@ data class FanboxPostDetail(
     val prevPost: OtherPost?,
     val user: FanboxUser,
 ) {
+    val browserUri get() = "https://www.fanbox.cc/@${user.creatorId}/posts/$id".toUri()
+
     sealed interface Body {
         val imageItems get() = when (this) {
             is Article -> blocks.filterIsInstance<Article.Block.Image>().map { it.item }

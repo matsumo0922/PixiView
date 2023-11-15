@@ -13,5 +13,5 @@ data class FanboxCreatorPlan(
     val paymentMethod: String?,
     val user: FanboxUser,
 ) {
-    val detailUri get() = "https://www.fanbox.cc/@${user.creatorId}/plans/$id".toUri()
+    val browserUri get() = "https://www.fanbox.cc/@${user.creatorId}/plans/$id".toUri()
 }

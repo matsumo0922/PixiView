@@ -74,7 +74,7 @@ internal fun CreatorTopRoute(
             creatorPlans = uiState.creatorPlans.toImmutableList(),
             creatorPostsPaging = uiState.creatorPostsPaging.collectAsLazyPagingItems(),
             onClickPost = navigateToPostDetail,
-            onClickPlan = { context.startActivity(Intent(Intent.ACTION_VIEW, it.detailUri)) },
+            onClickPlan = { context.startActivity(Intent(Intent.ACTION_VIEW, it.browserUri)) },
             onTerminate = terminate,
         )
     }

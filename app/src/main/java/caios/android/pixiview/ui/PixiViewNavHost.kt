@@ -29,6 +29,8 @@ internal fun PixiViewNavHost(
             navigateToPostDetail = { navController.navigateToPostDetail(it) },
             navigateToCreatorPosts = { navController.navigateToCreatorTop(it) },
             navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+            navigateToFollowerCreators = {  },
+            navigateToSupportingCreators = {  },
         )
 
         postDetailScreen(
