@@ -112,7 +112,7 @@ private fun NameItem(
 
         Column(
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Text(
                 text = "SINCE",
@@ -170,7 +170,7 @@ private fun cardTextStyle(fontSize: TextUnit) = TextStyle(
         color = Color.Black,
         offset = Offset(3f, 3f),
         blurRadius = 3f,
-    )
+    ),
 )
 
 @Preview

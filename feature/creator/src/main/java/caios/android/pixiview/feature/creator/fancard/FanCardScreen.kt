@@ -109,8 +109,8 @@ private fun FanCardScreen(
                             val pictureCanvas = Canvas(
                                 picture.beginRecording(
                                     width,
-                                    height
-                                )
+                                    height,
+                                ),
                             )
                             // requires at least 1.6.0-alpha01+
                             draw(this, this.layoutDirection, pictureCanvas, this.size) {
@@ -153,7 +153,7 @@ private fun Picture.asBitmap(): Bitmap {
         val bitmap = Bitmap.createBitmap(
             width,
             height,
-            Bitmap.Config.ARGB_8888
+            Bitmap.Config.ARGB_8888,
         )
         val canvas = android.graphics.Canvas(bitmap)
         canvas.drawColor(android.graphics.Color.WHITE)

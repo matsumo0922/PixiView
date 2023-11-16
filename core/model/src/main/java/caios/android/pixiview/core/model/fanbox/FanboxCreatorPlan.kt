@@ -20,7 +20,8 @@ data class FanboxCreatorPlan(
         CARD,
         PAYPAL,
         CVS,
-        UNKNOWN;
+        UNKNOWN,
+        ;
 
         companion object {
             fun fromString(string: String?) = when (string) {

@@ -100,7 +100,7 @@ private fun SupportingCreatorsScreen(
                 .drawVerticalScrollbar(state),
             state = state,
             contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             items(supportedCreators.toList()) { supportingPlan ->
                 SupportingCreatorItem(
