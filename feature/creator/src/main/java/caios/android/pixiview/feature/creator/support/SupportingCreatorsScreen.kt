@@ -1,5 +1,7 @@
 package caios.android.pixiview.feature.creator.support
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,22 +40,24 @@ import kotlinx.collections.immutable.toImmutableList
 internal fun SupportingCreatorsRoute(
     navigateToCreatorPlans: (CreatorId) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
+    navigateToFanCard: (CreatorId) -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SupportingCreatorsViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     AsyncLoadContents(
         modifier = modifier,
         screenState = screenState,
         retryAction = { viewModel.fetch() },
-    ) {
+    ) { uiState ->
         SupportingCreatorsScreen(
             modifier = Modifier.fillMaxSize(),
-            supportedCreators = it.supportedPlans.toImmutableList(),
-            onClickPlanDetail = {},
-            onClickFanCard = {},
+            supportedCreators = uiState.supportedPlans.toImmutableList(),
+            onClickPlanDetail = { context.startActivity(Intent(Intent.ACTION_VIEW, it)) },
+            onClickFanCard = navigateToFanCard,
             onClickCreatorPlans = navigateToCreatorPlans,
             onClickCreatorPosts = navigateToCreatorPosts,
             terminate = terminate,
@@ -64,7 +69,7 @@ internal fun SupportingCreatorsRoute(
 @Composable
 private fun SupportingCreatorsScreen(
     supportedCreators: ImmutableList<FanboxCreatorPlan>,
-    onClickPlanDetail: (CreatorId) -> Unit,
+    onClickPlanDetail: (Uri) -> Unit,
     onClickFanCard: (CreatorId) -> Unit,
     onClickCreatorPlans: (CreatorId) -> Unit,
     onClickCreatorPosts: (CreatorId) -> Unit,

@@ -18,4 +18,5 @@ dependencies {
 
     implementation(libs.bundles.ui.implementation)
     implementation(libs.collapsing.toolbar.compose)
+    implementation(libs.zoomable)
 }

@@ -352,7 +352,7 @@ internal fun FanboxCreatorPlanEntity.translate(): FanboxCreatorPlanDetail {
             FanboxCreatorPlanDetail.SupportTransaction(
                 id = it.id,
                 paidAmount = it.paidAmount,
-                transactionDatetime = it.transactionDatetime,
+                transactionDatetime = OffsetDateTime.parse(it.transactionDatetime),
                 targetMonth = it.targetMonth,
                 user = FanboxUser(
                     userId = it.supporter.userId,

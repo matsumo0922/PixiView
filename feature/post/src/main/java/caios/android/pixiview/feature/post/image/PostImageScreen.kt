@@ -86,21 +86,26 @@ private fun PostImageScreen(
         ) {
             val zoomState = rememberZoomState()
 
-            SubcomposeAsyncImage(
+            Box(
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .zoomable(zoomState),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .fanboxHeader()
-                    .data(postDetail.body.imageItems[it].thumbnailUrl)
-                    .build(),
-                loading = {
-                    IndicatorPlaceHolder()
-                },
-                contentScale = ContentScale.Fit,
-                contentDescription = null,
-            )
+            ) {
+                SubcomposeAsyncImage(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .fillMaxWidth(),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .fanboxHeader()
+                        .data(postDetail.body.imageItems[it].thumbnailUrl)
+                        .build(),
+                    loading = {
+                        IndicatorPlaceHolder()
+                    },
+                    contentScale = ContentScale.Fit,
+                    contentDescription = null,
+                )
+            }
 
             LaunchedEffect(pagerState.settledPage) {
                 if (pagerState.settledPage != it) {

@@ -14,6 +14,7 @@ data class FanboxCreatorPlan(
     val user: FanboxUser,
 ) {
     val browserUri get() = "https://www.fanbox.cc/@${user.creatorId}/plans/$id".toUri()
+    val supportingBrowserUri get() = "https://www.fanbox.cc/creators/supporting/@${user.creatorId}".toUri()
 
     enum class PaymentMethod {
         CARD,

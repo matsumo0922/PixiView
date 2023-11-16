@@ -1,5 +1,6 @@
 package caios.android.pixiview.feature.creator.support.item
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +44,7 @@ import coil.request.ImageRequest
 @Composable
 internal fun SupportingCreatorItem(
     supportingPlan: FanboxCreatorPlan,
-    onClickPlanDetail: (CreatorId) -> Unit,
+    onClickPlanDetail: (Uri) -> Unit,
     onClickFanCard: (CreatorId) -> Unit,
     onClickCreatorPlans: (CreatorId) -> Unit,
     onClickCreatorPosts: (CreatorId) -> Unit,
@@ -135,7 +136,7 @@ internal fun SupportingCreatorItem(
 
                 OutlinedButton(
                     modifier = Modifier.weight(1f),
-                    onClick = { onClickPlanDetail.invoke(supportingPlan.user.creatorId) },
+                    onClick = { onClickPlanDetail.invoke(supportingPlan.supportingBrowserUri) },
                 ) {
                     Text(text = stringResource(R.string.creator_supporting_plan_detail))
                 }

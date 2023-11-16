@@ -1,5 +1,7 @@
 package caios.android.pixiview.core.model.fanbox
 
+import java.time.OffsetDateTime
+
 data class FanboxCreatorPlanDetail(
     val plan: FanboxCreatorPlan,
     val supportStartDatetime: String,
@@ -9,8 +11,25 @@ data class FanboxCreatorPlanDetail(
     data class SupportTransaction(
         val id: String,
         val paidAmount: Int,
-        val transactionDatetime: String,
+        val transactionDatetime: OffsetDateTime,
         val targetMonth: String,
         val user: FanboxUser,
     )
+
+    companion object {
+        fun dummy() = FanboxCreatorPlanDetail(
+            plan = FanboxCreatorPlan.dummy(),
+            supportStartDatetime = "",
+            supportTransactions = listOf(
+                SupportTransaction(
+                    id = "",
+                    paidAmount = 0,
+                    transactionDatetime = OffsetDateTime.now(),
+                    targetMonth = "",
+                    user = FanboxUser.dummy(),
+                ),
+            ),
+            supporterCardImageUrl = "",
+        )
+    }
 }

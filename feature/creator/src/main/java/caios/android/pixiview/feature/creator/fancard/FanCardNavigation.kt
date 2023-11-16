@@ -1,38 +1,36 @@
-package caios.android.pixiview.feature.creator.support
+package caios.android.pixiview.feature.creator.fancard
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.ui.animation.NavigateAnimation
 
-const val SupportingCreatorsRoute = "supportingCreators"
+const val FanCardId = "fanCardId"
+const val FanCardRoute = "fanCard/{$FanCardId}"
 
-fun NavController.navigateToSupportingCreators(navOptions: NavOptions? = null) {
-    this.navigate(SupportingCreatorsRoute, navOptions)
+fun NavController.navigateToFanCard(creatorId: CreatorId) {
+    this.navigate("fanCard/$creatorId")
 }
 
-fun NavGraphBuilder.supportingCreatorsScreen(
-    navigateToCreatorPlans: (CreatorId) -> Unit,
-    navigateToCreatorPosts: (CreatorId) -> Unit,
-    navigateToFanCard: (CreatorId) -> Unit,
+fun NavGraphBuilder.fanCardScreen(
     terminate: () -> Unit,
 ) {
     composable(
-        route = SupportingCreatorsRoute,
+        route = FanCardRoute,
+        arguments = listOf(navArgument(FanCardId) { type = NavType.StringType }),
         enterTransition = { NavigateAnimation.Horizontal.enter },
         exitTransition = { NavigateAnimation.Horizontal.exit },
         popEnterTransition = { NavigateAnimation.Horizontal.popEnter },
         popExitTransition = { NavigateAnimation.Horizontal.popExit },
     ) {
-        SupportingCreatorsRoute(
+        FanCardRoute(
             modifier = Modifier.fillMaxSize(),
-            navigateToCreatorPlans = navigateToCreatorPlans,
-            navigateToCreatorPosts = navigateToCreatorPosts,
-            navigateToFanCard = navigateToFanCard,
+            creatorId = CreatorId(it.arguments?.getString(FanCardId) ?: ""),
             terminate = terminate,
         )
     }

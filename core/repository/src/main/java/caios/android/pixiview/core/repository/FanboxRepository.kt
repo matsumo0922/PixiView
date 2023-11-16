@@ -2,6 +2,7 @@ package caios.android.pixiview.core.repository
 
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -90,6 +91,7 @@ interface FanboxRepository {
     suspend fun followCreator(creatorUserId: String)
     suspend fun unfollowCreator(creatorUserId: String)
 
+    suspend fun downloadBitmap(bitmap: Bitmap, name: String)
     suspend fun downloadImage(url: String, name: String, extension: String)
     suspend fun downloadFile(url: String, name: String, extension: String)
 }
@@ -235,6 +237,25 @@ class FanboxRepositoryImpl(
         post("follow.delete", mapOf("creatorUserId" to creatorUserId))
     }
 
+    override suspend fun downloadBitmap(bitmap: Bitmap, name: String): Unit = withContext(ioDispatcher) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension("jpg")
+            val itemFile = getExternalFile("$name.jpg", Environment.DIRECTORY_PICTURES)
+
+            itemFile.outputStream().use {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            }
+
+            MediaScannerConnection.scanFile(context, arrayOf(itemFile.absolutePath), arrayOf(mime), null)
+        } else {
+            val uri = getUri(context, "$name.jpg", Environment.DIRECTORY_PICTURES)
+
+            context.contentResolver.openOutputStream(uri!!)!!.use {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            }
+        }
+    }
+
     override suspend fun downloadImage(url: String, name: String, extension: String) = withContext(ioDispatcher) {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
             val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
@@ -250,11 +271,8 @@ class FanboxRepositoryImpl(
 
     override suspend fun downloadFile(url: String, name: String, extension: String) = withContext(ioDispatcher) {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             val itemFile = getExternalFile("$name.$extension", Environment.DIRECTORY_DOWNLOADS)
-
             download(url, itemFile.outputStream())
-            MediaScannerConnection.scanFile(context, arrayOf(itemFile.absolutePath), arrayOf(mime), null)
         } else {
             val uri = getUri(context, "$name.$extension", Environment.DIRECTORY_DOWNLOADS)
             download(url, context.contentResolver.openOutputStream(uri!!)!!)

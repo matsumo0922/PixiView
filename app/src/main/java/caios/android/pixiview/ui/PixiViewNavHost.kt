@@ -5,6 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import caios.android.pixiview.feature.creator.fancard.fanCardScreen
+import caios.android.pixiview.feature.creator.fancard.navigateToFanCard
 import caios.android.pixiview.feature.creator.support.navigateToSupportingCreators
 import caios.android.pixiview.feature.creator.support.supportingCreatorsScreen
 import caios.android.pixiview.feature.creator.top.creatorTopScreen
@@ -55,6 +57,11 @@ internal fun PixiViewNavHost(
         supportingCreatorsScreen(
             navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
             navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
+            navigateToFanCard = { navController.navigateToFanCard(it) },
+            terminate = { navController.popBackStack() },
+        )
+
+        fanCardScreen(
             terminate = { navController.popBackStack() },
         )
     }

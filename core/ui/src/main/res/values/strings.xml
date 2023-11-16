@@ -77,6 +77,9 @@
     <string name="creator_supporting_payment_method_unknown">不明</string>
     <string name="creator_supporting_fan_card">ファンカード</string>
     <string name="creator_supporting_plan_detail">詳細</string>
+    <string name="creator_fan_card_not_supported">このクリエイターを支援していません</string>
+    <string name="creator_fan_card_switch_displa_name">名前の表示を切り替える</string>
+    <string name="creator_fan_card_download">ファンカードをダウンロード</string>
 
     <!-- PostDetail -->
     <string name="post_detail_title">投稿詳細</string>

@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.NotificationConfigs
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.id.PostId
@@ -56,11 +57,13 @@ class PostDownloadService : Service() {
 
                     setForegroundService(true, "$name.${item.extension}")
 
-                    fanboxRepository.downloadImage(
-                        url = item.originalUrl,
-                        name = name,
-                        extension = item.extension,
-                    )
+                    suspendRunCatching {
+                        fanboxRepository.downloadImage(
+                            url = item.originalUrl,
+                            name = name,
+                            extension = item.extension,
+                        )
+                    }
                 }
 
                 _downloadedEvent.send(imageItems.last().postId)
@@ -78,11 +81,13 @@ class PostDownloadService : Service() {
 
                 setForegroundService(true, "$name.${fileItem.extension}")
 
-                fanboxRepository.downloadFile(
-                    url = fileItem.url,
-                    name = name,
-                    extension = fileItem.extension,
-                )
+                suspendRunCatching {
+                    fanboxRepository.downloadFile(
+                        url = fileItem.url,
+                        name = name,
+                        extension = fileItem.extension,
+                    )
+                }
 
                 _downloadedEvent.send(fileItem.postId)
                 setForegroundService(false)
