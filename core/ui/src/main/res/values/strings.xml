@@ -71,6 +71,12 @@
     <!-- Creator -->
     <string name="creator_tab_posts">投稿</string>
     <string name="creator_tab_plans">プラン</string>
+    <string name="creator_supporting_payment_method_card">クレジットカード</string>
+    <string name="creator_supporting_payment_method_paypal">PayPal</string>
+    <string name="creator_supporting_payment_method_cvs">コンビニ払い</string>
+    <string name="creator_supporting_payment_method_unknown">不明</string>
+    <string name="creator_supporting_fan_card">ファンカード</string>
+    <string name="creator_supporting_plan_detail">詳細</string>
 
     <!-- PostDetail -->
     <string name="post_detail_title">投稿詳細</string>

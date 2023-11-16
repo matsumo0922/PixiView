@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.creator
+package caios.android.pixiview.feature.creator.top
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -14,7 +14,8 @@ import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.repository.FanboxRepository
-import caios.android.pixiview.feature.creator.paging.CreatorTopPostsPagingSource
+import caios.android.pixiview.feature.creator.R
+import caios.android.pixiview.feature.creator.top.paging.CreatorTopPostsPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

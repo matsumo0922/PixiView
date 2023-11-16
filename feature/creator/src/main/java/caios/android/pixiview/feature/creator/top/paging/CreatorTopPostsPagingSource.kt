@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.creator.paging
+package caios.android.pixiview.feature.creator.top.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

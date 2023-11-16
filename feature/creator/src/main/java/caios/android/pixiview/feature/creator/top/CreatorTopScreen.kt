@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.creator
+package caios.android.pixiview.feature.creator.top
 
 import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -34,9 +34,10 @@ import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.core.ui.LazyPagingItemsLoadContents
-import caios.android.pixiview.feature.creator.items.CreatorTopHeader
-import caios.android.pixiview.feature.creator.items.CreatorTopPlansScreen
-import caios.android.pixiview.feature.creator.items.CreatorTopPostsScreen
+import caios.android.pixiview.feature.creator.R
+import caios.android.pixiview.feature.creator.top.items.CreatorTopHeader
+import caios.android.pixiview.feature.creator.top.items.CreatorTopPlansScreen
+import caios.android.pixiview.feature.creator.top.items.CreatorTopPostsScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch

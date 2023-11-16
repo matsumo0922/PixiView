@@ -5,8 +5,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import caios.android.pixiview.feature.creator.creatorTopScreen
-import caios.android.pixiview.feature.creator.navigateToCreatorTop
+import caios.android.pixiview.feature.creator.support.navigateToSupportingCreators
+import caios.android.pixiview.feature.creator.support.supportingCreatorsScreen
+import caios.android.pixiview.feature.creator.top.creatorTopScreen
+import caios.android.pixiview.feature.creator.top.navigateToCreatorTop
 import caios.android.pixiview.feature.library.LibraryRoute
 import caios.android.pixiview.feature.library.libraryScreen
 import caios.android.pixiview.feature.post.detail.navigateToPostDetail
@@ -30,7 +32,7 @@ internal fun PixiViewNavHost(
             navigateToCreatorPosts = { navController.navigateToCreatorTop(it) },
             navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
             navigateToFollowerCreators = { },
-            navigateToSupportingCreators = { },
+            navigateToSupportingCreators = { navController.navigateToSupportingCreators() },
         )
 
         postDetailScreen(
@@ -47,6 +49,12 @@ internal fun PixiViewNavHost(
 
         creatorTopScreen(
             navigateToPostDetail = { navController.navigateToPostDetail(it) },
+            terminate = { navController.popBackStack() },
+        )
+
+        supportingCreatorsScreen(
+            navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+            navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
             terminate = { navController.popBackStack() },
         )
     }

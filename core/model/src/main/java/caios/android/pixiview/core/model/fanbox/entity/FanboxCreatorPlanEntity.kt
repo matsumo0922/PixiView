@@ -11,7 +11,7 @@ data class FanboxCreatorPlanEntity(
     @Serializable
     data class Body(
         @SerialName("plan")
-        val plan: Plan,
+        val plan: FanboxCreatorPlansEntity.Body,
         @SerialName("supportStartDatetime")
         val supportStartDatetime: String,
         @SerialName("supportTransactions")
@@ -19,38 +19,6 @@ data class FanboxCreatorPlanEntity(
         @SerialName("supporterCardImageUrl")
         val supporterCardImageUrl: String,
     ) {
-        @Serializable
-        data class Plan(
-            @SerialName("coverImageUrl")
-            val coverImageUrl: String?,
-            @SerialName("creatorId")
-            val creatorId: String,
-            @SerialName("description")
-            val description: String,
-            @SerialName("fee")
-            val fee: Int,
-            @SerialName("hasAdultContent")
-            val hasAdultContent: Boolean,
-            @SerialName("id")
-            val id: String,
-            @SerialName("paymentMethod")
-            val paymentMethod: String,
-            @SerialName("title")
-            val title: String,
-            @SerialName("user")
-            val user: User,
-        ) {
-            @Serializable
-            data class User(
-                @SerialName("iconUrl")
-                val iconUrl: String?,
-                @SerialName("name")
-                val name: String,
-                @SerialName("userId")
-                val userId: String,
-            )
-        }
-
         @Serializable
         data class SupportTransaction(
             @SerialName("id")

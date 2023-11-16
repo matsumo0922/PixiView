@@ -318,7 +318,7 @@ internal fun FanboxCreatorPlansEntity.translate(): List<FanboxCreatorPlan> {
             fee = it.fee,
             hasAdultContent = it.hasAdultContent,
             id = PlanId(it.id),
-            paymentMethod = it.paymentMethod,
+            paymentMethod = FanboxCreatorPlan.PaymentMethod.fromString(it.paymentMethod),
             title = it.title,
             user = FanboxUser(
                 userId = it.user.userId,
@@ -339,7 +339,7 @@ internal fun FanboxCreatorPlanEntity.translate(): FanboxCreatorPlanDetail {
             fee = body.plan.fee,
             coverImageUrl = body.plan.coverImageUrl,
             hasAdultContent = body.plan.hasAdultContent,
-            paymentMethod = body.plan.paymentMethod,
+            paymentMethod = FanboxCreatorPlan.PaymentMethod.fromString(body.plan.paymentMethod),
             user = FanboxUser(
                 userId = body.plan.user.userId,
                 creatorId = CreatorId(body.plan.creatorId),
