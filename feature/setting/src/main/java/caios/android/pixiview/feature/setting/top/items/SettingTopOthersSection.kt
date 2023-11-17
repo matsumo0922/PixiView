@@ -1,4 +1,4 @@
-package caios.android.kanade.feature.setting.top.items
+package caios.android.pixiview.feature.setting.top.items
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +13,6 @@ import caios.android.pixiview.core.model.fanbox.FanboxMetaData
 import caios.android.pixiview.feature.setting.R
 import caios.android.pixiview.feature.setting.SettingSwitchItem
 import caios.android.pixiview.feature.setting.SettingTextItem
-import caios.android.pixiview.feature.setting.top.items.SettingTopTitleItem
 
 @Composable
 internal fun SettingTopOthersSection(

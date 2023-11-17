@@ -65,7 +65,7 @@ internal fun FanCardItem(
                 .listener(
                     onSuccess = { _, result ->
                         isLight = isBitmapLightOrDark(result.drawable.toBitmap())
-                    }
+                    },
                 )
                 .build(),
             loading = {

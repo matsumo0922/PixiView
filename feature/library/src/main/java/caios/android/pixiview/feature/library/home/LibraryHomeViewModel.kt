@@ -33,7 +33,7 @@ class LibraryHomeViewModel @Inject constructor(
             userData = UserData.dummy(),
             homePaging = emptyPaging(),
             supportedPaging = emptyPaging(),
-        )
+        ),
     )
 
     val uiState = _uiState.asStateFlow()

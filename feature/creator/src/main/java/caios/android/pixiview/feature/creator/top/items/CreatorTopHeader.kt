@@ -281,7 +281,7 @@ private fun ProfileLinkItem(
                             TWITTER -> R.drawable.vec_twitter
                             YOUTUBE -> R.drawable.vec_youtube
                             UNKNOWN -> R.drawable.vec_unknown_link
-                        }
+                        },
                     ),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     contentDescription = null,

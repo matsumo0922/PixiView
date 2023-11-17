@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import caios.android.kanade.feature.setting.theme.SettingThemeRoute
 import caios.android.pixiview.core.ui.animation.NavigateAnimation
 
 const val SettingThemeDialogRoute = "SettingTheme"

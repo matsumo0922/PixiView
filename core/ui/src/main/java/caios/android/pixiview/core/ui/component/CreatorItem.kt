@@ -59,7 +59,7 @@ fun CreatorItem(
     modifier: Modifier = Modifier,
     isFollowed: Boolean = creatorDetail.isFollowed,
 ) {
-    var isEllipsized  by remember { mutableStateOf(false) }
+    var isEllipsized by remember { mutableStateOf(false) }
     var isDisplayedAll by remember { mutableStateOf(false) }
 
     Card(

@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import caios.android.kanade.feature.information.about.items.AboutIconButton
 import caios.android.pixiview.core.ui.icon.GitHub
 import caios.android.pixiview.core.ui.icon.GooglePlay
 import caios.android.pixiview.core.ui.icon.Twitter
@@ -128,7 +127,7 @@ internal fun AboutDeveloperSection(
                         modifier = Modifier.fillMaxWidth(),
                         titleRes = R.string.about_special_thanks_contributor,
                         descriptionRes = R.string.about_special_thanks_contributor_description,
-                        iconVector =  Icons.Outlined.GitHub,
+                        iconVector = Icons.Outlined.GitHub,
                     ) {
                         AboutIconButton(
                             modifier = Modifier.size(28.dp),

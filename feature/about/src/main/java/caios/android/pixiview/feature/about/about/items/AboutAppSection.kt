@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import caios.android.kanade.feature.information.about.items.AboutIconButton
 import caios.android.pixiview.core.common.PixiViewConfig
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.ui.icon.Discord

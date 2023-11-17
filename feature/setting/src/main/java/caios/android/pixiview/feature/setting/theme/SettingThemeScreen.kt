@@ -1,4 +1,4 @@
-package caios.android.kanade.feature.setting.theme
+package caios.android.pixiview.feature.setting.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,8 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import caios.android.pixiview.feature.setting.theme.items.SettingThemeColorSection
-import caios.android.pixiview.feature.setting.theme.items.SettingThemeTabsSection
 import caios.android.pixiview.core.common.util.ToastUtil
 import caios.android.pixiview.core.model.ThemeColorConfig
 import caios.android.pixiview.core.model.ThemeConfig
@@ -38,7 +36,8 @@ import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.feature.setting.R
 import caios.android.pixiview.feature.setting.SettingSwitchItem
 import caios.android.pixiview.feature.setting.SettingTheme
-import caios.android.pixiview.feature.setting.theme.SettingThemeViewModel
+import caios.android.pixiview.feature.setting.theme.items.SettingThemeColorSection
+import caios.android.pixiview.feature.setting.theme.items.SettingThemeTabsSection
 
 @Composable
 internal fun SettingThemeRoute(

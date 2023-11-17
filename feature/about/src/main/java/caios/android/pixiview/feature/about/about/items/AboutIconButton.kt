@@ -1,4 +1,4 @@
-package caios.android.kanade.feature.information.about.items
+package caios.android.pixiview.feature.about.about.items
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

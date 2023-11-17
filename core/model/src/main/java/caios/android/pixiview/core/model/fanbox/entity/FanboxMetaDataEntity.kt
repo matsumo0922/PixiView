@@ -18,14 +18,14 @@ data class FanboxMetaDataEntity(
     @SerialName("urlContext")
     val urlContext: UrlContext,
     @SerialName("wwwUrl")
-    val wwwUrl: String
+    val wwwUrl: String,
 ) {
     @Serializable
     data class Context(
         @SerialName("privacyPolicy")
         val privacyPolicy: PrivacyPolicy,
         @SerialName("user")
-        val user: User
+        val user: User,
     ) {
         @Serializable
         data class PrivacyPolicy(
@@ -36,7 +36,7 @@ data class FanboxMetaDataEntity(
             @SerialName("shouldShowNotice")
             val shouldShowNotice: Boolean,
             @SerialName("updateDate")
-            val updateDate: String
+            val updateDate: String,
         )
 
         @Serializable
@@ -66,7 +66,7 @@ data class FanboxMetaDataEntity(
             @SerialName("showAdultContent")
             val showAdultContent: Boolean,
             @SerialName("userId")
-            val userId: String
+            val userId: String,
         )
     }
 
@@ -79,12 +79,12 @@ data class FanboxMetaDataEntity(
         @SerialName("rootOriginPattern")
         val rootOriginPattern: String,
         @SerialName("user")
-        val user: User
+        val user: User,
     ) {
         @Serializable
         data class Host(
             @SerialName("creatorId")
-            val creatorId: String?
+            val creatorId: String?,
         )
 
         @Serializable
@@ -92,7 +92,7 @@ data class FanboxMetaDataEntity(
             @SerialName("creatorId")
             val creatorId: String?,
             @SerialName("isLoggedIn")
-            val isLoggedIn: Boolean
+            val isLoggedIn: Boolean,
         )
     }
 }

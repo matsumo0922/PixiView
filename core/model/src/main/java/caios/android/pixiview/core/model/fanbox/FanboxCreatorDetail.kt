@@ -39,7 +39,8 @@ data class FanboxCreatorDetail(
         TUMBLR,
         TWITTER,
         YOUTUBE,
-        UNKNOWN;
+        UNKNOWN,
+        ;
 
         companion object {
             fun fromUrl(url: String): Platform {

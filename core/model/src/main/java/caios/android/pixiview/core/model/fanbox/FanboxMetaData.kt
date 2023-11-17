@@ -9,17 +9,17 @@ data class FanboxMetaData(
     val invitationsDisabled: Boolean,
     val isOnCc: Boolean,
     val urlContext: UrlContext,
-    val wwwUrl: String
+    val wwwUrl: String,
 ) {
     data class Context(
         val privacyPolicy: PrivacyPolicy,
-        val user: User
+        val user: User,
     ) {
         data class PrivacyPolicy(
             val policyUrl: String,
             val revisionHistoryUrl: String,
             val shouldShowNotice: Boolean,
-            val updateDate: String
+            val updateDate: String,
         )
 
         data class User(

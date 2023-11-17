@@ -22,7 +22,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import caios.android.kanade.feature.setting.top.items.SettingTopOthersSection
 import caios.android.pixiview.core.common.PixiViewConfig
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxMetaData
@@ -30,6 +29,7 @@ import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.feature.setting.R
 import caios.android.pixiview.feature.setting.SettingTheme
 import caios.android.pixiview.feature.setting.top.items.SettingTopGeneralSection
+import caios.android.pixiview.feature.setting.top.items.SettingTopOthersSection
 import caios.android.pixiview.feature.setting.top.items.SettingTopThemeSection
 
 @Composable

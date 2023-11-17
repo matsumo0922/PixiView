@@ -64,7 +64,8 @@ internal fun PixiViewApp(
 private fun IdleScreen(
     modifier: Modifier = Modifier,
 ) {
-    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
+    val bottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
     val bottomSheetNavigator = remember { BottomSheetNavigator(bottomSheetState) }
     val navController = rememberNavController(bottomSheetNavigator)
 
