@@ -1,10 +1,17 @@
 package caios.android.pixiview.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import caios.android.pixiview.feature.about.about.aboutScreen
+import caios.android.pixiview.feature.about.about.navigateToAbout
+import caios.android.pixiview.feature.about.billing.billingPlusBottomSheet
+import caios.android.pixiview.feature.about.billing.navigateToBillingPlus
+import caios.android.pixiview.feature.about.versions.navigateToVersionHistory
+import caios.android.pixiview.feature.about.versions.versionHistoryBottomSheet
 import caios.android.pixiview.feature.creator.fancard.fanCardScreen
 import caios.android.pixiview.feature.creator.fancard.navigateToFanCard
 import caios.android.pixiview.feature.creator.follow.followingCreatorsScreen
@@ -27,79 +34,109 @@ import caios.android.pixiview.feature.setting.theme.navigateToSettingTheme
 import caios.android.pixiview.feature.setting.theme.settingThemeScreen
 import caios.android.pixiview.feature.setting.top.navigateToSettingTop
 import caios.android.pixiview.feature.setting.top.settingTopScreen
+import com.google.accompanist.navigation.material.BottomSheetNavigator
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 
+@OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 internal fun PixiViewNavHost(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
+    bottomSheetNavigator: BottomSheetNavigator = rememberBottomSheetNavigator(),
+    navController: NavHostController = rememberNavController(bottomSheetNavigator),
     startDestination: String = LibraryRoute,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = startDestination,
+    ModalBottomSheetLayout(
         modifier = modifier,
+        bottomSheetNavigator = bottomSheetNavigator,
     ) {
-        libraryScreen(
-            navigateToPostDetail = { navController.navigateToPostDetail(it) },
-            navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
-            navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-            navigateToFollowerCreators = { navController.navigateToFollowingCreators() },
-            navigateToSupportingCreators = { navController.navigateToSupportingCreators() },
-            navigateToSettingTop = { navController.navigateToSettingTop() },
-            navigateToAbout = { },
-        )
+        NavHost(
+            modifier = Modifier.fillMaxSize(),
+            navController = navController,
+            startDestination = startDestination,
+        ) {
+            // composable
 
-        postDetailScreen(
-            navigateToPostDetail = { navController.navigateToPostDetail(it) },
-            navigateToPostImage = { postId, index -> navController.navigateToPostImage(postId, index) },
-            navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
-            navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-            terminate = { navController.popBackStack() },
-        )
+            libraryScreen(
+                navigateToPostDetail = { navController.navigateToPostDetail(it) },
+                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
+                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+                navigateToFollowerCreators = { navController.navigateToFollowingCreators() },
+                navigateToSupportingCreators = { navController.navigateToSupportingCreators() },
+                navigateToSettingTop = { navController.navigateToSettingTop() },
+                navigateToAbout = { navController.navigateToAbout() },
+                navigateToBillingPlus = { navController.navigateToBillingPlus() },
+            )
 
-        postImageScreen(
-            terminate = { navController.popBackStack() },
-        )
+            postDetailScreen(
+                navigateToPostDetail = { navController.navigateToPostDetail(it) },
+                navigateToPostImage = { postId, index -> navController.navigateToPostImage(postId, index) },
+                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
+                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+                terminate = { navController.popBackStack() },
+            )
 
-        creatorTopScreen(
-            navigateToPostDetail = { navController.navigateToPostDetail(it) },
-            terminate = { navController.popBackStack() },
-        )
+            postImageScreen(
+                terminate = { navController.popBackStack() },
+            )
 
-        supportingCreatorsScreen(
-            navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-            navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
-            navigateToFanCard = { navController.navigateToFanCard(it) },
-            terminate = { navController.popBackStack() },
-        )
+            creatorTopScreen(
+                navigateToPostDetail = { navController.navigateToPostDetail(it) },
+                terminate = { navController.popBackStack() },
+            )
 
-        followingCreatorsScreen(
-            navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-            terminate = { navController.popBackStack() },
-        )
+            supportingCreatorsScreen(
+                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
+                navigateToFanCard = { navController.navigateToFanCard(it) },
+                terminate = { navController.popBackStack() },
+            )
 
-        fanCardScreen(
-            terminate = { navController.popBackStack() },
-        )
+            followingCreatorsScreen(
+                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+                terminate = { navController.popBackStack() },
+            )
 
-        settingTopScreen(
-            navigateToSettingTheme = { navController.navigateToSettingTheme() },
-            navigateToSettingDeveloper = { navController.navigateToSettingDeveloper() },
-            navigateToOpenSourceLicense = { navController.navigateToSettingLicense() },
-            terminate = { navController.popBackStack() },
-        )
+            fanCardScreen(
+                terminate = { navController.popBackStack() },
+            )
 
-        settingThemeScreen(
-            navigateToBillingPlus = { },
-            terminate = { navController.popBackStack() },
-        )
+            aboutScreen(
+                navigateToVersionHistory = { navController.navigateToVersionHistory() },
+                navigateToDonate = { navController.navigateToBillingPlus() },
+                terminate = { navController.popBackStack() },
+            )
 
-        settingLicenseScreen(
-            terminate = { navController.popBackStack() },
-        )
+            settingTopScreen(
+                navigateToSettingTheme = { navController.navigateToSettingTheme() },
+                navigateToSettingDeveloper = { navController.navigateToSettingDeveloper() },
+                navigateToOpenSourceLicense = { navController.navigateToSettingLicense() },
+                terminate = { navController.popBackStack() },
+            )
 
-        settingDeveloperDialog(
-            terminate = { navController.popBackStack() },
-        )
+            settingThemeScreen(
+                navigateToBillingPlus = { },
+                terminate = { navController.popBackStack() },
+            )
+
+            settingLicenseScreen(
+                terminate = { navController.popBackStack() },
+            )
+
+            settingDeveloperDialog(
+                terminate = { navController.popBackStack() },
+            )
+
+            // bottom sheet
+
+            versionHistoryBottomSheet(
+                terminate = { navController.popBackStack() },
+            )
+
+            billingPlusBottomSheet(
+                terminate = { navController.popBackStack() },
+            )
+        }
     }
 }

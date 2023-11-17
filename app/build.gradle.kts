@@ -108,6 +108,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:repository"))
     implementation(project(":core:ui"))
+    implementation(project(":core:billing"))
 
     implementation(project(":feature:report"))
     implementation(project(":feature:library"))

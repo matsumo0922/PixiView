@@ -4,6 +4,7 @@ import android.webkit.CookieManager
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import caios.android.pixiview.core.billing.BillingClient
 import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.UserData
@@ -26,6 +27,7 @@ import kotlin.time.DurationUnit
 @Stable
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    billingClient: BillingClient,
     private val userDataRepository: UserDataRepository,
     private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
@@ -47,6 +49,8 @@ class MainViewModel @Inject constructor(
     )
 
     init {
+        billingClient.initialize()
+
         Timer().schedule(0, 10.minutes.toLong(DurationUnit.MILLISECONDS)) {
             updateState()
         }

@@ -1,14 +1,18 @@
 package caios.android.pixiview.feature.library
 
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -16,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
+import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.feature.library.component.LibraryBottomBar
 import caios.android.pixiview.feature.library.component.LibraryDestination
 import caios.android.pixiview.feature.library.component.LibraryDrawer
@@ -35,49 +40,59 @@ fun LibraryScreen(
     navigateToSupportingCreators: () -> Unit,
     navigateToSettingTop: () -> Unit,
     navigateToAbout: () -> Unit,
+    navigateToBillingPlus: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: LibraryViewModel = hiltViewModel(),
 ) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            LibraryDrawer(
-                state = drawerState,
-                currentDestination = navController.currentBackStackEntryAsState().value?.destination,
-                onClickLibrary = navController::navigateToLibrary,
-                navigateToFollowingCreators = navigateToFollowerCreators,
-                navigateToSupportingCreators = navigateToSupportingCreators,
-                navigateToSetting = navigateToSettingTop,
-                navigateToAbout = navigateToAbout,
-            )
-        },
+    AsyncLoadContents(
+        modifier = modifier,
+        screenState = screenState,
     ) {
-        Scaffold(
-            modifier = modifier,
-            bottomBar = {
-                LibraryBottomBar(
-                    destinations = LibraryDestination.entries.toImmutableList(),
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                LibraryDrawer(
+                    state = drawerState,
+                    userData = it.userData,
                     currentDestination = navController.currentBackStackEntryAsState().value?.destination,
-                    navigateToDestination = navController::navigateToLibrary,
+                    onClickLibrary = navController::navigateToLibrary,
+                    navigateToFollowingCreators = navigateToFollowerCreators,
+                    navigateToSupportingCreators = navigateToSupportingCreators,
+                    navigateToSetting = navigateToSettingTop,
+                    navigateToAbout = navigateToAbout,
+                    navigateToBillingPlus = navigateToBillingPlus,
                 )
             },
-            contentWindowInsets = WindowInsets(0, 0, 0, 0),
         ) {
-            LibraryNavHost(
-                modifier = Modifier.padding(it),
-                navController = navController,
-                openDrawer = {
-                    scope.launch {
-                        drawerState.open()
-                    }
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = {
+                    LibraryBottomBar(
+                        destinations = LibraryDestination.entries.toImmutableList(),
+                        currentDestination = navController.currentBackStackEntryAsState().value?.destination,
+                        navigateToDestination = navController::navigateToLibrary,
+                    )
                 },
-                navigateToPostDetail = navigateToPostDetail,
-                navigateToCreatorPosts = navigateToCreatorPosts,
-                navigateToCreatorPlans = navigateToCreatorPlans,
-            )
+                contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            ) {
+                LibraryNavHost(
+                    modifier = Modifier.padding(it),
+                    navController = navController,
+                    openDrawer = {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    },
+                    navigateToPostDetail = navigateToPostDetail,
+                    navigateToCreatorPosts = navigateToCreatorPosts,
+                    navigateToCreatorPlans = navigateToCreatorPlans,
+                )
+            }
         }
     }
 }

@@ -23,6 +23,7 @@ fun NavGraphBuilder.libraryScreen(
     navigateToSupportingCreators: () -> Unit,
     navigateToSettingTop: () -> Unit,
     navigateToAbout: () -> Unit,
+    navigateToBillingPlus: () -> Unit,
 ) {
     composable(
         route = LibraryRoute,
@@ -60,6 +61,7 @@ fun NavGraphBuilder.libraryScreen(
             navigateToSupportingCreators = navigateToSupportingCreators,
             navigateToSettingTop = navigateToSettingTop,
             navigateToAbout = navigateToAbout,
+            navigateToBillingPlus = navigateToBillingPlus,
         )
     }
 }

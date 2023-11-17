@@ -64,7 +64,7 @@ internal fun LoginScreen(
                     it.settings.javaScriptEnabled = true
                 },
                 client = object : AccompanistWebViewClient() {
-                    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                    override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
                         if (url == fanboxRedirectUrl) {
                             onUpdateCookie.invoke(cookieManager.getCookie(url))
                             onDismiss.invoke(true)

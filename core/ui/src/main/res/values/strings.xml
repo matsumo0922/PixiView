@@ -56,6 +56,8 @@
     <string name="library_navigation_supporting">支援中</string>
     <string name="library_navigation_setting">設定</string>
     <string name="library_navigation_about">アプリについて</string>
+    <string name="library_navigation_plus_description">コーヒー1杯程度の金額で、全ての機能にアクセスできるようになります！</string>
+    <string name="library_navigation_plus_purchased_description">あなたは PixiView+ ユーザーです。快適な音楽視聴をお楽しみください！</string>
 
     <!-- Fanbox -->
     <string name="fanbox_free_fee">全体公開</string>
@@ -128,6 +130,22 @@
     <string name="setting_theme_color_description">アプリのテーマカラーを設定します。Dynamic Color と同時使用はできません。</string>
     <string name="setting_developer_title">開発モード</string>
     <string name="setting_developer_warning">You are trying to turn on this mode.Please enter the developer\'s PIN.\n\n[Warning] When this mode is turned on, you will not be able to receive any support.</string>
+
+    <!-- About -->
+    <string name="about_title">アプリについて</string>
+    <string name="about_name">PixiView</string>
+    <string name="about_developer_name">CAIOS</string>
+    <string name="about_developer_prefix">Developed and designed by</string>
+    <string name="about_special_thanks">SPECIAL THANKS</string>
+    <string name="about_special_thanks_contributor">GitHub コントリビューターの皆様</string>
+    <string name="about_special_thanks_contributor_description">このアプリをより良いものへと開発を手伝ってくださっている、コントリビューターの皆様に感謝します。</string>
+    <string name="about_contribute">CONTRIBUTE</string>
+    <string name="about_contribute_description">このアプリは OSS となっており、GPL でライセンスされています。コントリビュートはいつでも誰でも歓迎です。特に中国語への翻訳を手伝ってくれる方を探しています。</string>
+    <string name="about_support">SUPPORT</string>
+    <string name="about_support_version_history">更新履歴</string>
+    <string name="about_support_rate_app">アプリを評価</string>
+    <string name="about_support_opinion">ご意見・ご要望</string>
+    <string name="about_support_donate">寄付</string>
 
     <!-- Billing -->
     <string name="billing_plus_title">PixiView+</string>

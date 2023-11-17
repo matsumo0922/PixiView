@@ -5,9 +5,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -16,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Notifications
@@ -42,20 +45,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
+import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.ui.R
+import caios.android.pixiview.core.ui.theme.bold
 import kotlinx.coroutines.launch
 
 @Composable
 internal fun LibraryDrawer(
     state: DrawerState,
+    userData: UserData?,
     currentDestination: NavDestination?,
     onClickLibrary: (LibraryDestination) -> Unit,
     navigateToFollowingCreators: () -> Unit,
     navigateToSupportingCreators: () -> Unit,
     navigateToSetting: () -> Unit,
     navigateToAbout: () -> Unit,
+    navigateToBillingPlus: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ModalDrawerSheet(
@@ -144,6 +154,21 @@ internal fun LibraryDrawer(
                 icon = Icons.Outlined.Info,
                 onClick = navigateToAbout,
             )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            HorizontalDivider(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+            )
+
+            NavigationDrawerPlusItem(
+                state = state,
+                isPlusMode = userData?.isPlusMode == true,
+                isDeveloperMode = userData?.isDeveloperMode == true,
+                onClick = navigateToBillingPlus,
+            )
         }
     }
 }
@@ -203,5 +228,78 @@ private fun NavigationDrawerItem(
             style = MaterialTheme.typography.bodyMedium,
             color = contentColor,
         )
+    }
+}
+
+@Composable
+private fun NavigationDrawerPlusItem(
+    isPlusMode: Boolean,
+    isDeveloperMode: Boolean,
+    state: DrawerState,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val scope = rememberCoroutineScope()
+    val titleStyle = MaterialTheme.typography.titleMedium.bold()
+    val title: AnnotatedString
+    val description: String
+
+    if (isPlusMode) {
+        title = buildAnnotatedString {
+            withStyle(titleStyle.copy(color = MaterialTheme.colorScheme.primary).toSpanStyle()) {
+                append("PixiView+")
+            }
+        }
+        description = stringResource(R.string.library_navigation_plus_purchased_description)
+    } else {
+        title = buildAnnotatedString {
+            append("Buy ")
+            withStyle(titleStyle.copy(color = MaterialTheme.colorScheme.primary).toSpanStyle()) {
+                append("PixiView+")
+            }
+        }
+        description = stringResource(R.string.library_navigation_plus_description)
+    }
+
+    Row(
+        modifier = modifier
+            .clickable {
+                scope.launch {
+                    if (!isPlusMode || isDeveloperMode) {
+                        state.close()
+                        onClick.invoke()
+                    }
+                }
+            }
+            .padding(top = 8.dp)
+            .padding(horizontal = 24.dp, vertical = 12.dp)
+            .navigationBarsPadding(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Icon(
+            modifier = Modifier.size(24.dp),
+            imageVector = Icons.Default.AutoAwesome,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+        )
+
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = title,
+                style = titleStyle,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = description,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
