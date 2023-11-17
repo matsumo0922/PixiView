@@ -1,7 +1,5 @@
-package caios.android.pixiview.feature.creator.support
+package caios.android.pixiview.feature.creator.follow
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -21,31 +19,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
+import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.ui.AsyncLoadContents
+import caios.android.pixiview.core.ui.component.CreatorItem
 import caios.android.pixiview.core.ui.component.PixiViewTopBar
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 import caios.android.pixiview.feature.creator.R
-import caios.android.pixiview.feature.creator.support.item.SupportingCreatorItem
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-internal fun SupportingCreatorsRoute(
+internal fun FollowingCreatorsRoute(
     navigateToCreatorPlans: (CreatorId) -> Unit,
-    navigateToCreatorPosts: (CreatorId) -> Unit,
-    navigateToFanCard: (CreatorId) -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SupportingCreatorsViewModel = hiltViewModel(),
+    viewModel: FollowingCreatorsViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     AsyncLoadContents(
@@ -53,13 +47,10 @@ internal fun SupportingCreatorsRoute(
         screenState = screenState,
         retryAction = { viewModel.fetch() },
     ) { uiState ->
-        SupportingCreatorsScreen(
+        FollowingCreatorsScreen(
             modifier = Modifier.fillMaxSize(),
-            supportedCreators = uiState.supportedPlans.toImmutableList(),
-            onClickPlanDetail = { context.startActivity(Intent(Intent.ACTION_VIEW, it)) },
-            onClickFanCard = navigateToFanCard,
-            onClickCreatorPlans = navigateToCreatorPlans,
-            onClickCreatorPosts = navigateToCreatorPosts,
+            followingCreators = uiState.followingCreators.toImmutableList(),
+            onClickCreator = navigateToCreatorPlans,
             terminate = terminate,
         )
     }
@@ -67,12 +58,9 @@ internal fun SupportingCreatorsRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SupportingCreatorsScreen(
-    supportedCreators: ImmutableList<FanboxCreatorPlan>,
-    onClickPlanDetail: (Uri) -> Unit,
-    onClickFanCard: (CreatorId) -> Unit,
-    onClickCreatorPlans: (CreatorId) -> Unit,
-    onClickCreatorPosts: (CreatorId) -> Unit,
+private fun FollowingCreatorsScreen(
+    followingCreators: ImmutableList<FanboxCreatorDetail>,
+    onClickCreator: (CreatorId) -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -84,7 +72,7 @@ private fun SupportingCreatorsScreen(
         topBar = {
             PixiViewTopBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.library_navigation_supporting),
+                title = stringResource(R.string.library_navigation_following),
                 onClickNavigation = terminate,
                 scrollBehavior = scrollBehavior,
             )
@@ -102,14 +90,11 @@ private fun SupportingCreatorsScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            items(supportedCreators.toList()) { supportingPlan ->
-                SupportingCreatorItem(
+            items(followingCreators.toList()) { followingCreator ->
+                CreatorItem(
                     modifier = Modifier.fillMaxWidth(),
-                    supportingPlan = supportingPlan,
-                    onClickPlanDetail = onClickPlanDetail,
-                    onClickFanCard = onClickFanCard,
-                    onClickCreatorPlans = onClickCreatorPlans,
-                    onClickCreatorPosts = onClickCreatorPosts,
+                    creatorDetail = followingCreator,
+                    onClickCreator = onClickCreator,
                 )
             }
 

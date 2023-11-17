@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.library.discovery.items
+package caios.android.pixiview.core.ui.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,15 +27,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import caios.android.pixiview.core.ui.R
 import caios.android.pixiview.core.ui.extensition.FadePlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.core.ui.theme.bold
-import caios.android.pixiview.feature.library.R
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 
 @Composable
-internal fun LibraryDiscoveryItem(
+fun CreatorItem(
     creatorDetail: FanboxCreatorDetail,
     onClickCreator: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,

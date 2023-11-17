@@ -29,10 +29,10 @@ import androidx.paging.compose.itemKey
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.ui.LazyPagingItemsLoadContents
+import caios.android.pixiview.core.ui.component.CreatorItem
 import caios.android.pixiview.core.ui.component.PixiViewTopBar
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 import caios.android.pixiview.feature.library.R
-import caios.android.pixiview.feature.library.discovery.items.LibraryDiscoveryItem
 
 @Composable
 internal fun LibraryDiscoveryRoute(
@@ -98,7 +98,7 @@ private fun LibraryDiscoveryScreen(
                 contentType = pagingAdapter.itemContentType(),
             ) { index ->
                 pagingAdapter[index]?.let { creatorDetail ->
-                    LibraryDiscoveryItem(
+                    CreatorItem(
                         modifier = Modifier.fillMaxWidth(),
                         creatorDetail = creatorDetail,
                         onClickCreator = onClickCreator,
