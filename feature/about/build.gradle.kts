@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "caios.android.pixiview.feature.creator"
+    namespace = "caios.android.pixiview.feature.about"
 }
 
 dependencies {
@@ -17,7 +17,4 @@ dependencies {
     implementation(project(":core:ui"))
 
     implementation(libs.bundles.ui.implementation)
-    implementation(libs.androidx.palette)
-    implementation(libs.collapsing.toolbar.compose)
-    implementation(libs.zoomable)
 }

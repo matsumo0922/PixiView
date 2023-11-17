@@ -21,6 +21,8 @@ fun NavGraphBuilder.libraryScreen(
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
     navigateToFollowerCreators: () -> Unit,
     navigateToSupportingCreators: () -> Unit,
+    navigateToSettingTop: () -> Unit,
+    navigateToAbout: () -> Unit,
 ) {
     composable(
         route = LibraryRoute,
@@ -56,6 +58,8 @@ fun NavGraphBuilder.libraryScreen(
             navigateToCreatorPlans = navigateToCreatorPlans,
             navigateToFollowerCreators = navigateToFollowerCreators,
             navigateToSupportingCreators = navigateToSupportingCreators,
+            navigateToSettingTop = navigateToSettingTop,
+            navigateToAbout = navigateToAbout,
         )
     }
 }

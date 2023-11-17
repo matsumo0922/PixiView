@@ -48,15 +48,13 @@ internal fun LibraryHomeScreen(
     modifier: Modifier = Modifier,
     viewModel: LibraryHomeViewModel = hiltViewModel(),
 ) {
-    val homeUiState by viewModel.homeUiState.collectAsStateWithLifecycle()
-    val supportedUiState by viewModel.supportedUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val homePager = homeUiState.paging.collectAsLazyPagingItems()
-    val supportedPager = supportedUiState.paging.collectAsLazyPagingItems()
-
+    val homePager = uiState.homePaging.collectAsLazyPagingItems()
+    val supportedPager = uiState.supportedPaging.collectAsLazyPagingItems()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(snapAnimationSpec = null, flingAnimationSpec = null)
 
-    val pagerState = rememberPagerState { 2 }
+    val pagerState = rememberPagerState(initialPage = if (uiState.userData.isFollowTabDefaultHome) 1 else 0) { 2 }
     val scope = rememberCoroutineScope()
 
     val tabs = listOf(

@@ -33,6 +33,7 @@ class PixiViewPreferencesDataStore(
                 },
                 isDynamicColor = if (it.hasIsUseDynamicColor()) it.isUseDynamicColor else false,
                 isDeveloperMode = if (it.hasIsDeveloperMode()) it.isDeveloperMode else false,
+                isFollowTabDefaultHome = if (it.hasIsFollowTabDefaultHome()) it.isFollowTabDefaultHome else false,
                 isPlusMode = if (it.hasIsPlusMode()) it.isPlusMode else false,
                 isAgreedPrivacyPolicy = if (it.hasIsAgreedPrivacyPolicy()) it.isAgreedPrivacyPolicy else false,
                 isAgreedTermsOfService = if (it.hasIsAgreedTermsOfService()) it.isAgreedTermsOfService else false,
@@ -103,6 +104,14 @@ class PixiViewPreferencesDataStore(
         userPreference.updateData {
             it.copy {
                 this.isUseDynamicColor = useDynamicColor
+            }
+        }
+    }
+
+    suspend fun setFollowTabDefaultHome(isFollowTabDefaultHome: Boolean) = withContext(ioDispatcher) {
+        userPreference.updateData {
+            it.copy {
+                this.isFollowTabDefaultHome = isFollowTabDefaultHome
             }
         }
     }

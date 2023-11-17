@@ -19,6 +19,14 @@ import caios.android.pixiview.feature.post.detail.navigateToPostDetail
 import caios.android.pixiview.feature.post.detail.postDetailScreen
 import caios.android.pixiview.feature.post.image.navigateToPostImage
 import caios.android.pixiview.feature.post.image.postImageScreen
+import caios.android.pixiview.feature.setting.developer.navigateToSettingDeveloper
+import caios.android.pixiview.feature.setting.developer.settingDeveloperDialog
+import caios.android.pixiview.feature.setting.oss.navigateToSettingLicense
+import caios.android.pixiview.feature.setting.oss.settingLicenseScreen
+import caios.android.pixiview.feature.setting.theme.navigateToSettingTheme
+import caios.android.pixiview.feature.setting.theme.settingThemeScreen
+import caios.android.pixiview.feature.setting.top.navigateToSettingTop
+import caios.android.pixiview.feature.setting.top.settingTopScreen
 
 @Composable
 internal fun PixiViewNavHost(
@@ -37,6 +45,8 @@ internal fun PixiViewNavHost(
             navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
             navigateToFollowerCreators = { navController.navigateToFollowingCreators() },
             navigateToSupportingCreators = { navController.navigateToSupportingCreators() },
+            navigateToSettingTop = { navController.navigateToSettingTop() },
+            navigateToAbout = { },
         )
 
         postDetailScreen(
@@ -69,6 +79,26 @@ internal fun PixiViewNavHost(
         )
 
         fanCardScreen(
+            terminate = { navController.popBackStack() },
+        )
+
+        settingTopScreen(
+            navigateToSettingTheme = { navController.navigateToSettingTheme() },
+            navigateToSettingDeveloper = { navController.navigateToSettingDeveloper() },
+            navigateToOpenSourceLicense = { navController.navigateToSettingLicense() },
+            terminate = { navController.popBackStack() },
+        )
+
+        settingThemeScreen(
+            navigateToBillingPlus = { },
+            terminate = { navController.popBackStack() },
+        )
+
+        settingLicenseScreen(
+            terminate = { navController.popBackStack() },
+        )
+
+        settingDeveloperDialog(
             terminate = { navController.popBackStack() },
         )
     }

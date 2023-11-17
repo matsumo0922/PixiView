@@ -1,5 +1,6 @@
 package caios.android.pixiview.feature.creator.fancard.items
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,6 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
+import androidx.palette.graphics.Palette
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlanDetail
 import caios.android.pixiview.core.ui.extensition.FadePlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
@@ -40,6 +47,8 @@ internal fun FanCardItem(
     isDisplayName: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    var isLight by remember { mutableStateOf(false) }
+
     Box(
         modifier = modifier
             .aspectRatio(16 / 9f)
@@ -51,7 +60,13 @@ internal fun FanCardItem(
                 .fillMaxWidth(),
             model = ImageRequest.Builder(LocalContext.current)
                 .fanboxHeader()
+                .allowHardware(false)
                 .data(planDetail.supporterCardImageUrl)
+                .listener(
+                    onSuccess = { _, result ->
+                        isLight = isBitmapLightOrDark(result.drawable.toBitmap())
+                    }
+                )
                 .build(),
             loading = {
                 FadePlaceHolder()
@@ -79,7 +94,7 @@ internal fun FanCardItem(
             modifier = Modifier
                 .padding(24.dp, 16.dp)
                 .align(Alignment.BottomEnd),
-            painter = painterResource(R.drawable.im_fanbox_logo),
+            painter = painterResource(if (isLight) R.drawable.im_fanbox_logo_light else R.drawable.im_fanbox_logo_dark),
             contentDescription = null,
         )
     }
@@ -93,7 +108,7 @@ private fun NameItem(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
@@ -159,8 +174,8 @@ private fun TitleItem(
     }
 }
 
-private val DEFAULT_TEXT_SIZE = 14.sp
-private val LARGE_TEXT_SIZE = 18.sp
+private val DEFAULT_TEXT_SIZE = 10.sp
+private val LARGE_TEXT_SIZE = 14.sp
 
 private fun cardTextStyle(fontSize: TextUnit) = TextStyle(
     fontSize = fontSize,
@@ -172,6 +187,22 @@ private fun cardTextStyle(fontSize: TextUnit) = TextStyle(
         blurRadius = 3f,
     ),
 )
+
+private fun isBitmapLightOrDark(bitmap: Bitmap): Boolean {
+    val palette = Palette.from(bitmap).generate()
+    val dominantColor = palette.getDominantColor(0)
+    return isColorLight(dominantColor)
+}
+
+private fun isColorLight(color: Int): Boolean {
+    val red = (color shr 16) and 0xff
+    val green = (color shr 8) and 0xff
+    val blue = color and 0xff
+
+    // 輝度の計算
+    val brightness = (red * 0.299) + (green * 0.587) + (blue * 0.114)
+    return brightness > 160 // 160を閾値として明るさを判断
+}
 
 @Preview
 @Composable

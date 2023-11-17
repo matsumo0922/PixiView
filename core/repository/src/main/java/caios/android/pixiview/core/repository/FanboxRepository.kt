@@ -53,7 +53,9 @@ import io.ktor.util.InternalAPI
 import io.ktor.utils.io.jvm.javaio.copyTo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -66,6 +68,7 @@ import javax.inject.Inject
 
 interface FanboxRepository {
     val cookie: SharedFlow<String>
+    val metaData: SharedFlow<FanboxMetaData>
 
     fun hasActiveCookie(): Boolean
 
@@ -111,10 +114,11 @@ class FanboxRepositoryImpl(
     private val ioDispatcher: CoroutineDispatcher,
 ) : FanboxRepository {
 
-    override val cookie: SharedFlow<String> = fanboxCookiePreference.data
-
-    private var metaData: FanboxMetaData? = null
+    private val _metaData = MutableSharedFlow<FanboxMetaData>(replay = 1)
     private val postCache = mutableMapOf<PostId, FanboxPostDetail>()
+
+    override val cookie: SharedFlow<String> = fanboxCookiePreference.data
+    override val metaData: SharedFlow<FanboxMetaData> = _metaData.asSharedFlow()
 
     @Inject
     constructor(
@@ -138,12 +142,12 @@ class FanboxRepositoryImpl(
         fanboxCookiePreference.save(cookie)
     }
 
-    override suspend fun updateCsrfToken() = withContext(ioDispatcher) {
+    override suspend fun updateCsrfToken(): Unit = withContext(ioDispatcher) {
         val html = html("https://www.fanbox.cc/")
         val doc = Jsoup.parse(html)
         val meta = doc.select("meta[name=metadata]").first()?.attr("content")?.toString()
 
-        metaData = formatter.decodeFromString(FanboxMetaDataEntity.serializer(), meta!!).translate()
+        _metaData.emit(formatter.decodeFromString(FanboxMetaDataEntity.serializer(), meta!!).translate())
     }
 
     override suspend fun getHomePosts(cursor: FanboxCursor?): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
@@ -372,7 +376,7 @@ class FanboxRepositoryImpl(
         header("referer", "https://www.fanbox.cc")
         header("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36")
         header("Content-Type", "application/json")
-        header("x-csrf-token", metaData?.csrfToken.orEmpty())
+        header("x-csrf-token", metaData.first().csrfToken)
         header("Cookie", cookie.first())
     }
 

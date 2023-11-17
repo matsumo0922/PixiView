@@ -7,8 +7,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.repository.FanboxRepository
+import caios.android.pixiview.core.repository.UserDataRepository
 import caios.android.pixiview.core.ui.extensition.emptyPaging
 import caios.android.pixiview.feature.library.home.paging.LibraryHomePagingSource
 import caios.android.pixiview.feature.library.home.paging.LibrarySupportedPagingSource
@@ -16,18 +18,25 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LibraryHomeViewModel @Inject constructor(
+    private val userDataRepository: UserDataRepository,
     private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
 
-    private val _homeUiState = MutableStateFlow(LibraryHomeUiState(emptyPaging()))
-    private val _supportedUiState = MutableStateFlow(LibrarySupportedUiState(emptyPaging()))
+    private val _uiState = MutableStateFlow(
+        LibraryUiState(
+            userData = UserData.dummy(),
+            homePaging = emptyPaging(),
+            supportedPaging = emptyPaging(),
+        )
+    )
 
-    val homeUiState = _homeUiState.asStateFlow()
-    val supportedUiState = _supportedUiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
     init {
         Pager(
@@ -37,7 +46,7 @@ class LibraryHomeViewModel @Inject constructor(
                 LibraryHomePagingSource(fanboxRepository)
             },
         ).flow.cachedIn(viewModelScope).also {
-            _homeUiState.value = LibraryHomeUiState(it)
+            _uiState.value = uiState.value.copy(homePaging = it)
         }
 
         Pager(
@@ -47,17 +56,20 @@ class LibraryHomeViewModel @Inject constructor(
                 LibrarySupportedPagingSource(fanboxRepository)
             },
         ).flow.cachedIn(viewModelScope).also {
-            _supportedUiState.value = LibrarySupportedUiState(it)
+            _uiState.value = uiState.value.copy(supportedPaging = it)
+        }
+
+        viewModelScope.launch {
+            userDataRepository.userData.collectLatest {
+                _uiState.value = uiState.value.copy(userData = it)
+            }
         }
     }
 }
 
 @Stable
-data class LibraryHomeUiState(
-    val paging: Flow<PagingData<FanboxPost>>,
-)
-
-@Stable
-data class LibrarySupportedUiState(
-    val paging: Flow<PagingData<FanboxPost>>,
+data class LibraryUiState(
+    val userData: UserData,
+    val homePaging: Flow<PagingData<FanboxPost>>,
+    val supportedPaging: Flow<PagingData<FanboxPost>>,
 )

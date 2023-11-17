@@ -1,0 +1,140 @@
+package caios.android.pixiview.feature.setting.top
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import caios.android.kanade.feature.setting.top.items.SettingTopOthersSection
+import caios.android.pixiview.core.common.PixiViewConfig
+import caios.android.pixiview.core.model.UserData
+import caios.android.pixiview.core.model.fanbox.FanboxMetaData
+import caios.android.pixiview.core.ui.AsyncLoadContents
+import caios.android.pixiview.feature.setting.R
+import caios.android.pixiview.feature.setting.SettingTheme
+import caios.android.pixiview.feature.setting.top.items.SettingTopGeneralSection
+import caios.android.pixiview.feature.setting.top.items.SettingTopThemeSection
+
+@Composable
+internal fun SettingTopRoute(
+    navigateToSettingTheme: () -> Unit,
+    navigateToOpenSourceLicense: () -> Unit,
+    navigateToSettingDeveloper: () -> Unit,
+    terminate: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: SettingTopViewModel = hiltViewModel(),
+) {
+    val screenState by viewModel.screenState.collectAsStateWithLifecycle()
+
+    AsyncLoadContents(
+        modifier = modifier,
+        screenState = screenState,
+    ) { uiState ->
+        SettingTopScreen(
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+            userData = uiState.userData,
+            metaData = uiState.metaData,
+            fanboxSessionId = uiState.fanboxSessionId,
+            config = uiState.config,
+            onClickTheme = navigateToSettingTheme,
+            onClickOpenSourceLicense = navigateToOpenSourceLicense,
+            onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
+            onClickDeveloperMode = { isEnable ->
+                if (isEnable) {
+                    navigateToSettingDeveloper.invoke()
+                } else {
+                    viewModel.setDeveloperMode(false)
+                }
+            },
+            onTerminate = terminate,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SettingTopScreen(
+    userData: UserData,
+    metaData: FanboxMetaData,
+    fanboxSessionId: String,
+    config: PixiViewConfig,
+    onClickTheme: () -> Unit,
+    onClickFollowTabDefaultHome: (Boolean) -> Unit,
+    onClickOpenSourceLicense: () -> Unit,
+    onClickDeveloperMode: (Boolean) -> Unit,
+    onTerminate: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val state = rememberTopAppBarState()
+    val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(state)
+
+    Scaffold(
+        modifier = modifier.nestedScroll(behavior.nestedScrollConnection),
+        topBar = {
+            SettingTheme {
+                LargeTopAppBar(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = {
+                        Text(
+                            text = stringResource(R.string.setting_title),
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onTerminate) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                    scrollBehavior = behavior,
+                )
+            }
+        },
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = paddingValues,
+        ) {
+            item {
+                SettingTopThemeSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClickAppTheme = onClickTheme,
+                )
+
+                SettingTopGeneralSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    userData = userData,
+                    onClickFollowTabDefaultHome = onClickFollowTabDefaultHome,
+                )
+
+                SettingTopOthersSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    config = config,
+                    userData = userData,
+                    fanboxMetaData = metaData,
+                    fanboxSessionId = fanboxSessionId,
+                    onClickOpenSourceLicense = onClickOpenSourceLicense,
+                    onClickDeveloperMode = onClickDeveloperMode,
+                )
+            }
+        }
+    }
+}

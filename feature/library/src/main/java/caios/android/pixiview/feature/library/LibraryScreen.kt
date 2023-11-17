@@ -33,6 +33,8 @@ fun LibraryScreen(
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
     navigateToFollowerCreators: () -> Unit,
     navigateToSupportingCreators: () -> Unit,
+    navigateToSettingTop: () -> Unit,
+    navigateToAbout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
@@ -48,8 +50,8 @@ fun LibraryScreen(
                 onClickLibrary = navController::navigateToLibrary,
                 navigateToFollowingCreators = navigateToFollowerCreators,
                 navigateToSupportingCreators = navigateToSupportingCreators,
-                navigateToSetting = { },
-                navigateToAbout = { },
+                navigateToSetting = navigateToSettingTop,
+                navigateToAbout = navigateToAbout,
             )
         },
     ) {
