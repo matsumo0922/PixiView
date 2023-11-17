@@ -50,6 +50,36 @@ class CreatorTopViewModel @Inject constructor(
         }
     }
 
+    fun follow(creatorUserId: String) {
+        viewModelScope.launch {
+            (screenState.value as? ScreenState.Idle)?.also { data ->
+                val creatorDetail = suspendRunCatching {
+                    fanboxRepository.followCreator(creatorUserId)
+                }.fold(
+                    onSuccess = { data.data.creatorDetail.copy(isFollowed = true) },
+                    onFailure = { data.data.creatorDetail.copy(isFollowed = false) },
+                )
+
+                _screenState.value = ScreenState.Idle(data.data.copy(creatorDetail = creatorDetail))
+            }
+        }
+    }
+
+    fun unfollow(creatorUserId: String) {
+        viewModelScope.launch {
+            (screenState.value as? ScreenState.Idle)?.also { data ->
+                val creatorDetail = suspendRunCatching {
+                    fanboxRepository.unfollowCreator(creatorUserId)
+                }.fold(
+                    onSuccess = { data.data.creatorDetail.copy(isFollowed = false) },
+                    onFailure = { data.data.creatorDetail.copy(isFollowed = true) },
+                )
+
+                _screenState.value = ScreenState.Idle(data.data.copy(creatorDetail = creatorDetail))
+            }
+        }
+    }
+
     private fun buildPaging(creatorId: CreatorId): Flow<PagingData<FanboxPost>> {
         return Pager(
             config = PagingConfig(pageSize = 10),

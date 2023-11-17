@@ -18,6 +18,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlanDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
+import caios.android.pixiview.core.model.fanbox.FanboxMetaData
 import caios.android.pixiview.core.model.fanbox.FanboxNewsLetter
 import caios.android.pixiview.core.model.fanbox.FanboxPaidRecord
 import caios.android.pixiview.core.model.fanbox.FanboxPost
@@ -28,6 +29,7 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlanEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlansEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxMetaDataEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxNewsLattersEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPaidRecordEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
@@ -38,22 +40,26 @@ import caios.android.pixiview.core.repository.utils.parse
 import caios.android.pixiview.core.repository.utils.translate
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.HttpClient
-import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsChannel
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMessageBuilder
-import io.ktor.http.Parameters
+import io.ktor.util.InternalAPI
 import io.ktor.utils.io.jvm.javaio.copyTo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import org.jsoup.Jsoup
 import java.io.File
 import java.io.OutputStream
 import javax.inject.Inject
@@ -64,6 +70,7 @@ interface FanboxRepository {
     fun hasActiveCookie(): Boolean
 
     suspend fun updateCookie(cookie: String)
+    suspend fun updateCsrfToken()
 
     suspend fun getHomePosts(cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
     suspend fun getSupportedPosts(cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
@@ -99,22 +106,26 @@ interface FanboxRepository {
 class FanboxRepositoryImpl(
     private val context: Context,
     private val client: HttpClient,
+    private val formatter: Json,
     private val fanboxCookiePreference: PreferenceFanboxCookie,
     private val ioDispatcher: CoroutineDispatcher,
 ) : FanboxRepository {
 
     override val cookie: SharedFlow<String> = fanboxCookiePreference.data
 
+    private var metaData: FanboxMetaData? = null
     private val postCache = mutableMapOf<PostId, FanboxPostDetail>()
 
     @Inject
     constructor(
         @ApplicationContext context: Context,
         client: HttpClient,
+        formatter: Json,
         fanboxCookiePreference: PreferenceFanboxCookie,
     ) : this(
         context = context,
         client = client,
+        formatter = formatter,
         fanboxCookiePreference = fanboxCookiePreference,
         ioDispatcher = Dispatchers.IO,
     )
@@ -125,6 +136,14 @@ class FanboxRepositoryImpl(
 
     override suspend fun updateCookie(cookie: String) {
         fanboxCookiePreference.save(cookie)
+    }
+
+    override suspend fun updateCsrfToken() = withContext(ioDispatcher) {
+        val html = html("https://www.fanbox.cc/")
+        val doc = Jsoup.parse(html)
+        val meta = doc.select("meta[name=metadata]").first()?.attr("content")?.toString()
+
+        metaData = formatter.decodeFromString(FanboxMetaDataEntity.serializer(), meta!!).translate()
     }
 
     override suspend fun getHomePosts(cursor: FanboxCursor?): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
@@ -227,12 +246,10 @@ class FanboxRepositoryImpl(
         }
     }
 
-    @Deprecated("動作未確認")
     override suspend fun followCreator(creatorUserId: String): Unit = withContext(ioDispatcher) {
         post("follow.create", mapOf("creatorUserId" to creatorUserId))
     }
 
-    @Deprecated("動作未確認")
     override suspend fun unfollowCreator(creatorUserId: String): Unit = withContext(ioDispatcher) {
         post("follow.delete", mapOf("creatorUserId" to creatorUserId))
     }
@@ -312,6 +329,10 @@ class FanboxRepositoryImpl(
         return contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
     }
 
+    private suspend fun html(url: String): String {
+        return client.get(url).bodyAsText()
+    }
+
     private suspend fun get(dir: String, parameters: Map<String, String> = emptyMap()): HttpResponse {
         return client.get {
             url("$API/$dir")
@@ -323,18 +344,17 @@ class FanboxRepositoryImpl(
         }
     }
 
+    @OptIn(InternalAPI::class)
     private suspend fun post(dir: String, parameters: Map<String, String> = emptyMap()): HttpResponse {
-        return client.submitForm(
-            url = "$API/$dir",
-            formParameters = Parameters.build {
+        return client.post {
+            url("$API/$dir")
+            fanboxHeader()
+
+            body = buildJsonObject {
                 for ((key, value) in parameters) {
-                    append(key, value)
+                    put(key, value)
                 }
-            },
-        ) {
-            runBlocking {
-                fanboxHeader()
-            }
+            }.toString()
         }
     }
 
@@ -351,6 +371,8 @@ class FanboxRepositoryImpl(
         header("origin", "https://www.fanbox.cc")
         header("referer", "https://www.fanbox.cc")
         header("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36")
+        header("Content-Type", "application/json")
+        header("x-csrf-token", metaData?.csrfToken.orEmpty())
         header("Cookie", cookie.first())
     }
 

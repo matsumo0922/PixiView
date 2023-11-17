@@ -12,8 +12,8 @@ compileSdk = "34"
 gradle = "8.1.2"
 
 # Kotlin
-kotlin = "1.9.20"
-kotlinCompiler = "1.5.4"
+kotlin = "1.9.10"
+kotlinCompiler = "1.5.3"
 
 # KotlinX
 kotlinxCoroutines = "1.7.3"

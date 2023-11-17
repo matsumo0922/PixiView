@@ -17,6 +17,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -51,6 +54,8 @@ internal fun FollowingCreatorsRoute(
             modifier = Modifier.fillMaxSize(),
             followingCreators = uiState.followingCreators.toImmutableList(),
             onClickCreator = navigateToCreatorPlans,
+            onClickFollow = viewModel::follow,
+            onClickUnfollow = viewModel::unfollow,
             terminate = terminate,
         )
     }
@@ -61,6 +66,8 @@ internal fun FollowingCreatorsRoute(
 private fun FollowingCreatorsScreen(
     followingCreators: ImmutableList<FanboxCreatorDetail>,
     onClickCreator: (CreatorId) -> Unit,
+    onClickFollow: (String) -> Unit,
+    onClickUnfollow: (String) -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -91,10 +98,21 @@ private fun FollowingCreatorsScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             items(followingCreators.toList()) { followingCreator ->
+                var isFollowed by rememberSaveable(followingCreator.isFollowed) { mutableStateOf(followingCreator.isFollowed) }
+
                 CreatorItem(
                     modifier = Modifier.fillMaxWidth(),
                     creatorDetail = followingCreator,
+                    isFollowed = isFollowed,
                     onClickCreator = onClickCreator,
+                    onClickFollow = {
+                        isFollowed = true
+                        onClickFollow.invoke(it)
+                    },
+                    onClickUnfollow = {
+                        isFollowed = false
+                        onClickUnfollow.invoke(it)
+                    },
                 )
             }
 

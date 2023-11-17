@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
@@ -16,12 +19,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
@@ -34,16 +41,17 @@ import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.core.ui.LazyPagingItemsLoadContents
+import caios.android.pixiview.core.ui.component.CollapsingToolbarScaffold
+import caios.android.pixiview.core.ui.component.ScrollStrategy
+import caios.android.pixiview.core.ui.component.rememberCollapsingToolbarScaffoldState
 import caios.android.pixiview.feature.creator.R
+import caios.android.pixiview.feature.creator.top.items.CreatorTopDescriptionDialog
 import caios.android.pixiview.feature.creator.top.items.CreatorTopHeader
 import caios.android.pixiview.feature.creator.top.items.CreatorTopPlansScreen
 import caios.android.pixiview.feature.creator.top.items.CreatorTopPostsScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
-import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.ScrollStrategy
-import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 internal fun CreatorTopRoute(
@@ -77,6 +85,9 @@ internal fun CreatorTopRoute(
             onClickPost = navigateToPostDetail,
             onClickPlan = { context.startActivity(Intent(Intent.ACTION_VIEW, it.browserUri)) },
             onTerminate = terminate,
+            onClickLink = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
+            onClickFollow = viewModel::follow,
+            onClickUnfollow = viewModel::unfollow,
         )
     }
 }
@@ -90,21 +101,30 @@ private fun CreatorTopScreen(
     creatorPostsPaging: LazyPagingItems<FanboxPost>,
     onClickPost: (PostId) -> Unit,
     onClickPlan: (FanboxCreatorPlan) -> Unit,
+    onClickLink: (String) -> Unit,
+    onClickFollow: (String) -> Unit,
+    onClickUnfollow: (String) -> Unit,
     onTerminate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state = rememberCollapsingToolbarScaffoldState()
-    val pagerState = rememberPagerState(initialPage = if (isPosts) 1 else 0) { 2 }
+    val pagerState = rememberPagerState(initialPage = if (isPosts) 0 else 1) { 2 }
     val scope = rememberCoroutineScope()
 
+    val postsListState = rememberLazyListState()
+    val plansListState = rememberLazyListState()
+
+    var isShowDescriptionDialog by remember { mutableStateOf(false) }
+
     val tabs = listOf(
-        CreatorTab.PLANS,
         CreatorTab.POSTS,
+        CreatorTab.PLANS,
     )
 
     CollapsingToolbarScaffold(
         modifier = modifier,
         state = state,
+        toolbarModifier = Modifier.verticalScroll(rememberScrollState()),
         toolbar = {
             Spacer(
                 modifier = Modifier
@@ -114,14 +134,18 @@ private fun CreatorTopScreen(
 
             CreatorTopHeader(
                 modifier = Modifier
-                    .parallax(0.5f)
+                    .parallax(1f)
                     .fillMaxWidth()
                     .graphicsLayer {
-                        alpha = state.toolbarState.progress
+                        alpha = state.toolbarState.progress * 10
                     },
                 creatorDetail = creatorDetail,
                 onClickTerminate = onTerminate,
                 onClickMenu = {},
+                onClickLink = onClickLink,
+                onClickFollow = onClickFollow,
+                onClickUnfollow = onClickUnfollow,
+                onClickDescription = { isShowDescriptionDialog = true },
             )
         },
         scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
@@ -137,32 +161,43 @@ private fun CreatorTopScreen(
                         label = stringResource(tab.titleRes),
                         onClick = {
                             scope.launch {
-                                pagerState.animateScrollToPage(index)
+                                if (pagerState.currentPage != index) {
+                                    pagerState.animateScrollToPage(index)
+                                } else {
+                                    when (tabs[index]) {
+                                        CreatorTab.POSTS -> postsListState.animateScrollToItem(0)
+                                        CreatorTab.PLANS -> plansListState.animateScrollToItem(0)
+                                    }
+                                }
                             }
                         },
                     )
                 }
             }
 
-            HorizontalPager(pagerState) {
+            HorizontalPager(
+                modifier = Modifier.fillMaxSize(),
+                state = pagerState,
+            ) {
                 when (tabs[it]) {
                     CreatorTab.POSTS -> {
                         LazyPagingItemsLoadContents(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxSize(),
                             lazyPagingItems = creatorPostsPaging,
                         ) {
                             CreatorTopPostsScreen(
                                 modifier = Modifier.fillMaxSize(),
+                                state = postsListState,
                                 pagingAdapter = creatorPostsPaging,
                                 onClickPost = onClickPost,
                                 onClickCreator = {
                                     scope.launch {
-                                        pagerState.animateScrollToPage(0)
+                                        pagerState.animateScrollToPage(1)
                                     }
                                 },
                                 onClickPlanList = {
                                     scope.launch {
-                                        pagerState.animateScrollToPage(0)
+                                        pagerState.animateScrollToPage(1)
                                     }
                                 },
                             )
@@ -170,8 +205,8 @@ private fun CreatorTopScreen(
                     }
                     CreatorTab.PLANS -> {
                         CreatorTopPlansScreen(
-                            modifier = Modifier.fillMaxWidth(),
-                            creatorDetail = creatorDetail,
+                            modifier = Modifier.fillMaxSize(),
+                            state = plansListState,
                             creatorPlans = creatorPlans,
                             onClickPlan = onClickPlan,
                         )
@@ -179,6 +214,13 @@ private fun CreatorTopScreen(
                 }
             }
         }
+    }
+
+    if (isShowDescriptionDialog) {
+        CreatorTopDescriptionDialog(
+            description = creatorDetail.description,
+            onDismissRequest = { isShowDescriptionDialog = false },
+        )
     }
 }
 

@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,14 +19,13 @@ import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 
 @Composable
 internal fun CreatorTopPostsScreen(
+    state: LazyListState,
     pagingAdapter: LazyPagingItems<FanboxPost>,
     onClickPost: (PostId) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val state = rememberLazyListState()
-
     LazyColumn(
         modifier = modifier.drawVerticalScrollbar(state),
         state = state,

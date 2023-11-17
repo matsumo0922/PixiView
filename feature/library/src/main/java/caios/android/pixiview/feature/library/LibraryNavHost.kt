@@ -20,7 +20,7 @@ import caios.android.pixiview.feature.library.notify.libraryNotifyScreen
 fun LibraryNavHost(
     openDrawer: () -> Unit,
     navigateToPostDetail: (postId: PostId) -> Unit,
-    navigateToCreatorTop: (creatorId: CreatorId) -> Unit,
+    navigateToCreatorPosts: (creatorId: CreatorId) -> Unit,
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
@@ -34,7 +34,7 @@ fun LibraryNavHost(
         libraryHomeScreen(
             openDrawer = openDrawer,
             navigateToPostDetail = navigateToPostDetail,
-            navigateToCreatorTop = navigateToCreatorTop,
+            navigateToCreatorPosts = navigateToCreatorPosts,
             navigateToCreatorPlans = navigateToCreatorPlans,
         )
 

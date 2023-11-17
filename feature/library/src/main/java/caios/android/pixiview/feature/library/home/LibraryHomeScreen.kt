@@ -44,7 +44,7 @@ internal fun LibraryHomeScreen(
     openDrawer: () -> Unit,
     navigateToPostDetail: (PostId) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
-    navigateToCreatorTop: (CreatorId) -> Unit,
+    navigateToCreatorPosts: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LibraryHomeViewModel = hiltViewModel(),
 ) {
@@ -60,8 +60,8 @@ internal fun LibraryHomeScreen(
     val scope = rememberCoroutineScope()
 
     val tabs = listOf(
-        HomeTabs.Home,
         HomeTabs.Supported,
+        HomeTabs.Home,
     )
 
     Scaffold(
@@ -118,7 +118,7 @@ internal fun LibraryHomeScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = homePager,
                                 onClickPost = navigateToPostDetail,
-                                onClickCreator = navigateToCreatorTop,
+                                onClickCreator = navigateToCreatorPosts,
                                 onClickPlanList = navigateToCreatorPlans,
                             )
                         }
@@ -132,7 +132,7 @@ internal fun LibraryHomeScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = supportedPager,
                                 onClickPost = navigateToPostDetail,
-                                onClickCreator = navigateToCreatorTop,
+                                onClickCreator = navigateToCreatorPosts,
                                 onClickPlanList = navigateToCreatorPlans,
                             )
                         }

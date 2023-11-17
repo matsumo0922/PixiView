@@ -23,6 +23,9 @@
     <string name="common_delete">削除</string>
     <string name="common_download">ダウンロード</string>
     <string name="common_downloaded">ダウンロードしました</string>
+    <string name="common_follow">フォロー</string>
+    <string name="common_unfollow">フォロー中</string>
+    <string name="common_see_more">もっと見る</string>
 
     <!-- Common Error -->
     <string name="error_executed">エラーが発生しました</string>
@@ -78,8 +81,12 @@
     <string name="creator_supporting_fan_card">ファンカード</string>
     <string name="creator_supporting_plan_detail">詳細</string>
     <string name="creator_fan_card_not_supported">このクリエイターを支援していません</string>
-    <string name="creator_fan_card_switch_displa_name">名前の表示を切り替える</string>
+    <string name="creator_fan_card_switch_display_name">名前の表示を切り替える</string>
     <string name="creator_fan_card_download">ファンカードをダウンロード</string>
+    <string name="creator_tag_has_adult_content">成人向けコンテンツ</string>
+    <string name="creator_tag_has_booth_shop">BOOTHショップ有り</string>
+    <string name="creator_tag_is_supported">支援中</string>
+    <string name="creator_tag_is_accepting_request">リクエスト受付中</string>
 
     <!-- PostDetail -->
     <string name="post_detail_title">投稿詳細</string>

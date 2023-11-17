@@ -18,5 +18,6 @@ dependencies {
     implementation(libs.bundles.ui.implementation)
 
     implementation(libs.androidx.palette)
+    implementation(libs.collapsing.toolbar.compose)
     implementation(libs.reorderble.compose)
 }

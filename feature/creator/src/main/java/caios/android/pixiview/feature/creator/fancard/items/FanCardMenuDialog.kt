@@ -37,7 +37,7 @@ internal fun FanCardMenuDialog(
                         onDismissRequest.invoke()
                     }
                     .padding(20.dp, 16.dp),
-                text = stringResource(R.string.creator_fan_card_switch_displa_name),
+                text = stringResource(R.string.creator_fan_card_switch_display_name),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
             )

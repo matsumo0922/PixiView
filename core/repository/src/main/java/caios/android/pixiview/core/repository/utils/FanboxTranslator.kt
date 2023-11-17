@@ -12,6 +12,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlanDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxCursor
+import caios.android.pixiview.core.model.fanbox.FanboxMetaData
 import caios.android.pixiview.core.model.fanbox.FanboxNewsLetter
 import caios.android.pixiview.core.model.fanbox.FanboxPaidRecord
 import caios.android.pixiview.core.model.fanbox.FanboxPost
@@ -23,6 +24,7 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlanEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlansEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxMetaDataEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxNewsLattersEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPaidRecordEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
@@ -91,7 +93,12 @@ internal fun FanboxCreatorItemsEntity.translate(): List<FanboxCreatorDetail> {
                     type = profileItem.type,
                 )
             },
-            profileLinks = it.profileLinks,
+            profileLinks = it.profileLinks.map { profileLink ->
+                FanboxCreatorDetail.ProfileLink(
+                    url = profileLink,
+                    link = FanboxCreatorDetail.Platform.fromUrl(profileLink),
+                )
+            },
             user = FanboxUser(
                 userId = it.user.userId,
                 creatorId = CreatorId(it.creatorId),
@@ -121,7 +128,12 @@ internal fun FanboxCreatorEntity.translate(): FanboxCreatorDetail {
                 type = profileItem.type,
             )
         },
-        profileLinks = body.profileLinks,
+        profileLinks = body.profileLinks.map { profileLink ->
+            FanboxCreatorDetail.ProfileLink(
+                url = profileLink,
+                link = FanboxCreatorDetail.Platform.fromUrl(profileLink),
+            )
+        },
         user = FanboxUser(
             userId = body.user.userId,
             creatorId = CreatorId(body.creatorId),
@@ -450,6 +462,43 @@ internal fun FanboxBellItemsEntity.translate(): PageNumberInfo<FanboxBell> {
             }
         },
         nextPage = Uri.parse(body.nextUrl).getQueryParameter("page")?.toIntOrNull(),
+    )
+}
+
+internal fun FanboxMetaDataEntity.translate(): FanboxMetaData {
+    return FanboxMetaData(
+        apiUrl = apiUrl,
+        wwwUrl = wwwUrl,
+        csrfToken = csrfToken,
+        invitationsDisabled = invitationsDisabled,
+        isOnCc = isOnCc,
+        context = FanboxMetaData.Context(
+            privacyPolicy = FanboxMetaData.Context.PrivacyPolicy(
+                policyUrl = context.privacyPolicy.policyUrl,
+                revisionHistoryUrl = context.privacyPolicy.revisionHistoryUrl,
+                shouldShowNotice = context.privacyPolicy.shouldShowNotice,
+                updateDate = context.privacyPolicy.updateDate,
+            ),
+            user = FanboxMetaData.Context.User(
+                creatorId = context.user.creatorId?.let { id -> CreatorId(id) },
+                fanboxUserStatus = context.user.fanboxUserStatus,
+                hasAdultContent = context.user.hasAdultContent ?: false,
+                hasUnpaidPayments = context.user.hasUnpaidPayments,
+                iconUrl = context.user.iconUrl,
+                isCreator = context.user.isCreator,
+                isMailAddressOutdated = context.user.isMailAddressOutdated,
+                isSupporter = context.user.isSupporter,
+                lang = context.user.lang,
+                name = context.user.name,
+                planCount = context.user.planCount,
+                showAdultContent = context.user.showAdultContent,
+                userId = context.user.userId,
+            ),
+        ),
+        urlContext = FanboxMetaData.UrlContext(
+            creatorOriginPattern = urlContext.creatorOriginPattern,
+            rootOriginPattern = urlContext.rootOriginPattern,
+        ),
     )
 }
 

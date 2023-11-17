@@ -33,7 +33,7 @@ internal fun PixiViewNavHost(
     ) {
         libraryScreen(
             navigateToPostDetail = { navController.navigateToPostDetail(it) },
-            navigateToCreatorPosts = { navController.navigateToCreatorTop(it) },
+            navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
             navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
             navigateToFollowerCreators = { navController.navigateToFollowingCreators() },
             navigateToSupportingCreators = { navController.navigateToSupportingCreators() },

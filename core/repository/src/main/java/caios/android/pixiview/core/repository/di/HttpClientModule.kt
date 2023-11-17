@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
@@ -22,6 +23,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import timber.log.Timber
+import java.net.UnknownHostException
 import javax.inject.Singleton
 
 @Module
@@ -31,7 +33,7 @@ object HttpClientModule {
     @OptIn(ExperimentalSerializationApi::class)
     @Provides
     @Singleton
-    fun provideHttpClient(preference: PreferenceFanboxCookie): HttpClient {
+    fun provideHttpClient(preference: PreferenceFanboxCookie, formatter: Json): HttpClient {
         val cookieManager = CookieManager.getInstance()
 
         return HttpClient(OkHttp) {
@@ -77,17 +79,27 @@ object HttpClientModule {
             }
 
             install(ContentNegotiation) {
-                json(
-                    Json {
-                        isLenient = true
-                        prettyPrint = true
-                        ignoreUnknownKeys = true
-                        coerceInputValues = true
-                        encodeDefaults = true
-                        explicitNulls = false
-                    },
-                )
+                json(formatter)
             }
+
+            install(HttpRequestRetry) {
+                retryOnExceptionIf(maxRetries = 3) { _, throwable -> throwable is UnknownHostException }
+                exponentialDelay()
+            }
+        }
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    @Provides
+    @Singleton
+    fun provideFormatter(): Json {
+        return Json {
+            isLenient = true
+            prettyPrint = true
+            ignoreUnknownKeys = true
+            coerceInputValues = true
+            encodeDefaults = true
+            explicitNulls = false
         }
     }
 }

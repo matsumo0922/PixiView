@@ -16,8 +16,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Timer
 import java.util.UUID
 import javax.inject.Inject
+import kotlin.concurrent.schedule
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.DurationUnit
 
 @Stable
 @HiltViewModel
@@ -43,21 +47,28 @@ class MainViewModel @Inject constructor(
     )
 
     init {
-        viewModelScope.launch {
-            CookieManager.getInstance().getCookie("https://www.fanbox.cc/").also {
-                suspendRunCatching {
-                    fanboxRepository.updateCookie(it.orEmpty())
-                    fanboxRepository.getNewsLetters()
-                }.isSuccess.also {
-                    isLoggedInFlow.emit(it)
-                }
-            }
+        Timer().schedule(0, 10.minutes.toLong(DurationUnit.MILLISECONDS)) {
+            updateState()
         }
     }
 
     fun initPixiViewId() {
         viewModelScope.launch {
             userDataRepository.setPixiViewId(UUID.randomUUID().toString())
+        }
+    }
+
+    private fun updateState() {
+        viewModelScope.launch {
+            CookieManager.getInstance().getCookie("https://www.fanbox.cc/").also {
+                suspendRunCatching {
+                    fanboxRepository.updateCookie(it.orEmpty())
+                    fanboxRepository.updateCsrfToken()
+                    fanboxRepository.getNewsLetters()
+                }.isSuccess.also {
+                    isLoggedInFlow.emit(it)
+                }
+            }
         }
     }
 }

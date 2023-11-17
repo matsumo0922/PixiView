@@ -16,6 +16,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -33,6 +37,7 @@ import caios.android.pixiview.core.ui.component.CreatorItem
 import caios.android.pixiview.core.ui.component.PixiViewTopBar
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 import caios.android.pixiview.feature.library.R
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun LibraryDiscoveryRoute(
@@ -52,6 +57,8 @@ internal fun LibraryDiscoveryRoute(
             modifier = Modifier.fillMaxSize(),
             openDrawer = openDrawer,
             onClickCreator = navigateToCreatorPlans,
+            onClickFollow = viewModel::follow,
+            onClickUnfollow = viewModel::unfollow,
             pagingAdapter = paging,
         )
     }
@@ -63,8 +70,11 @@ private fun LibraryDiscoveryScreen(
     pagingAdapter: LazyPagingItems<FanboxCreatorDetail>,
     openDrawer: () -> Unit,
     onClickCreator: (CreatorId) -> Unit,
+    onClickFollow: suspend (String) -> Result<Unit>,
+    onClickUnfollow: suspend (String) -> Result<Unit>,
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
     val state = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -98,10 +108,25 @@ private fun LibraryDiscoveryScreen(
                 contentType = pagingAdapter.itemContentType(),
             ) { index ->
                 pagingAdapter[index]?.let { creatorDetail ->
+                    var isFollowed by rememberSaveable { mutableStateOf(creatorDetail.isFollowed) }
+
                     CreatorItem(
                         modifier = Modifier.fillMaxWidth(),
                         creatorDetail = creatorDetail,
+                        isFollowed = isFollowed,
                         onClickCreator = onClickCreator,
+                        onClickFollow = {
+                            scope.launch {
+                                isFollowed = true
+                                isFollowed = onClickFollow.invoke(it).isSuccess
+                            }
+                        },
+                        onClickUnfollow = {
+                            scope.launch {
+                                isFollowed = false
+                                isFollowed = !onClickUnfollow.invoke(it).isSuccess
+                            }
+                        },
                     )
                 }
             }

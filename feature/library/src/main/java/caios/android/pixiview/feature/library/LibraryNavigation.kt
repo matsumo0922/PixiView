@@ -52,7 +52,7 @@ fun NavGraphBuilder.libraryScreen(
         LibraryScreen(
             modifier = Modifier.fillMaxSize(),
             navigateToPostDetail = navigateToPostDetail,
-            navigateToCreatorTop = navigateToCreatorPosts,
+            navigateToCreatorPosts = navigateToCreatorPosts,
             navigateToCreatorPlans = navigateToCreatorPlans,
             navigateToFollowerCreators = navigateToFollowerCreators,
             navigateToSupportingCreators = navigateToSupportingCreators,

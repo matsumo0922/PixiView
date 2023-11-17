@@ -7,6 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.repository.FanboxRepository
 import caios.android.pixiview.core.ui.extensition.emptyPaging
@@ -34,6 +35,18 @@ class LibraryDiscoveryViewModel @Inject constructor(
             },
         ).flow.cachedIn(viewModelScope).also {
             _uiState.value = LibraryDiscoveryUiState(it)
+        }
+    }
+
+    suspend fun follow(creatorUserId: String): Result<Unit> {
+        return suspendRunCatching {
+            fanboxRepository.followCreator(creatorUserId)
+        }
+    }
+
+    suspend fun unfollow(creatorUserId: String): Result<Unit> {
+        return suspendRunCatching {
+            fanboxRepository.unfollowCreator(creatorUserId)
         }
     }
 }

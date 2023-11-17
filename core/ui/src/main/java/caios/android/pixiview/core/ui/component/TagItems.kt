@@ -13,7 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -24,16 +26,19 @@ fun TagItems(
     tags: ImmutableList<String>,
     onClickTag: (String) -> Unit,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = MaterialTheme.typography.bodySmall,
+    arrangementSpace: Dp = 8.dp,
 ) {
     FlowRow(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(arrangementSpace),
+        verticalArrangement = Arrangement.spacedBy(arrangementSpace),
     ) {
         for (tag in tags) {
             TagItem(
                 tag = tag,
+                textStyle = textStyle,
                 onClickTag = onClickTag,
-                modifier = Modifier.padding(4.dp),
             )
         }
     }
@@ -42,6 +47,7 @@ fun TagItems(
 @Composable
 private fun TagItem(
     tag: String,
+    textStyle: TextStyle,
     onClickTag: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -58,7 +64,7 @@ private fun TagItem(
         Text(
             modifier = Modifier.padding(8.dp, 4.dp),
             text = tag,
-            style = MaterialTheme.typography.bodyMedium,
+            style = textStyle,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }

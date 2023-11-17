@@ -14,7 +14,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -31,6 +30,8 @@ import caios.android.pixiview.core.model.ThemeConfig
 import caios.android.pixiview.core.model.contract.PostDownloader
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.ui.AsyncLoadContents
+import caios.android.pixiview.core.ui.theme.DarkDefaultColorScheme
+import caios.android.pixiview.core.ui.theme.LightDefaultColorScheme
 import caios.android.pixiview.core.ui.theme.PixiViewTheme
 import caios.android.pixiview.feature.post.service.PostDownloadService
 import caios.android.pixiview.ui.PixiViewApp
@@ -76,12 +77,10 @@ class MainActivity : ComponentActivity(), PostDownloader {
             val systemUiController = rememberSystemUiController()
             val shouldUseDarkTheme = shouldUseDarkTheme(screenState)
 
-            LaunchedEffect(screenState) {
-                splashScreen.setKeepOnScreenCondition {
-                    when (screenState) {
-                        is ScreenState.Loading -> true
-                        else -> false
-                    }
+            splashScreen.setKeepOnScreenCondition {
+                when (screenState) {
+                    is ScreenState.Loading -> true
+                    else -> false
                 }
             }
 
@@ -93,6 +92,7 @@ class MainActivity : ComponentActivity(), PostDownloader {
             AsyncLoadContents(
                 modifier = Modifier.fillMaxSize(),
                 screenState = screenState,
+                containerColor = if (shouldUseDarkTheme) DarkDefaultColorScheme.surface else LightDefaultColorScheme.surface,
             ) {
                 val isAgreedTeams = remember { it.userData.isAgreedPrivacyPolicy && it.userData.isAgreedTermsOfService }
                 val isAllowedPermission = remember { isAllowedPermission() }
