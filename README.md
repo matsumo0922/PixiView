@@ -94,41 +94,27 @@ graph LR
   subgraph core
     common
     datastore
-    design
     model
-    music
     repository
     ui
   end
   subgraph feature
-    album
-    artist
-    home
-    playlist
-    song
+    library
+    creator
+    post
   end
-  app --> album
-  app --> artist
-  app --> playlist
-  app --> song
-  app --> home
-  home --> ui
-  home --> music
-  playlist --> ui
-  playlist --> music
-  song --> ui
-  song --> music
-  artist --> ui
-  artist --> music
-  album --> ui
-  album --> music
-  ui --> design
-  ui --> repository
-  music --> design
-  music --> repository
+  app --> library
+  app --> creator
+  app --> post
+  library --> ui
+  library --> repository
+  post --> ui
+  post --> repository
+  creator --> ui
+  creator --> repository
+  ui --> model
   repository --> datastore
   datastore --> model
-  design --> model
   model --> common
 ```
 
