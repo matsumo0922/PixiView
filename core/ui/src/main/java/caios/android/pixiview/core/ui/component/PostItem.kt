@@ -4,18 +4,23 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Comment
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.NoAdultContent
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -23,8 +28,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -50,8 +60,14 @@ fun PostItem(
     onClickPost: (PostId) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
+    onClickLike: (PostId, Boolean) -> Unit,
+    isHideAdultContents: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    var isPostLiked by rememberSaveable(post.isLiked) { mutableStateOf(post.isLiked) }
+    val likeCount by rememberSaveable(post.isLiked, isPostLiked) { mutableStateOf(post.likeCount + if (isPostLiked) 1 else 0) }
+    var isHideAdultContent by rememberSaveable(isHideAdultContents) { mutableStateOf(isHideAdultContents) }
+
     Card(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
@@ -72,6 +88,7 @@ fun PostItem(
                         feeRequired = post.feeRequired,
                     )
                 }
+
                 post.cover == null -> {
                     FileThumbnail(
                         modifier = Modifier
@@ -79,6 +96,17 @@ fun PostItem(
                             .aspectRatio(16f / 9),
                     )
                 }
+
+                post.hasAdultContent && isHideAdultContent -> {
+                    AdultContentThumbnail(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9),
+                        coverImageUrl = post.cover?.url,
+                        onClickShowAdultContent = { isHideAdultContent = false },
+                    )
+                }
+
                 else -> {
                     AsyncImage(
                         modifier = Modifier
@@ -151,8 +179,12 @@ fun PostItem(
                             bottom = 16.dp,
                         ),
                     commentCount = post.commentCount,
-                    likeCount = post.likeCount,
-                    isLiked = post.isLiked,
+                    likeCount = likeCount,
+                    isLiked = isPostLiked,
+                    onClickLike = {
+                        isPostLiked = !isPostLiked
+                        onClickLike.invoke(post.id, isPostLiked)
+                    },
                 )
             }
         }
@@ -182,7 +214,7 @@ private fun UserSection(
             AsyncImage(
                 modifier = Modifier
                     .size(32.dp)
-                    .clip(RoundedCornerShape(50)),
+                    .clip(CircleShape),
                 model = ImageRequest.Builder(LocalContext.current)
                     .error(R.drawable.im_default_user)
                     .data(post.user.iconUrl)
@@ -256,6 +288,62 @@ private fun RestrictThumbnail(
 }
 
 @Composable
+private fun AdultContentThumbnail(
+    coverImageUrl: String?,
+    onClickShowAdultContent: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier) {
+        AsyncImage(
+            modifier = Modifier
+                .fillMaxSize()
+                .blur(16.dp),
+            model = ImageRequest.Builder(LocalContext.current)
+                .fanboxHeader()
+                .data(coverImageUrl)
+                .build(),
+            contentScale = ContentScale.Crop,
+            contentDescription = null,
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f)),
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(
+                space = 16.dp,
+                alignment = Alignment.CenterVertically,
+            ),
+        ) {
+            Icon(
+                modifier = Modifier.size(48.dp),
+                imageVector = Icons.Default.NoAdultContent,
+                tint = Color.White,
+                contentDescription = null,
+            )
+
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(R.string.error_adult_content),
+                style = MaterialTheme.typography.bodySmall.center(),
+                color = Color.White,
+            )
+
+            Button(onClick = { onClickShowAdultContent.invoke() }) {
+                Text(text = stringResource(R.string.error_adult_content_description))
+            }
+        }
+    }
+}
+
+@Composable
 private fun FileThumbnail(
     modifier: Modifier = Modifier,
 ) {
@@ -283,6 +371,7 @@ private fun CommentLikeButton(
     commentCount: Int,
     likeCount: Int,
     isLiked: Boolean,
+    onClickLike: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val likeColor = if (isLiked) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
@@ -297,7 +386,7 @@ private fun CommentLikeButton(
                 .border(
                     width = 0.5.dp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    shape = RoundedCornerShape(50),
+                    shape = CircleShape,
                 )
                 .padding(8.dp, 6.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -319,11 +408,13 @@ private fun CommentLikeButton(
 
         Row(
             modifier = Modifier
+                .clip(CircleShape)
                 .border(
                     width = 0.5.dp,
                     color = likeColor,
-                    shape = RoundedCornerShape(50),
+                    shape = CircleShape,
                 )
+                .clickable { onClickLike.invoke() }
                 .padding(8.dp, 6.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -352,6 +443,8 @@ private fun PostItemPreview1() {
         onClickPost = {},
         onClickPlanList = {},
         onClickCreator = {},
+        onClickLike = { _, _ -> },
+        isHideAdultContents = false,
     )
 }
 
@@ -363,5 +456,20 @@ private fun PostItemPreview2() {
         onClickPost = {},
         onClickPlanList = {},
         onClickCreator = {},
+        onClickLike = { _, _ -> },
+        isHideAdultContents = false,
+    )
+}
+
+@Preview
+@Composable
+private fun PostItemPreview3() {
+    PostItem(
+        post = FanboxPost.dummy().copy(hasAdultContent = true),
+        onClickPost = {},
+        onClickPlanList = {},
+        onClickCreator = {},
+        onClickLike = { _, _ -> },
+        isHideAdultContents = true,
     )
 }

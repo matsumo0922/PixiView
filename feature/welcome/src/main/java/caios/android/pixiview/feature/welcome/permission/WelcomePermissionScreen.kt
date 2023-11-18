@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -133,7 +133,7 @@ internal fun WelcomePermissionScreen(
                 modifier = Modifier
                     .padding(bottom = 24.dp)
                     .fillMaxWidth(),
-                shape = RoundedCornerShape(50),
+                shape = CircleShape,
                 onClick = { navigateToHome.invoke() },
             ) {
                 Text(
@@ -146,7 +146,7 @@ internal fun WelcomePermissionScreen(
                 modifier = Modifier
                     .padding(bottom = 24.dp)
                     .fillMaxWidth(),
-                shape = RoundedCornerShape(50),
+                shape = CircleShape,
                 onClick = {
                     if (permissionsState.shouldShowRationale || isPermissionRequested) {
                         startAppSettings(context)
@@ -217,11 +217,11 @@ private fun WelcomePermissionLabel(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(50))
+            .clip(CircleShape)
             .border(
                 width = 1.dp,
                 color = color,
-                shape = RoundedCornerShape(50),
+                shape = CircleShape,
             ),
     ) {
         Text(

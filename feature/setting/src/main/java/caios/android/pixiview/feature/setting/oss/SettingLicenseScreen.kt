@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,7 +51,7 @@ internal fun SettingLicenseScreen(
                         Icon(
                             modifier = Modifier
                                 .size(40.dp)
-                                .clip(RoundedCornerShape(50))
+                                .clip(CircleShape)
                                 .padding(6.dp)
                                 .clickable { terminate.invoke() },
                             imageVector = Icons.Outlined.ArrowBack,

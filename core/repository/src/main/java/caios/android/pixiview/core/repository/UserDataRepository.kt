@@ -17,6 +17,7 @@ interface UserDataRepository {
     suspend fun setThemeConfig(themeConfig: ThemeConfig)
     suspend fun setThemeColorConfig(themeColorConfig: ThemeColorConfig)
     suspend fun setFollowTabDefaultHome(isFollowTabDefaultHome: Boolean)
+    suspend fun setHideAdultContents(isHideAdultContents: Boolean)
     suspend fun setDeveloperMode(isDeveloperMode: Boolean)
     suspend fun setPlusMode(isPlusMode: Boolean)
     suspend fun setUseDynamicColor(useDynamicColor: Boolean)
@@ -50,6 +51,10 @@ class UserDataRepositoryImpl @Inject constructor(
 
     override suspend fun setFollowTabDefaultHome(isFollowTabDefaultHome: Boolean) {
         pixiViewPreferencesDataStore.setFollowTabDefaultHome(isFollowTabDefaultHome)
+    }
+
+    override suspend fun setHideAdultContents(isHideAdultContents: Boolean) {
+        pixiViewPreferencesDataStore.setHideAdultContents(isHideAdultContents)
     }
 
     override suspend fun setDeveloperMode(isDeveloperMode: Boolean) {

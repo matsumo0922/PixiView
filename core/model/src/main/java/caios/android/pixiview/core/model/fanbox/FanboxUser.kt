@@ -1,7 +1,9 @@
 package caios.android.pixiview.core.model.fanbox
 
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class FanboxUser(
     val userId: String,
     val creatorId: CreatorId,

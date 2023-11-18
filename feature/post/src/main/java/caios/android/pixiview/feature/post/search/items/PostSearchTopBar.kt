@@ -5,6 +5,7 @@ import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,6 +36,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -62,6 +64,8 @@ internal fun PostSearchTopBar(
     modifier: Modifier = Modifier,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
     var queryText by rememberSaveable(query) { mutableStateOf(query) }
     val focusRequester = remember { FocusRequester() }
 
@@ -71,7 +75,7 @@ internal fun PostSearchTopBar(
         targetValue = lerp(
             MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp),
             MaterialTheme.colorScheme.secondaryContainer,
-            FastOutLinearInEasing.transform(fraction)
+            FastOutLinearInEasing.transform(fraction),
         ),
         animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
         label = "appBarContainerColor",
@@ -91,10 +95,11 @@ internal fun PostSearchTopBar(
                     .fillMaxWidth()
                     .clip(CircleShape)
                     .background(color = appBarContainerColor)
-                    .padding(16.dp, 12.dp)
+                    .padding(16.dp, 12.dp),
             ) {
                 BasicTextField(
                     modifier = Modifier
+                        .clickable { keyboardController?.show() }
                         .focusRequester(focusRequester)
                         .fillMaxWidth(),
                     value = queryText,
@@ -105,6 +110,7 @@ internal fun PostSearchTopBar(
                             parseQuery(queryText).also {
                                 if (it.mode != PostSearchMode.Unknown) {
                                     keyboardController?.hide()
+                                    focusManager.clearFocus()
                                     onClickSearch.invoke(it)
                                 }
                             }

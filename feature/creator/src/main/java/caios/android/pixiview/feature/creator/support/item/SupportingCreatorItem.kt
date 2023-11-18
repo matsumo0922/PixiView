@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
@@ -168,7 +169,7 @@ private fun UserSection(
             AsyncImage(
                 modifier = Modifier
                     .size(32.dp)
-                    .clip(RoundedCornerShape(50)),
+                    .clip(CircleShape),
                 model = ImageRequest.Builder(LocalContext.current)
                     .error(R.drawable.im_default_user)
                     .data(plan.user.iconUrl)

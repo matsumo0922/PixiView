@@ -38,6 +38,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
@@ -55,9 +56,11 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 internal fun CreatorTopPostsScreen(
     state: LazyListState,
+    userData: UserData,
     pagingAdapter: LazyPagingItems<FanboxPost>,
     creatorTags: ImmutableList<FanboxCreatorTag>,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickTag: (FanboxCreatorTag) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
@@ -96,9 +99,11 @@ internal fun CreatorTopPostsScreen(
                 PostItem(
                     modifier = Modifier.fillMaxWidth(),
                     post = post,
+                    isHideAdultContents = userData.isHideAdultContents,
                     onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
                     onClickCreator = onClickCreator,
                     onClickPlanList = onClickPlanList,
+                    onClickLike = { _, isLiked -> onClickPostLike.invoke(post, isLiked) },
                 )
             }
         }
@@ -167,7 +172,7 @@ private fun TagItem(
                         color = Color.Black,
                         offset = Offset(1f, 1f),
                         blurRadius = 3f,
-                    )
+                    ),
                 ),
                 color = MaterialTheme.colorScheme.onSurface,
                 overflow = TextOverflow.Ellipsis,

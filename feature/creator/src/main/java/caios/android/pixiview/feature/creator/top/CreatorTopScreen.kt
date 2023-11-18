@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import caios.android.pixiview.core.model.ScreenState
+import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
@@ -81,6 +82,8 @@ internal fun CreatorTopRoute(
         CreatorTopScreen(
             modifier = Modifier.fillMaxSize(),
             isPosts = isPosts,
+            userData = uiState.userData,
+            likedPosts = uiState.likedPosts,
             creatorDetail = uiState.creatorDetail,
             creatorPlans = uiState.creatorPlans.toImmutableList(),
             creatorTags = uiState.creatorTags.toImmutableList(),
@@ -92,6 +95,7 @@ internal fun CreatorTopRoute(
             onClickLink = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
             onClickFollow = viewModel::follow,
             onClickUnfollow = viewModel::unfollow,
+            onClickPostLike = viewModel::postLike,
         )
     }
 }
@@ -101,10 +105,13 @@ internal fun CreatorTopRoute(
 private fun CreatorTopScreen(
     isPosts: Boolean,
     creatorDetail: FanboxCreatorDetail,
+    userData: UserData,
+    likedPosts: List<PostId>,
     creatorPlans: ImmutableList<FanboxCreatorPlan>,
     creatorTags: ImmutableList<FanboxCreatorTag>,
     creatorPostsPaging: LazyPagingItems<FanboxPost>,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (FanboxPost, Boolean) -> Unit,
     onClickPlan: (FanboxCreatorPlan) -> Unit,
     onClickTag: (FanboxCreatorTag) -> Unit,
     onClickLink: (String) -> Unit,
@@ -190,14 +197,16 @@ private fun CreatorTopScreen(
                         LazyPagingItemsLoadContents(
                             modifier = Modifier.fillMaxSize(),
                             lazyPagingItems = creatorPostsPaging,
-                            isSwipeEnabled = state.toolbarState.progress == 1f
+                            isSwipeEnabled = state.toolbarState.progress == 1f,
                         ) {
                             CreatorTopPostsScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 state = postsListState,
+                                userData = userData,
                                 pagingAdapter = creatorPostsPaging,
                                 creatorTags = creatorTags,
                                 onClickPost = onClickPost,
+                                onClickPostLike = onClickPostLike,
                                 onClickTag = onClickTag,
                                 onClickCreator = {
                                     scope.launch {
@@ -230,6 +239,12 @@ private fun CreatorTopScreen(
             description = creatorDetail.description,
             onDismissRequest = { isShowDescriptionDialog = false },
         )
+    }
+
+    LaunchedEffect(likedPosts) {
+        for (i in 0 until creatorPostsPaging.itemCount) {
+            creatorPostsPaging[i]?.isLiked = likedPosts.contains(creatorPostsPaging[i]?.id)
+        }
     }
 }
 

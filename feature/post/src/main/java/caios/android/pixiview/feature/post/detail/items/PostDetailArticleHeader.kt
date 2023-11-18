@@ -8,6 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import caios.android.pixiview.core.model.UserData
+import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
@@ -16,7 +18,9 @@ import caios.android.pixiview.core.ui.component.PostItem
 @Composable
 internal fun PostDetailArticleHeader(
     content: FanboxPostDetail.Body.Article,
+    userData: UserData,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
     onClickFile: (FanboxPostDetail.FileItem) -> Unit,
@@ -57,7 +61,9 @@ internal fun PostDetailArticleHeader(
                     ArticleLinkItem(
                         modifier = Modifier.fillMaxWidth(),
                         item = item,
+                        isHideAdultContents = userData.isHideAdultContents,
                         onClickPost = onClickPost,
+                        onClickPostLike = { _, isLiked -> item.post?.let { onClickPostLike.invoke(it, isLiked) } },
                         onClickCreator = onClickCreator,
                     )
                 }
@@ -82,7 +88,9 @@ private fun ArticleTextItem(
 @Composable
 private fun ArticleLinkItem(
     item: FanboxPostDetail.Body.Article.Block.Link,
+    isHideAdultContents: Boolean,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (PostId, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -90,9 +98,11 @@ private fun ArticleLinkItem(
         PostItem(
             modifier = modifier.padding(16.dp),
             post = it,
+            isHideAdultContents = isHideAdultContents,
             onClickPost = onClickPost,
             onClickCreator = onClickCreator,
             onClickPlanList = {},
+            onClickLike = onClickPostLike,
         )
     }
 }

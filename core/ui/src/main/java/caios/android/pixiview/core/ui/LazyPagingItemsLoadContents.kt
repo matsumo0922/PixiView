@@ -51,7 +51,9 @@ fun <T : Any> LazyPagingItemsLoadContents(
                         )
                     }
                     is LoadState.NotLoading -> {
-                        val isRefreshing by remember(lazyPagingItems.loadState) { derivedStateOf { lazyPagingItems.loadState.refresh is LoadState.Loading } }
+                        val isRefreshing by remember(lazyPagingItems.loadState) {
+                            derivedStateOf { lazyPagingItems.loadState.refresh is LoadState.Loading }
+                        }
                         val refreshState = rememberPullRefreshState(
                             refreshing = isRefreshing,
                             onRefresh = { lazyPagingItems.refresh() },
@@ -63,7 +65,7 @@ fun <T : Any> LazyPagingItemsLoadContents(
                             PullRefreshIndicator(
                                 refreshing = isRefreshing,
                                 state = refreshState,
-                                modifier = Modifier.align(Alignment.TopCenter)
+                                modifier = Modifier.align(Alignment.TopCenter),
                             )
                         }
                     }

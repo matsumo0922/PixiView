@@ -1,8 +1,11 @@
 package caios.android.pixiview.core.model.fanbox
 
+import caios.android.pixiview.core.common.serializer.OffsetDateTimeSerializer
 import caios.android.pixiview.core.model.fanbox.id.PostId
+import kotlinx.serialization.Serializable
 import java.time.OffsetDateTime
 
+@Serializable
 data class FanboxPost(
     val id: PostId,
     val title: String,
@@ -11,12 +14,14 @@ data class FanboxPost(
     val excerpt: String,
     val feeRequired: Int,
     val hasAdultContent: Boolean,
-    val isLiked: Boolean,
+    var isLiked: Boolean,
     val isRestricted: Boolean,
     val likeCount: Int,
     val commentCount: Int,
     val tags: List<String>,
+    @Serializable(with = OffsetDateTimeSerializer::class)
     val publishedDatetime: OffsetDateTime,
+    @Serializable(with = OffsetDateTimeSerializer::class)
     val updatedDatetime: OffsetDateTime,
 ) {
     companion object {

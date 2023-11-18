@@ -9,6 +9,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxPost
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.FanboxRepository
 import caios.android.pixiview.core.repository.UserDataRepository
 import caios.android.pixiview.core.ui.extensition.emptyPaging
@@ -31,6 +32,7 @@ class LibraryHomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(
         LibraryUiState(
             userData = UserData.dummy(),
+            likedPosts = emptyList(),
             homePaging = emptyPaging(),
             supportedPaging = emptyPaging(),
         ),
@@ -64,12 +66,29 @@ class LibraryHomeViewModel @Inject constructor(
                 _uiState.value = uiState.value.copy(userData = it)
             }
         }
+
+        viewModelScope.launch {
+            fanboxRepository.likedPosts.collectLatest {
+                _uiState.value = uiState.value.copy(likedPosts = it)
+            }
+        }
+    }
+
+    fun postLike(post: FanboxPost, isLiked: Boolean) {
+        viewModelScope.launch {
+            if (isLiked) {
+                fanboxRepository.likePost(post)
+            } else {
+                fanboxRepository.unlikePost(post)
+            }
+        }
     }
 }
 
 @Stable
 data class LibraryUiState(
     val userData: UserData,
+    val likedPosts: List<PostId>,
     val homePaging: Flow<PagingData<FanboxPost>>,
     val supportedPaging: Flow<PagingData<FanboxPost>>,
 )

@@ -17,6 +17,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
@@ -28,7 +29,9 @@ import caios.android.pixiview.core.ui.view.PagingErrorSection
 @Composable
 internal fun PostSearchTagScreen(
     pagingAdapter: LazyPagingItems<FanboxPost>,
+    userData: UserData,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
@@ -61,7 +64,9 @@ internal fun PostSearchTagScreen(
                     PostItem(
                         modifier = Modifier.fillMaxWidth(),
                         post = post,
+                        isHideAdultContents = userData.isHideAdultContents,
                         onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
+                        onClickLike = { _, isLiked -> onClickPostLike.invoke(post, isLiked) },
                         onClickCreator = onClickCreator,
                         onClickPlanList = onClickPlanList,
                     )

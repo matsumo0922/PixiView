@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
@@ -56,8 +57,8 @@ internal fun WelcomeTopScreen(
     var isAgreedPrivacyPolicy by remember { mutableStateOf(false) }
     var isAgreedTermsOfService by remember { mutableStateOf(false) }
 
-    val teamOfServiceUri = "https://www.matsumo.me/application/kanade/team_of_service".toUri()
-    val privacyPolicyUri = "https://www.matsumo.me/application/kanade/privacy_policy".toUri()
+    val teamOfServiceUri = "https://www.matsumo.me/application/pixiview/team_of_service".toUri()
+    val privacyPolicyUri = "https://www.matsumo.me/application/pixiview/privacy_policy".toUri()
 
     Column(
         modifier = modifier
@@ -129,7 +130,7 @@ internal fun WelcomeTopScreen(
             modifier = Modifier
                 .padding(bottom = 24.dp)
                 .fillMaxWidth(),
-            shape = RoundedCornerShape(50),
+            shape = CircleShape,
             enabled = isAgreedPrivacyPolicy && isAgreedTermsOfService,
             onClick = {
                 navigateToWelcomePlus.invoke()

@@ -26,6 +26,8 @@ import caios.android.pixiview.feature.post.detail.navigateToPostDetail
 import caios.android.pixiview.feature.post.detail.postDetailScreen
 import caios.android.pixiview.feature.post.image.navigateToPostImage
 import caios.android.pixiview.feature.post.image.postImageScreen
+import caios.android.pixiview.feature.post.liked.likedPostsScreen
+import caios.android.pixiview.feature.post.liked.navigateToLikedPosts
 import caios.android.pixiview.feature.post.search.navigateToPostSearch
 import caios.android.pixiview.feature.post.search.postSearchScreen
 import caios.android.pixiview.feature.setting.developer.navigateToSettingDeveloper
@@ -65,6 +67,7 @@ internal fun PixiViewNavHost(
                 navigateToPostDetail = { navController.navigateToPostDetail(it) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+                navigateToLikedPosts = { navController.navigateToLikedPosts() },
                 navigateToFollowerCreators = { navController.navigateToFollowingCreators() },
                 navigateToSupportingCreators = { navController.navigateToSupportingCreators() },
                 navigateToSettingTop = { navController.navigateToSettingTop() },
@@ -85,6 +88,13 @@ internal fun PixiViewNavHost(
             )
 
             postSearchScreen(
+                navigateToPostDetail = { navController.navigateToPostDetail(it) },
+                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
+                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+                terminate = { navController.popBackStack() },
+            )
+
+            likedPostsScreen(
                 navigateToPostDetail = { navController.navigateToPostDetail(it) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },

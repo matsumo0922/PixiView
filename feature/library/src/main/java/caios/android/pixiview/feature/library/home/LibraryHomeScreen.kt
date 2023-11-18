@@ -21,6 +21,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -115,7 +116,9 @@ internal fun LibraryHomeScreen(
                             LibraryHomeIdleSection(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = homePager,
+                                userData = uiState.userData,
                                 onClickPost = navigateToPostDetail,
+                                onClickPostLike = viewModel::postLike,
                                 onClickCreator = navigateToCreatorPosts,
                                 onClickPlanList = navigateToCreatorPlans,
                             )
@@ -129,7 +132,9 @@ internal fun LibraryHomeScreen(
                             LibrarySupportedIdleSection(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = supportedPager,
+                                userData = uiState.userData,
                                 onClickPost = navigateToPostDetail,
+                                onClickPostLike = viewModel::postLike,
                                 onClickCreator = navigateToCreatorPosts,
                                 onClickPlanList = navigateToCreatorPlans,
                             )
@@ -137,6 +142,16 @@ internal fun LibraryHomeScreen(
                     }
                 }
             }
+        }
+    }
+
+    LaunchedEffect(uiState.likedPosts) {
+        for (i in 0 until homePager.itemCount) {
+            homePager[i]?.isLiked = uiState.likedPosts.contains(homePager[i]?.id)
+        }
+
+        for (i in 0 until supportedPager.itemCount) {
+            supportedPager[i]?.isLiked = uiState.likedPosts.contains(supportedPager[i]?.id)
         }
     }
 }

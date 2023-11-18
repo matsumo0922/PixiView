@@ -38,7 +38,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.pixiview.core.common.util.ToastUtil
 import caios.android.pixiview.core.model.ScreenState
+import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.contract.PostDownloader
+import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
@@ -94,7 +96,9 @@ internal fun PostDetailRoute(
         PostDetailScreen(
             modifier = Modifier.fillMaxSize(),
             postDetail = uiState.postDetail,
+            userData = uiState.userData,
             onClickPost = navigateToPostDetail,
+            onClickPostLike = viewModel::postLike,
             onClickCreator = navigateToCreatorPlans,
             onClickImage = { item ->
                 uiState.postDetail.body.imageItems.indexOf(item).let { index ->
@@ -118,7 +122,9 @@ internal fun PostDetailRoute(
 @Composable
 private fun PostDetailScreen(
     postDetail: FanboxPostDetail,
+    userData: UserData,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
     onClickFile: (FanboxPostDetail.FileItem) -> Unit,
@@ -147,8 +153,10 @@ private fun PostDetailScreen(
                 PostDetailContent(
                     modifier = it,
                     post = postDetail,
+                    userData = userData,
                     onClickCreator = onClickCreator,
                     onClickPost = onClickPost,
+                    onClickPostLike = onClickPostLike,
                     onClickImage = onClickImage,
                     onClickFile = onClickFile,
                     onClickDownload = onClickDownloadImages,
@@ -166,8 +174,10 @@ private fun PostDetailScreen(
                 PostDetailContent(
                     modifier = Modifier.fillMaxWidth(),
                     post = postDetail,
+                    userData = userData,
                     onClickCreator = onClickCreator,
                     onClickPost = onClickPost,
+                    onClickPostLike = onClickPostLike,
                     onClickImage = onClickImage,
                     onClickFile = onClickFile,
                     onClickDownload = onClickDownloadImages,
@@ -334,7 +344,9 @@ private fun PostDetailHeader(
 @Composable
 private fun PostDetailContent(
     post: FanboxPostDetail,
+    userData: UserData,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
     onClickFile: (FanboxPostDetail.FileItem) -> Unit,
@@ -347,7 +359,9 @@ private fun PostDetailContent(
                 PostDetailArticleHeader(
                     modifier = Modifier.fillMaxWidth(),
                     content = content,
+                    userData = userData,
                     onClickPost = onClickPost,
+                    onClickPostLike = onClickPostLike,
                     onClickCreator = onClickCreator,
                     onClickImage = onClickImage,
                     onClickFile = onClickFile,

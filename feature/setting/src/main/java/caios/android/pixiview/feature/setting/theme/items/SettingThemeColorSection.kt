@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -122,7 +123,7 @@ private fun SettingThemeColorItem(
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(16.dp)
-                .clip(RoundedCornerShape(50)),
+                .clip(CircleShape),
         ) {
             Box(
                 modifier = Modifier

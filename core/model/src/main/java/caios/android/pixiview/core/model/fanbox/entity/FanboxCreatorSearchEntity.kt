@@ -1,13 +1,12 @@
 package caios.android.pixiview.core.model.fanbox.entity
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class FanboxCreatorSearchEntity(
     @SerialName("body")
-    val body: Body
+    val body: Body,
 ) {
     @Serializable
     data class Body(
@@ -16,6 +15,6 @@ data class FanboxCreatorSearchEntity(
         @SerialName("creators")
         val creators: List<FanboxCreatorEntity.Body>,
         @SerialName("nextPage")
-        val nextPage: Int?
+        val nextPage: Int?,
     )
 }

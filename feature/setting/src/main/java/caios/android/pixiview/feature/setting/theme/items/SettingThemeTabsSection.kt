@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +29,7 @@ internal fun SettingThemeTabsSection(
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(horizontal = 24.dp, vertical = 16.dp)
-                .clip(RoundedCornerShape(50))
+                .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.onSurface)
                 .padding(4.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -65,7 +65,7 @@ private fun TabText(
 ) {
     Text(
         modifier = modifier
-            .clip(RoundedCornerShape(50))
+            .clip(CircleShape)
             .background(if (isSelected) MaterialTheme.colorScheme.surface else Color.Transparent)
             .clickable { onClick.invoke() }
             .padding(horizontal = 24.dp, vertical = 8.dp),

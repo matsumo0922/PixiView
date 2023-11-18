@@ -56,6 +56,7 @@ internal fun SettingTopRoute(
             onClickTheme = navigateToSettingTheme,
             onClickOpenSourceLicense = navigateToOpenSourceLicense,
             onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
+            onClickHideAdultContents = viewModel::setHideAdultContents,
             onClickDeveloperMode = { isEnable ->
                 if (isEnable) {
                     navigateToSettingDeveloper.invoke()
@@ -77,6 +78,7 @@ private fun SettingTopScreen(
     config: PixiViewConfig,
     onClickTheme: () -> Unit,
     onClickFollowTabDefaultHome: (Boolean) -> Unit,
+    onClickHideAdultContents: (Boolean) -> Unit,
     onClickOpenSourceLicense: () -> Unit,
     onClickDeveloperMode: (Boolean) -> Unit,
     onTerminate: () -> Unit,
@@ -123,6 +125,7 @@ private fun SettingTopScreen(
                     modifier = Modifier.fillMaxWidth(),
                     userData = userData,
                     onClickFollowTabDefaultHome = onClickFollowTabDefaultHome,
+                    onClickHideAdultContents = onClickHideAdultContents,
                 )
 
                 SettingTopOthersSection(

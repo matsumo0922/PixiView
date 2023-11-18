@@ -15,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
@@ -43,15 +44,23 @@ internal fun PostSearchRoute(
         }
     }
 
+    LaunchedEffect(uiState.likedPosts) {
+        for (i in 0 until tagPaging.itemCount) {
+            tagPaging[i]?.isLiked = uiState.likedPosts.contains(tagPaging[i]?.id)
+        }
+    }
+
     PostSearchScreen(
         modifier = modifier,
         query = uiState.query,
         initialQuery = query,
+        userData = uiState.userData,
         creatorPaging = creatorPaging,
         tagPaging = tagPaging,
         onSearch = viewModel::search,
         onTerminate = terminate,
         onClickPost = navigateToPostDetail,
+        onClickPostLike = viewModel::postLike,
         onClickCreatorPosts = navigateToCreatorPosts,
         onClickCreatorPlans = navigateToCreatorPlans,
         onClickFollow = viewModel::follow,
@@ -64,11 +73,13 @@ internal fun PostSearchRoute(
 private fun PostSearchScreen(
     query: String,
     initialQuery: String,
+    userData: UserData,
     creatorPaging: LazyPagingItems<FanboxCreatorDetail>,
     tagPaging: LazyPagingItems<FanboxPost>,
     onSearch: (PostSearchQuery) -> Unit,
     onTerminate: () -> Unit,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (FanboxPost, Boolean) -> Unit,
     onClickCreatorPosts: (CreatorId) -> Unit,
     onClickCreatorPlans: (CreatorId) -> Unit,
     onClickFollow: suspend (String) -> Result<Unit>,
@@ -108,7 +119,9 @@ private fun PostSearchScreen(
                         .padding(padding)
                         .fillMaxSize(),
                     pagingAdapter = tagPaging,
+                    userData = userData,
                     onClickPost = onClickPost,
+                    onClickPostLike = onClickPostLike,
                     onClickCreator = onClickCreatorPosts,
                     onClickPlanList = onClickCreatorPlans,
                 )

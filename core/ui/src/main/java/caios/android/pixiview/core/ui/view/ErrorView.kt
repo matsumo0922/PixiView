@@ -23,7 +23,7 @@ import caios.android.pixiview.core.ui.theme.center
 @Composable
 fun ErrorView(
     errorState: ScreenState.Error,
-    retryAction: () -> Unit,
+    retryAction: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -50,15 +50,17 @@ fun ErrorView(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
-        Button(
-            modifier = Modifier.padding(top = 24.dp),
-            onClick = { retryAction.invoke() },
-        ) {
-            Text(
-                text = stringResource(errorState.retryTitle ?: R.string.common_reload),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onPrimary,
-            )
+        if (retryAction != null) {
+            Button(
+                modifier = Modifier.padding(top = 24.dp),
+                onClick = { retryAction.invoke() },
+            ) {
+                Text(
+                    text = stringResource(errorState.retryTitle ?: R.string.common_reload),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
+            }
         }
     }
 }

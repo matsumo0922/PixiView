@@ -12,12 +12,13 @@ import caios.android.pixiview.feature.setting.SettingSwitchItem
 internal fun SettingTopGeneralSection(
     userData: UserData,
     onClickFollowTabDefaultHome: (Boolean) -> Unit,
+    onClickHideAdultContents: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
         SettingTopTitleItem(
             modifier = Modifier.fillMaxWidth(),
-            text = R.string.setting_top_others,
+            text = R.string.setting_top_general,
         )
 
         SettingSwitchItem(
@@ -26,6 +27,14 @@ internal fun SettingTopGeneralSection(
             description = R.string.setting_top_general_default_follow_tab_description,
             value = userData.isFollowTabDefaultHome,
             onValueChanged = onClickFollowTabDefaultHome,
+        )
+
+        SettingSwitchItem(
+            modifier = Modifier.fillMaxWidth(),
+            title = R.string.setting_top_general_hide_adult_contents,
+            description = R.string.setting_top_general_hide_adult_contents_description,
+            value = userData.isHideAdultContents,
+            onValueChanged = onClickHideAdultContents,
         )
     }
 }

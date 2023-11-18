@@ -1,15 +1,17 @@
-package caios.android.pixiview.feature.library.message
+package caios.android.pixiview.feature.post.liked
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
@@ -19,51 +21,59 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.pixiview.core.model.ScreenState
-import caios.android.pixiview.core.model.fanbox.FanboxNewsLetter
+import caios.android.pixiview.core.model.UserData
+import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.core.ui.component.PixiViewTopBar
+import caios.android.pixiview.core.ui.component.PostItem
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 import caios.android.pixiview.core.ui.view.ErrorView
-import caios.android.pixiview.feature.library.R
-import caios.android.pixiview.feature.library.message.items.LibraryMessageItem
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
+import caios.android.pixiview.feature.post.R
 
 @Composable
-internal fun LibraryMessageRoute(
-    openDrawer: () -> Unit,
+internal fun LikedPostsRoute(
+    navigateToPostDetail: (PostId) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
+    navigateToCreatorPlans: (CreatorId) -> Unit,
+    terminate: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LibraryMessageViewModel = hiltViewModel(),
+    viewModel: LikedPostsViewModel = hiltViewModel(),
 ) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     AsyncLoadContents(
         modifier = modifier,
         screenState = screenState,
-        retryAction = viewModel::fetch,
-    ) { uiState ->
-        LibraryMessageScreen(
+    ) {
+        LikedPostsScreen(
             modifier = Modifier.fillMaxSize(),
-            messages = uiState.messages.toImmutableList(),
-            openDrawer = openDrawer,
-            onClickRetry = viewModel::fetch,
-            onClickCreator = navigateToCreatorPosts,
+            userData = it.userData,
+            likedPosts = it.likedPosts,
+            onClickPost = navigateToPostDetail,
+            onClickPostLike = viewModel::postLike,
+            onClickCreatorPosts = navigateToCreatorPosts,
+            onClickCreatorPlans = navigateToCreatorPlans,
+            onTerminate = terminate,
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LibraryMessageScreen(
-    messages: ImmutableList<FanboxNewsLetter>,
-    openDrawer: () -> Unit,
-    onClickRetry: () -> Unit,
-    onClickCreator: (CreatorId) -> Unit,
+private fun LikedPostsScreen(
+    userData: UserData,
+    likedPosts: List<FanboxPost>,
+    onClickPost: (PostId) -> Unit,
+    onClickPostLike: (FanboxPost, Boolean) -> Unit,
+    onClickCreatorPosts: (CreatorId) -> Unit,
+    onClickCreatorPlans: (CreatorId) -> Unit,
+    onTerminate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state = rememberLazyListState()
@@ -74,9 +84,8 @@ private fun LibraryMessageScreen(
         topBar = {
             PixiViewTopBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.library_navigation_message),
-                navigationIcon = Icons.Default.Menu,
-                onClickNavigation = openDrawer,
+                title = stringResource(R.string.library_navigation_like),
+                onClickNavigation = onTerminate,
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -90,29 +99,34 @@ private fun LibraryMessageScreen(
                 .padding(padding)
                 .fillMaxSize(),
         ) {
-            if (messages.isNotEmpty()) {
+            if (likedPosts.isNotEmpty()) {
                 LazyColumn(
                     modifier = Modifier.drawVerticalScrollbar(state),
                     state = state,
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    items(
-                        items = messages,
-                        key = { it.id.value },
-                    ) {
-                        LibraryMessageItem(
+                    items(likedPosts) { likedPost ->
+                        PostItem(
                             modifier = Modifier.fillMaxWidth(),
-                            message = it,
-                            onClickCreator = onClickCreator,
+                            post = likedPost,
+                            isHideAdultContents = userData.isHideAdultContents,
+                            onClickPost = { if (!likedPost.isRestricted) onClickPost.invoke(it) },
+                            onClickLike = { _, isLiked -> onClickPostLike.invoke(likedPost, isLiked) },
+                            onClickCreator = onClickCreatorPosts,
+                            onClickPlanList = onClickCreatorPlans,
                         )
+                    }
 
-                        HorizontalDivider()
+                    item {
+                        Spacer(modifier = Modifier.navigationBarsPadding())
                     }
                 }
             } else {
                 ErrorView(
                     modifier = Modifier.fillMaxSize(),
                     errorState = ScreenState.Error(R.string.error_no_data),
-                    retryAction = onClickRetry,
+                    retryAction = null,
                 )
             }
         }

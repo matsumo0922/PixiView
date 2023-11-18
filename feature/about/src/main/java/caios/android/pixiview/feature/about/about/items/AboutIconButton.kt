@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MailOutline
@@ -26,11 +26,11 @@ internal fun AboutIconButton(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(50))
+            .clip(CircleShape)
             .border(
                 width = 0.5.dp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                shape = RoundedCornerShape(50),
+                shape = CircleShape,
             )
             .clickable { onClick.invoke() },
     ) {

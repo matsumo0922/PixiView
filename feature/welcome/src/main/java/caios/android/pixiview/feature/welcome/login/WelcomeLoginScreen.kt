@@ -10,13 +10,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -92,7 +91,7 @@ internal fun WelcomeLoginScreen(
                 modifier = Modifier
                     .padding(bottom = 24.dp)
                     .fillMaxWidth(),
-                shape = RoundedCornerShape(50),
+                shape = CircleShape,
                 onClick = { navigateToWelcomePermission.invoke() },
             ) {
                 Text(
@@ -105,7 +104,7 @@ internal fun WelcomeLoginScreen(
                 modifier = Modifier
                     .padding(bottom = 24.dp)
                     .fillMaxWidth(),
-                shape = RoundedCornerShape(50),
+                shape = CircleShape,
                 onClick = { launcher.launch(Intent(context, LoginActivity::class.java)) },
             ) {
                 Text(

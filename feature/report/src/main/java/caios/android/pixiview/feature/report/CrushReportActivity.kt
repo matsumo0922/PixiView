@@ -85,7 +85,7 @@ class CrushReportActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             report = report,
                             onClickCopy = {
-                                clipboardManager.setPrimaryClip(ClipData.newPlainText("PixiView Crush Report", it))
+                                clipboardManager.setPrimaryClip(ClipData.newPlainText("FANBOX Viewer Crush Report", it))
 
                                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                                     ToastUtil.show(this@CrushReportActivity, R.string.report_crush_copy)

@@ -9,23 +9,30 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.ScreenState
+import caios.android.pixiview.core.model.UserData
+import caios.android.pixiview.core.model.changeContent
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.FanboxRepository
+import caios.android.pixiview.core.repository.UserDataRepository
 import caios.android.pixiview.feature.creator.R
 import caios.android.pixiview.feature.creator.top.paging.CreatorTopPostsPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreatorTopViewModel @Inject constructor(
+    private val userDataRepository: UserDataRepository,
     private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
 
@@ -35,11 +42,27 @@ class CreatorTopViewModel @Inject constructor(
 
     private var postsPagingCache: Flow<PagingData<FanboxPost>>? = null
 
+    init {
+        viewModelScope.launch {
+            userDataRepository.userData.collectLatest { data ->
+                _screenState.value = screenState.value.changeContent { it.copy(userData = data) }
+            }
+        }
+
+        viewModelScope.launch {
+            fanboxRepository.likedPosts.collectLatest { ids ->
+                _screenState.value = screenState.value.changeContent { it.copy(likedPosts = ids) }
+            }
+        }
+    }
+
     fun fetch(creatorId: CreatorId) {
         viewModelScope.launch {
             _screenState.value = ScreenState.Loading
             _screenState.value = suspendRunCatching {
                 CreatorTopUiState(
+                    userData = userDataRepository.userData.first(),
+                    likedPosts = fanboxRepository.likedPosts.first(),
                     creatorDetail = fanboxRepository.getCreator(creatorId),
                     creatorPlans = fanboxRepository.getCreatorPlans(creatorId),
                     creatorTags = fanboxRepository.getCreatorTags(creatorId),
@@ -82,6 +105,18 @@ class CreatorTopViewModel @Inject constructor(
         }
     }
 
+    fun postLike(post: FanboxPost, isLiked: Boolean) {
+        viewModelScope.launch {
+            (screenState.value as? ScreenState.Idle)?.also {
+                if (isLiked) {
+                    fanboxRepository.likePost(post)
+                } else {
+                    fanboxRepository.unlikePost(post)
+                }
+            }
+        }
+    }
+
     private fun buildPaging(creatorId: CreatorId): Flow<PagingData<FanboxPost>> {
         return Pager(
             config = PagingConfig(pageSize = 10),
@@ -98,6 +133,8 @@ class CreatorTopViewModel @Inject constructor(
 
 @Stable
 data class CreatorTopUiState(
+    val userData: UserData,
+    val likedPosts: List<PostId>,
     val creatorDetail: FanboxCreatorDetail,
     val creatorPlans: List<FanboxCreatorPlan>,
     val creatorTags: List<FanboxCreatorTag>,

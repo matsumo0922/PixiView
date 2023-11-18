@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -46,11 +46,11 @@ private fun WelcomeIndicator(
     Box(
         modifier = modifier
             .size(8.dp)
-            .clip(RoundedCornerShape(50))
+            .clip(CircleShape)
             .border(
                 width = 0.5.dp,
                 color = MaterialTheme.colorScheme.outline,
-                shape = RoundedCornerShape(50),
+                shape = CircleShape,
             ),
     ) {
         if (isSelected) {
@@ -58,7 +58,7 @@ private fun WelcomeIndicator(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .size(8.dp)
-                    .clip(RoundedCornerShape(50))
+                    .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary),
             )
         }

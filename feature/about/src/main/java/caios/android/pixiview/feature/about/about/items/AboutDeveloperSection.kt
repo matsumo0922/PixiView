@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Card
@@ -175,11 +176,11 @@ internal fun AboutDeveloperSection(
             Image(
                 modifier = Modifier
                     .size(96.dp)
-                    .clip(RoundedCornerShape(50))
+                    .clip(CircleShape)
                     .border(
                         width = 1.dp,
                         color = MaterialTheme.colorScheme.onSurface,
-                        shape = RoundedCornerShape(50),
+                        shape = CircleShape,
                     )
                     .constrainAs(icon) {
                         top.linkTo(card.top)

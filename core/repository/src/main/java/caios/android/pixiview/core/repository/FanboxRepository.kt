@@ -10,6 +10,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
+import caios.android.pixiview.core.datastore.PreferenceLikedPosts
 import caios.android.pixiview.core.model.PageCursorInfo
 import caios.android.pixiview.core.model.PageNumberInfo
 import caios.android.pixiview.core.model.fanbox.FanboxBell
@@ -70,6 +71,7 @@ import javax.inject.Inject
 
 interface FanboxRepository {
     val cookie: SharedFlow<String>
+    val likedPosts: SharedFlow<List<PostId>>
     val metaData: SharedFlow<FanboxMetaData>
 
     fun hasActiveCookie(): Boolean
@@ -106,6 +108,10 @@ interface FanboxRepository {
     suspend fun followCreator(creatorUserId: String)
     suspend fun unfollowCreator(creatorUserId: String)
 
+    suspend fun getLikedPosts(): List<FanboxPost>
+    suspend fun likePost(post: FanboxPost)
+    suspend fun unlikePost(post: FanboxPost)
+
     suspend fun downloadBitmap(bitmap: Bitmap, name: String)
     suspend fun downloadImage(url: String, name: String, extension: String)
     suspend fun downloadFile(url: String, name: String, extension: String)
@@ -116,6 +122,7 @@ class FanboxRepositoryImpl(
     private val client: HttpClient,
     private val formatter: Json,
     private val fanboxCookiePreference: PreferenceFanboxCookie,
+    private val likedPostsPreference: PreferenceLikedPosts,
     private val ioDispatcher: CoroutineDispatcher,
 ) : FanboxRepository {
 
@@ -123,6 +130,7 @@ class FanboxRepositoryImpl(
     private val postCache = mutableMapOf<PostId, FanboxPostDetail>()
 
     override val cookie: SharedFlow<String> = fanboxCookiePreference.data
+    override val likedPosts: SharedFlow<List<PostId>> = likedPostsPreference.data
     override val metaData: SharedFlow<FanboxMetaData> = _metaData.asSharedFlow()
 
     @Inject
@@ -131,11 +139,13 @@ class FanboxRepositoryImpl(
         client: HttpClient,
         formatter: Json,
         fanboxCookiePreference: PreferenceFanboxCookie,
+        likedPostsPreference: PreferenceLikedPosts,
     ) : this(
         context = context,
         client = client,
         formatter = formatter,
         fanboxCookiePreference = fanboxCookiePreference,
+        likedPostsPreference = likedPostsPreference,
         ioDispatcher = Dispatchers.IO,
     )
 
@@ -164,7 +174,7 @@ class FanboxRepositoryImpl(
                 put("maxId", cursor.maxId)
             }
         }.let {
-            get("post.listHome", it).parse<FanboxPostItemsEntity>()!!.translate()
+            get("post.listHome", it).parse<FanboxPostItemsEntity>()!!.translate(likedPosts.first())
         }
     }
 
@@ -177,7 +187,7 @@ class FanboxRepositoryImpl(
                 put("maxId", cursor.maxId)
             }
         }.let {
-            get("post.listSupporting", it).parse<FanboxPostItemsEntity>()!!.translate()
+            get("post.listSupporting", it).parse<FanboxPostItemsEntity>()!!.translate(likedPosts.first())
         }
     }
 
@@ -191,7 +201,7 @@ class FanboxRepositoryImpl(
                 put("maxId", cursor.maxId)
             }
         }.let {
-            get("post.listCreator", it).parse<FanboxPostItemsEntity>()!!.translate()
+            get("post.listCreator", it).parse<FanboxPostItemsEntity>()!!.translate(likedPosts.first())
         }
     }
 
@@ -204,7 +214,7 @@ class FanboxRepositoryImpl(
                 put("creatorId", creatorId.value)
             }
         }.let {
-            get("post.listTagged", it).parse<FanboxPostSearchEntity>()!!.translate()
+            get("post.listTagged", it).parse<FanboxPostSearchEntity>()!!.translate(likedPosts.first())
         }
     }
 
@@ -213,7 +223,7 @@ class FanboxRepositoryImpl(
     }
 
     override suspend fun getPost(postId: PostId): FanboxPostDetail = withContext(ioDispatcher) {
-        get("post.info", mapOf("postId" to postId.value)).parse<FanboxPostDetailEntity>()!!.translate().also {
+        get("post.info", mapOf("postId" to postId.value)).parse<FanboxPostDetailEntity>()!!.translate(likedPosts.first()).also {
             postCache[postId] = it
         }
     }
@@ -280,6 +290,18 @@ class FanboxRepositoryImpl(
         post("follow.delete", mapOf("creatorUserId" to creatorUserId))
     }
 
+    override suspend fun getLikedPosts(): List<FanboxPost> = withContext(ioDispatcher) {
+        likedPostsPreference.get()
+    }
+
+    override suspend fun likePost(post: FanboxPost) = withContext(ioDispatcher) {
+        likedPostsPreference.save(post)
+    }
+
+    override suspend fun unlikePost(post: FanboxPost) {
+        likedPostsPreference.remove(post)
+    }
+
     override suspend fun downloadBitmap(bitmap: Bitmap, name: String): Unit = withContext(ioDispatcher) {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
             val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension("jpg")
@@ -324,7 +346,7 @@ class FanboxRepositoryImpl(
 
     private fun getExternalFile(name: String, parent: String): File {
         val downloadFile = Environment.getExternalStoragePublicDirectory(parent)
-        val pixiViewFile = downloadFile.resolve("PixiView")
+        val pixiViewFile = downloadFile.resolve("FANBOX")
 
         if (!pixiViewFile.exists()) {
             pixiViewFile.mkdirs()
@@ -337,10 +359,10 @@ class FanboxRepositoryImpl(
         val contentResolver = context.contentResolver
         val contentValues = ContentValues().apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(MediaStore.Images.ImageColumns.RELATIVE_PATH, "$parent/PixiView")
+                put(MediaStore.Images.ImageColumns.RELATIVE_PATH, "$parent/FANBOX")
             } else {
-                val path = Environment.getExternalStorageDirectory().path + "/$parent/PixiView/"
-                val dir = File(Environment.getExternalStorageDirectory().path + "/$parent", "PixiView")
+                val path = Environment.getExternalStorageDirectory().path + "/$parent/FANBOX/"
+                val dir = File(Environment.getExternalStorageDirectory().path + "/$parent", "FANBOX")
 
                 if (!dir.exists()) {
                     dir.mkdir()

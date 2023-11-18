@@ -51,6 +51,12 @@ class SettingTopViewModel @Inject constructor(
         }
     }
 
+    fun setHideAdultContents(isHideAdultContents: Boolean) {
+        viewModelScope.launch {
+            userDataRepository.setHideAdultContents(isHideAdultContents)
+        }
+    }
+
     fun setDeveloperMode(isDeveloperMode: Boolean) {
         viewModelScope.launch {
             userDataRepository.setDeveloperMode(isDeveloperMode)

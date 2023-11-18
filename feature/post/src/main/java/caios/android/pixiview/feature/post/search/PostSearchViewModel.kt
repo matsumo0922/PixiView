@@ -8,10 +8,13 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import caios.android.pixiview.core.common.util.suspendRunCatching
+import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.FanboxRepository
+import caios.android.pixiview.core.repository.UserDataRepository
 import caios.android.pixiview.core.ui.extensition.emptyPaging
 import caios.android.pixiview.feature.post.search.paging.PostSearchCreatorPagingSource
 import caios.android.pixiview.feature.post.search.paging.PostSearchTagPagingSource
@@ -19,29 +22,51 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
 @HiltViewModel
 class PostSearchViewModel @Inject constructor(
+    private val userDataRepository: UserDataRepository,
     private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         PostSearchUiState(
             query = "",
+            userData = UserData.dummy(),
+            likedPosts = emptyList(),
             creatorPaging = emptyPaging(),
             tagPaging = emptyPaging(),
             postPaging = emptyPaging(),
-        )
+        ),
     )
 
     val uiState = _uiState.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            userDataRepository.userData.collectLatest { data ->
+                _uiState.value = uiState.value.copy(userData = data)
+            }
+        }
+
+        viewModelScope.launch {
+            fanboxRepository.likedPosts.collectLatest { ids ->
+                _uiState.value = uiState.value.copy(likedPosts = ids)
+            }
+        }
+    }
+
     fun search(query: PostSearchQuery) {
         viewModelScope.launch {
-            _uiState.value = uiState.value.copy(query = buildQuery(query))
+            _uiState.value = uiState.value.copy(
+                query = buildQuery(query),
+                userData = userDataRepository.userData.first(),
+            )
 
             when (query.mode) {
                 PostSearchMode.Creator -> {
@@ -99,11 +124,23 @@ class PostSearchViewModel @Inject constructor(
             fanboxRepository.unfollowCreator(creatorUserId)
         }
     }
+
+    fun postLike(post: FanboxPost, isLiked: Boolean) {
+        viewModelScope.launch {
+            if (isLiked) {
+                fanboxRepository.likePost(post)
+            } else {
+                fanboxRepository.unlikePost(post)
+            }
+        }
+    }
 }
 
 @Stable
 data class PostSearchUiState(
     val query: String,
+    val userData: UserData,
+    val likedPosts: List<PostId>,
     val creatorPaging: Flow<PagingData<FanboxCreatorDetail>>,
     val tagPaging: Flow<PagingData<FanboxPost>>,
     val postPaging: Flow<PagingData<FanboxPost>>,
