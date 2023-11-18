@@ -33,7 +33,7 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 internal fun LibraryMessageRoute(
     openDrawer: () -> Unit,
-    navigateToCreatorPlans: (CreatorId) -> Unit,
+    navigateToCreatorPosts: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LibraryMessageViewModel = hiltViewModel(),
 ) {
@@ -48,7 +48,7 @@ internal fun LibraryMessageRoute(
             modifier = Modifier.fillMaxSize(),
             messages = uiState.messages.toImmutableList(),
             openDrawer = openDrawer,
-            onClickCreator = navigateToCreatorPlans,
+            onClickCreator = navigateToCreatorPosts,
         )
     }
 }

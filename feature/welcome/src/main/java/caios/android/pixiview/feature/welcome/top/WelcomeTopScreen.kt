@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -70,8 +71,9 @@ internal fun WelcomeTopScreen(
             modifier = Modifier
                 .padding(64.dp, 24.dp)
                 .aspectRatio(1f)
-                .fillMaxWidth(),
-            painter = painterResource(R.drawable.vec_app_icon_no_background),
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp)),
+            painter = painterResource(R.drawable.vec_app_icon),
             contentDescription = null,
         )
 

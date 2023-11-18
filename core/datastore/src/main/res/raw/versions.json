@@ -1,9 +1,16 @@
 [
   {
-    "versionName": "0.1.0.D",
+    "versionName": "0.1.0",
     "versionCode": 1,
     "date": "2023/10/21",
     "logJp": "・アプリの開発を開始",
     "logEn": "・Start developing this app"
+  },
+  {
+    "versionName": "0.2.0",
+    "versionCode": 2,
+    "date": "2023/11/18",
+    "logJp": "・PlayStoreにてアルファ版の公開を開始",
+    "logEn": "・Alpha version now available on Play Store"
   }
 ]

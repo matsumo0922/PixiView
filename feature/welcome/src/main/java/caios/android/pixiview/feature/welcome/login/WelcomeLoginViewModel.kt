@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +32,7 @@ class WelcomeLoginViewModel @Inject constructor(
                     fanboxRepository.updateCookie(it.orEmpty())
                     fanboxRepository.getNewsLetters()
                 }.isSuccess.also {
+                    Timber.d("isLoggedIn: $it")
                     _isLoggedInFlow.emit(it)
                 }
             }

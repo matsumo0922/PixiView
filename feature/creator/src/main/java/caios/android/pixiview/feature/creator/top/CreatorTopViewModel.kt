@@ -11,6 +11,7 @@ import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
+import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.repository.FanboxRepository
@@ -41,6 +42,7 @@ class CreatorTopViewModel @Inject constructor(
                 CreatorTopUiState(
                     creatorDetail = fanboxRepository.getCreator(creatorId),
                     creatorPlans = fanboxRepository.getCreatorPlans(creatorId),
+                    creatorTags = fanboxRepository.getCreatorTags(creatorId),
                     creatorPostsPaging = postsPagingCache ?: buildPaging(creatorId).also { postsPagingCache = it },
                 )
             }.fold(
@@ -98,5 +100,6 @@ class CreatorTopViewModel @Inject constructor(
 data class CreatorTopUiState(
     val creatorDetail: FanboxCreatorDetail,
     val creatorPlans: List<FanboxCreatorPlan>,
+    val creatorTags: List<FanboxCreatorTag>,
     val creatorPostsPaging: Flow<PagingData<FanboxPost>>,
 )

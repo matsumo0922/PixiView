@@ -1,8 +1,10 @@
 package caios.android.pixiview.feature.library.notify
 
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -19,6 +21,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
@@ -28,6 +31,7 @@ import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.LazyPagingItemsLoadContents
 import caios.android.pixiview.core.ui.component.PixiViewTopBar
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
+import caios.android.pixiview.core.ui.view.PagingErrorSection
 import caios.android.pixiview.feature.library.R
 import caios.android.pixiview.feature.library.notify.items.LibraryNotifyBellItem
 
@@ -107,6 +111,19 @@ private fun LibraryNotifyScreen(
 
                     HorizontalDivider()
                 }
+            }
+
+            if (pagingAdapter.loadState.append is LoadState.Error) {
+                item {
+                    PagingErrorSection(
+                        modifier = Modifier.fillMaxWidth(),
+                        onRetry = { pagingAdapter.retry() },
+                    )
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
     }

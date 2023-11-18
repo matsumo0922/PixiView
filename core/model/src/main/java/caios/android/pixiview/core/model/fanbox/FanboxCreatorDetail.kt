@@ -19,8 +19,8 @@ data class FanboxCreatorDetail(
 ) {
     data class ProfileItem(
         val id: String,
-        val imageUrl: String,
-        val thumbnailUrl: String,
+        val imageUrl: String?,
+        val thumbnailUrl: String?,
         val type: String,
     )
 

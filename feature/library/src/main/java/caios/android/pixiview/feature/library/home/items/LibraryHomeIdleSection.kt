@@ -2,12 +2,15 @@ package caios.android.pixiview.feature.library.home.items
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
@@ -16,6 +19,7 @@ import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.component.PostItem
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
+import caios.android.pixiview.core.ui.view.PagingErrorSection
 
 @Composable
 internal fun LibraryHomeIdleSection(
@@ -47,6 +51,19 @@ internal fun LibraryHomeIdleSection(
                     onClickPlanList = onClickPlanList,
                 )
             }
+        }
+
+        if (pagingAdapter.loadState.append is LoadState.Error) {
+            item {
+                PagingErrorSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    onRetry = { pagingAdapter.retry() },
+                )
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.navigationBarsPadding())
         }
     }
 }

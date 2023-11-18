@@ -17,7 +17,7 @@ fun NavController.navigateToLibraryMessage(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.libraryMessageScreen(
     openDrawer: () -> Unit,
-    navigateToCreatorPlans: (CreatorId) -> Unit,
+    navigateToCreatorPosts: (CreatorId) -> Unit,
 ) {
     composable(
         route = LibraryMessageRoute,
@@ -27,7 +27,7 @@ fun NavGraphBuilder.libraryMessageScreen(
         LibraryMessageRoute(
             modifier = Modifier.fillMaxSize(),
             openDrawer = openDrawer,
-            navigateToCreatorPlans = navigateToCreatorPlans,
+            navigateToCreatorPosts = navigateToCreatorPosts,
         )
     }
 }

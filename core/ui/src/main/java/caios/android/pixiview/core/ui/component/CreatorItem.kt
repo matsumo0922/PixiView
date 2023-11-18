@@ -169,43 +169,34 @@ private fun UserSection(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Row(
+        AsyncImage(
             modifier = Modifier
-                .weight(1f)
-                .clip(RoundedCornerShape(4.dp))
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                .size(32.dp)
+                .clip(RoundedCornerShape(50)),
+            model = ImageRequest.Builder(LocalContext.current)
+                .error(R.drawable.im_default_user)
+                .data(creatorDetail.user.iconUrl)
+                .build(),
+            contentDescription = null,
+        )
+
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            AsyncImage(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(RoundedCornerShape(50)),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .error(R.drawable.im_default_user)
-                    .data(creatorDetail.user.iconUrl)
-                    .build(),
-                contentDescription = null,
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = creatorDetail.user.name,
+                style = MaterialTheme.typography.titleMedium.bold(),
+                color = MaterialTheme.colorScheme.primary,
             )
 
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = creatorDetail.user.name,
-                    style = MaterialTheme.typography.titleMedium.bold(),
-                    color = MaterialTheme.colorScheme.primary,
-                )
-
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "@${creatorDetail.user.creatorId}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "@${creatorDetail.user.creatorId}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
 
         if (isFollowed) {

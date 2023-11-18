@@ -23,12 +23,14 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlanEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlansEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorSearchEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxMetaDataEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxNewsLattersEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPaidRecordEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxPostSearchEntity
 import caios.android.pixiview.core.model.fanbox.id.CommentId
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.NewsLetterId
@@ -73,54 +75,26 @@ internal fun FanboxPostItemsEntity.Body.Item.translate(): FanboxPost {
     )
 }
 
-internal fun FanboxCreatorItemsEntity.translate(): List<FanboxCreatorDetail> {
-    return body.map {
-        FanboxCreatorDetail(
-            creatorId = CreatorId(it.creatorId),
-            coverImageUrl = it.coverImageUrl,
-            description = it.description,
-            hasAdultContent = it.hasAdultContent,
-            hasBoothShop = it.hasBoothShop,
-            isAcceptingRequest = it.isAcceptingRequest,
-            isFollowed = it.isFollowed,
-            isStopped = it.isStopped,
-            isSupported = it.isSupported,
-            profileItems = it.profileItems.map { profileItem ->
-                FanboxCreatorDetail.ProfileItem(
-                    id = profileItem.id,
-                    imageUrl = profileItem.imageUrl,
-                    thumbnailUrl = profileItem.thumbnailUrl,
-                    type = profileItem.type,
-                )
-            },
-            profileLinks = it.profileLinks.map { profileLink ->
-                FanboxCreatorDetail.ProfileLink(
-                    url = profileLink,
-                    link = FanboxCreatorDetail.Platform.fromUrl(profileLink),
-                )
-            },
-            user = FanboxUser(
-                userId = it.user.userId,
-                creatorId = CreatorId(it.creatorId),
-                name = it.user.name,
-                iconUrl = it.user.iconUrl,
-            ),
-        )
-    }
+internal fun FanboxCreatorEntity.translate(): FanboxCreatorDetail {
+    return body.translate()
 }
 
-internal fun FanboxCreatorEntity.translate(): FanboxCreatorDetail {
+internal fun FanboxCreatorItemsEntity.translate(): List<FanboxCreatorDetail> {
+    return body.map { it.translate() }
+}
+
+internal fun FanboxCreatorEntity.Body.translate(): FanboxCreatorDetail {
     return FanboxCreatorDetail(
-        creatorId = CreatorId(body.creatorId),
-        coverImageUrl = body.coverImageUrl,
-        description = body.description,
-        hasAdultContent = body.hasAdultContent,
-        hasBoothShop = body.hasBoothShop,
-        isAcceptingRequest = body.isAcceptingRequest,
-        isFollowed = body.isFollowed,
-        isStopped = body.isStopped,
-        isSupported = body.isSupported,
-        profileItems = body.profileItems.map { profileItem ->
+        creatorId = CreatorId(creatorId),
+        coverImageUrl = coverImageUrl,
+        description = description,
+        hasAdultContent = hasAdultContent,
+        hasBoothShop = hasBoothShop,
+        isAcceptingRequest = isAcceptingRequest,
+        isFollowed = isFollowed,
+        isStopped = isStopped,
+        isSupported = isSupported,
+        profileItems = profileItems.map { profileItem ->
             FanboxCreatorDetail.ProfileItem(
                 id = profileItem.id,
                 imageUrl = profileItem.imageUrl,
@@ -128,17 +102,17 @@ internal fun FanboxCreatorEntity.translate(): FanboxCreatorDetail {
                 type = profileItem.type,
             )
         },
-        profileLinks = body.profileLinks.map { profileLink ->
+        profileLinks = profileLinks.map { profileLink ->
             FanboxCreatorDetail.ProfileLink(
                 url = profileLink,
                 link = FanboxCreatorDetail.Platform.fromUrl(profileLink),
             )
         },
         user = FanboxUser(
-            userId = body.user.userId,
-            creatorId = CreatorId(body.creatorId),
-            name = body.user.name,
-            iconUrl = body.user.iconUrl,
+            userId = user.userId,
+            creatorId = CreatorId(creatorId),
+            name = user.name,
+            iconUrl = user.iconUrl,
         ),
     )
 }
@@ -499,6 +473,20 @@ internal fun FanboxMetaDataEntity.translate(): FanboxMetaData {
             creatorOriginPattern = urlContext.creatorOriginPattern,
             rootOriginPattern = urlContext.rootOriginPattern,
         ),
+    )
+}
+
+internal fun FanboxCreatorSearchEntity.translate(): PageNumberInfo<FanboxCreatorDetail> {
+    return PageNumberInfo(
+        contents = body.creators.map { it.translate() },
+        nextPage = body.nextPage,
+    )
+}
+
+internal fun FanboxPostSearchEntity.translate(): PageNumberInfo<FanboxPost> {
+    return PageNumberInfo(
+        contents = body.items.map { it.translate() },
+        nextPage = Uri.parse(body.nextUrl).getQueryParameter("page")?.toIntOrNull(),
     )
 }
 

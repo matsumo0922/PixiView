@@ -7,6 +7,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import caios.android.pixiview.core.model.ScreenState
+import caios.android.pixiview.core.ui.view.EmptyView
 import caios.android.pixiview.core.ui.view.ErrorView
 import caios.android.pixiview.core.ui.view.LoadingView
 
@@ -14,12 +15,16 @@ import caios.android.pixiview.core.ui.view.LoadingView
 fun <T : Any> LazyPagingItemsLoadContents(
     lazyPagingItems: LazyPagingItems<T>,
     modifier: Modifier = Modifier,
-    emptyComponent: @Composable () -> Unit = {},
+    emptyComponent: @Composable (() -> Unit)? = null,
     content: @Composable (CombinedLoadStates) -> Unit,
 ) {
     Surface(modifier) {
         if (lazyPagingItems.isEmpty()) {
-            emptyComponent.invoke()
+            if (emptyComponent != null) {
+                emptyComponent.invoke()
+            } else {
+                EmptyView()
+            }
         } else {
             lazyPagingItems.apply {
                 when (loadState.refresh) {
@@ -28,7 +33,7 @@ fun <T : Any> LazyPagingItemsLoadContents(
                     }
                     is LoadState.Error -> {
                         ErrorView(
-                            errorState = ScreenState.Error(R.string.error_network, R.string.common_retry),
+                            errorState = ScreenState.Error(R.string.error_no_data, R.string.common_retry),
                             retryAction = { lazyPagingItems.refresh() },
                         )
                     }

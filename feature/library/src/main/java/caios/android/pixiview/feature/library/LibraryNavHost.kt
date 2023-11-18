@@ -19,6 +19,7 @@ import caios.android.pixiview.feature.library.notify.libraryNotifyScreen
 @Composable
 fun LibraryNavHost(
     openDrawer: () -> Unit,
+    navigateToPostSearch: () -> Unit,
     navigateToPostDetail: (postId: PostId) -> Unit,
     navigateToCreatorPosts: (creatorId: CreatorId) -> Unit,
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
@@ -40,7 +41,8 @@ fun LibraryNavHost(
 
         libraryDiscoveryScreen(
             openDrawer = openDrawer,
-            navigateToCreatorPlans = navigateToCreatorPlans,
+            navigateToPostSearch = navigateToPostSearch,
+            navigateToCreatorPosts = navigateToCreatorPosts,
         )
 
         libraryNotifyScreen(
@@ -50,7 +52,7 @@ fun LibraryNavHost(
 
         libraryMessageScreen(
             openDrawer = openDrawer,
-            navigateToCreatorPlans = navigateToCreatorPlans,
+            navigateToCreatorPosts = navigateToCreatorPosts,
         )
     }
 }

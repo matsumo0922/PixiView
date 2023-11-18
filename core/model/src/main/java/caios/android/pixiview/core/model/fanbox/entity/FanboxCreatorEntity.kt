@@ -40,9 +40,9 @@ data class FanboxCreatorEntity(
             @SerialName("id")
             val id: String,
             @SerialName("imageUrl")
-            val imageUrl: String,
+            val imageUrl: String?,
             @SerialName("thumbnailUrl")
-            val thumbnailUrl: String,
+            val thumbnailUrl: String?,
             @SerialName("type")
             val type: String,
         )

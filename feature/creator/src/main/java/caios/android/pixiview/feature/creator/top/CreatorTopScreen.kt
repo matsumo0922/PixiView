@@ -36,6 +36,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
+import caios.android.pixiview.core.model.fanbox.FanboxCreatorTag
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
@@ -58,6 +59,7 @@ internal fun CreatorTopRoute(
     creatorId: CreatorId,
     isPosts: Boolean,
     navigateToPostDetail: (PostId) -> Unit,
+    navigateToPostSearch: (String, CreatorId) -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CreatorTopViewModel = hiltViewModel(),
@@ -81,9 +83,11 @@ internal fun CreatorTopRoute(
             isPosts = isPosts,
             creatorDetail = uiState.creatorDetail,
             creatorPlans = uiState.creatorPlans.toImmutableList(),
+            creatorTags = uiState.creatorTags.toImmutableList(),
             creatorPostsPaging = uiState.creatorPostsPaging.collectAsLazyPagingItems(),
             onClickPost = navigateToPostDetail,
             onClickPlan = { context.startActivity(Intent(Intent.ACTION_VIEW, it.browserUri)) },
+            onClickTag = { navigateToPostSearch.invoke(it.tag, uiState.creatorDetail.creatorId) },
             onTerminate = terminate,
             onClickLink = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
             onClickFollow = viewModel::follow,
@@ -98,9 +102,11 @@ private fun CreatorTopScreen(
     isPosts: Boolean,
     creatorDetail: FanboxCreatorDetail,
     creatorPlans: ImmutableList<FanboxCreatorPlan>,
+    creatorTags: ImmutableList<FanboxCreatorTag>,
     creatorPostsPaging: LazyPagingItems<FanboxPost>,
     onClickPost: (PostId) -> Unit,
     onClickPlan: (FanboxCreatorPlan) -> Unit,
+    onClickTag: (FanboxCreatorTag) -> Unit,
     onClickLink: (String) -> Unit,
     onClickFollow: (String) -> Unit,
     onClickUnfollow: (String) -> Unit,
@@ -189,7 +195,9 @@ private fun CreatorTopScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 state = postsListState,
                                 pagingAdapter = creatorPostsPaging,
+                                creatorTags = creatorTags,
                                 onClickPost = onClickPost,
+                                onClickTag = onClickTag,
                                 onClickCreator = {
                                     scope.launch {
                                         pagerState.animateScrollToPage(1)

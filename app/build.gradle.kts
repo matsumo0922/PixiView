@@ -67,9 +67,9 @@ android {
     androidComponents {
         onVariants {
             val appName = when (it.buildType) {
-                "debug" -> "PixiView Debug"
-                "billing" -> "PixiView Billing"
-                else -> "PixiView"
+                "debug" -> "FANBOX Debug"
+                "billing" -> "FANBOX Billing"
+                else -> "FANBOX"
             }
 
             it.resValues.put(it.makeResValueKey("string", "app_name"), ResValue(appName, null))

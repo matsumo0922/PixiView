@@ -26,6 +26,8 @@ import caios.android.pixiview.feature.post.detail.navigateToPostDetail
 import caios.android.pixiview.feature.post.detail.postDetailScreen
 import caios.android.pixiview.feature.post.image.navigateToPostImage
 import caios.android.pixiview.feature.post.image.postImageScreen
+import caios.android.pixiview.feature.post.search.navigateToPostSearch
+import caios.android.pixiview.feature.post.search.postSearchScreen
 import caios.android.pixiview.feature.setting.developer.navigateToSettingDeveloper
 import caios.android.pixiview.feature.setting.developer.settingDeveloperDialog
 import caios.android.pixiview.feature.setting.oss.navigateToSettingLicense
@@ -59,6 +61,7 @@ internal fun PixiViewNavHost(
             // composable
 
             libraryScreen(
+                navigateToPostSearch = { navController.navigateToPostSearch() },
                 navigateToPostDetail = { navController.navigateToPostDetail(it) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
@@ -81,8 +84,16 @@ internal fun PixiViewNavHost(
                 terminate = { navController.popBackStack() },
             )
 
+            postSearchScreen(
+                navigateToPostDetail = { navController.navigateToPostDetail(it) },
+                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
+                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+                terminate = { navController.popBackStack() },
+            )
+
             creatorTopScreen(
                 navigateToPostDetail = { navController.navigateToPostDetail(it) },
+                navigateToPostSearch = { query, creatorId -> navController.navigateToPostSearch(tag = query, creatorId = creatorId) },
                 terminate = { navController.popBackStack() },
             )
 

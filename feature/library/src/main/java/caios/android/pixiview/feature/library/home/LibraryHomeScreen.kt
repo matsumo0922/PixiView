@@ -68,7 +68,7 @@ internal fun LibraryHomeScreen(
             CenterAlignedTopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = {
-                    Text(text = "PixiView")
+                    Text(text = stringResource(R.string.about_name))
                 },
                 navigationIcon = {
                     IconButton(onClick = openDrawer) {

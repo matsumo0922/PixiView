@@ -247,7 +247,7 @@ private fun NavigationDrawerPlusItem(
     if (isPlusMode) {
         title = buildAnnotatedString {
             withStyle(titleStyle.copy(color = MaterialTheme.colorScheme.primary).toSpanStyle()) {
-                append("PixiView+")
+                append("Plus+")
             }
         }
         description = stringResource(R.string.library_navigation_plus_purchased_description)
@@ -255,7 +255,7 @@ private fun NavigationDrawerPlusItem(
         title = buildAnnotatedString {
             append("Buy ")
             withStyle(titleStyle.copy(color = MaterialTheme.colorScheme.primary).toSpanStyle()) {
-                append("PixiView+")
+                append("Plus+")
             }
         }
         description = stringResource(R.string.library_navigation_plus_description)

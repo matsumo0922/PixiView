@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,19 +53,20 @@ internal fun AboutAppSection(
                 Image(
                     modifier = Modifier
                         .size(104.dp)
+                        .clip(RoundedCornerShape(12.dp))
                         .constrainAs(icon) {
                             top.linkTo(parent.top, 16.dp)
                             start.linkTo(parent.start, 24.dp)
                             bottom.linkTo(parent.bottom, 16.dp)
                         },
-                    painter = painterResource(R.drawable.vec_app_icon_no_background),
+                    painter = painterResource(R.drawable.vec_app_icon),
                     contentDescription = null,
                 )
 
                 Text(
                     modifier = Modifier.constrainAs(title) {
                         top.linkTo(icon.top, 8.dp)
-                        start.linkTo(icon.end, 16.dp)
+                        start.linkTo(icon.end, 24.dp)
                         end.linkTo(parent.end, 16.dp)
 
                         width = Dimension.fillToConstraints

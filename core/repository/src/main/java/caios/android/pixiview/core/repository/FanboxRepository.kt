@@ -28,12 +28,14 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlanEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlansEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorSearchEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxMetaDataEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxNewsLattersEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPaidRecordEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxPostSearchEntity
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.utils.parse
@@ -87,6 +89,9 @@ interface FanboxRepository {
     suspend fun getCreator(creatorId: CreatorId): FanboxCreatorDetail
     suspend fun getCreatorTags(creatorId: CreatorId): List<FanboxCreatorTag>
 
+    suspend fun getPostFromQuery(query: String, creatorId: CreatorId? = null, page: Int = 0): PageNumberInfo<FanboxPost>
+    suspend fun getCreatorFromQuery(query: String, page: Int = 0): PageNumberInfo<FanboxCreatorDetail>
+
     suspend fun getSupportedPlans(): List<FanboxCreatorPlan>
     suspend fun getCreatorPlans(creatorId: CreatorId): List<FanboxCreatorPlan>
     suspend fun getCreatorPlan(creatorId: CreatorId): FanboxCreatorPlanDetail
@@ -96,7 +101,7 @@ interface FanboxRepository {
 
     suspend fun getNewsLetters(): List<FanboxNewsLetter>
 
-    suspend fun getBells(page: Int = 1): PageNumberInfo<FanboxBell>
+    suspend fun getBells(page: Int = 0): PageNumberInfo<FanboxBell>
 
     suspend fun followCreator(creatorUserId: String)
     suspend fun unfollowCreator(creatorUserId: String)
@@ -188,6 +193,23 @@ class FanboxRepositoryImpl(
         }.let {
             get("post.listCreator", it).parse<FanboxPostItemsEntity>()!!.translate()
         }
+    }
+
+    override suspend fun getPostFromQuery(query: String, creatorId: CreatorId?, page: Int): PageNumberInfo<FanboxPost> = withContext(ioDispatcher) {
+        buildMap {
+            put("tag", query)
+            put("page", page.toString())
+
+            if (creatorId != null) {
+                put("creatorId", creatorId.value)
+            }
+        }.let {
+            get("post.listTagged", it).parse<FanboxPostSearchEntity>()!!.translate()
+        }
+    }
+
+    override suspend fun getCreatorFromQuery(query: String, page: Int): PageNumberInfo<FanboxCreatorDetail> = withContext(ioDispatcher) {
+        get("creator.search", mapOf("q" to query, "page" to page.toString())).parse<FanboxCreatorSearchEntity>()!!.translate()
     }
 
     override suspend fun getPost(postId: PostId): FanboxPostDetail = withContext(ioDispatcher) {
