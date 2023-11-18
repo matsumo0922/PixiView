@@ -35,6 +35,8 @@ import caios.android.pixiview.core.ui.component.PostItem
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 import caios.android.pixiview.core.ui.view.ErrorView
 import caios.android.pixiview.feature.post.R
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun LikedPostsRoute(
@@ -54,7 +56,7 @@ internal fun LikedPostsRoute(
         LikedPostsScreen(
             modifier = Modifier.fillMaxSize(),
             userData = it.userData,
-            likedPosts = it.likedPosts,
+            likedPosts = it.likedPosts.toImmutableList(),
             onClickPost = navigateToPostDetail,
             onClickPostLike = viewModel::postLike,
             onClickCreatorPosts = navigateToCreatorPosts,
@@ -68,7 +70,7 @@ internal fun LikedPostsRoute(
 @Composable
 private fun LikedPostsScreen(
     userData: UserData,
-    likedPosts: List<FanboxPost>,
+    likedPosts: ImmutableList<FanboxPost>,
     onClickPost: (PostId) -> Unit,
     onClickPostLike: (FanboxPost, Boolean) -> Unit,
     onClickCreatorPosts: (CreatorId) -> Unit,

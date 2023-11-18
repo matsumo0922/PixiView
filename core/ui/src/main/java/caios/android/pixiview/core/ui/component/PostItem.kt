@@ -65,7 +65,9 @@ fun PostItem(
     modifier: Modifier = Modifier,
 ) {
     var isPostLiked by rememberSaveable(post.isLiked) { mutableStateOf(post.isLiked) }
-    val likeCount by rememberSaveable(post.isLiked, isPostLiked) { mutableStateOf(post.likeCount + if (isPostLiked) 1 else 0) }
+    val likeCount by rememberSaveable(post.isLiked, isPostLiked) {
+        mutableStateOf(post.likeCount + if (isPostLiked) 1 else 0)
+    }
     var isHideAdultContent by rememberSaveable(isHideAdultContents) { mutableStateOf(isHideAdultContents) }
 
     Card(

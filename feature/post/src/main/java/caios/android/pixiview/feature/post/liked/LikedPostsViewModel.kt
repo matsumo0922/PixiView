@@ -26,7 +26,7 @@ class LikedPostsViewModel @Inject constructor(
             LikedPostsUiState(
                 userData = userData,
                 likedPosts = fanboxRepository.getLikedPosts(),
-            )
+            ),
         )
     }.stateIn(
         scope = viewModelScope,
