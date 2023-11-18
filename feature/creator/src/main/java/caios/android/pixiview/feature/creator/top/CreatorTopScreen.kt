@@ -190,6 +190,7 @@ private fun CreatorTopScreen(
                         LazyPagingItemsLoadContents(
                             modifier = Modifier.fillMaxSize(),
                             lazyPagingItems = creatorPostsPaging,
+                            isSwipeEnabled = state.toolbarState.progress == 1f
                         ) {
                             CreatorTopPostsScreen(
                                 modifier = Modifier.fillMaxSize(),

@@ -13,7 +13,7 @@ data class FanboxBellItemsEntity(
         @SerialName("items")
         val items: List<Item>,
         @SerialName("nextUrl")
-        val nextUrl: String,
+        val nextUrl: String?,
     ) {
         @Serializable
         data class Item(

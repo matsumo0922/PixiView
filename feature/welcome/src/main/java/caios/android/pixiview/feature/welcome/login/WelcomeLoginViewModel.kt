@@ -30,6 +30,7 @@ class WelcomeLoginViewModel @Inject constructor(
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/").also {
                 suspendRunCatching {
                     fanboxRepository.updateCookie(it.orEmpty())
+                    fanboxRepository.updateCsrfToken()
                     fanboxRepository.getNewsLetters()
                 }.isSuccess.also {
                     Timber.d("isLoggedIn: $it")

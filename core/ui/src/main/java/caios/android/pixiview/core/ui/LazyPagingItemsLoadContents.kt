@@ -1,20 +1,30 @@
 package caios.android.pixiview.core.ui
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import caios.android.pixiview.core.model.ScreenState
-import caios.android.pixiview.core.ui.view.EmptyView
 import caios.android.pixiview.core.ui.view.ErrorView
 import caios.android.pixiview.core.ui.view.LoadingView
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T : Any> LazyPagingItemsLoadContents(
     lazyPagingItems: LazyPagingItems<T>,
     modifier: Modifier = Modifier,
+    isSwipeEnabled: Boolean = true,
     emptyComponent: @Composable (() -> Unit)? = null,
     content: @Composable (CombinedLoadStates) -> Unit,
 ) {
@@ -23,7 +33,10 @@ fun <T : Any> LazyPagingItemsLoadContents(
             if (emptyComponent != null) {
                 emptyComponent.invoke()
             } else {
-                EmptyView()
+                ErrorView(
+                    errorState = ScreenState.Error(R.string.error_no_data),
+                    retryAction = { lazyPagingItems.refresh() },
+                )
             }
         } else {
             lazyPagingItems.apply {
@@ -33,12 +46,26 @@ fun <T : Any> LazyPagingItemsLoadContents(
                     }
                     is LoadState.Error -> {
                         ErrorView(
-                            errorState = ScreenState.Error(R.string.error_no_data, R.string.common_retry),
+                            errorState = ScreenState.Error(R.string.error_no_data),
                             retryAction = { lazyPagingItems.refresh() },
                         )
                     }
                     is LoadState.NotLoading -> {
-                        content.invoke(loadState)
+                        val isRefreshing by remember(lazyPagingItems.loadState) { derivedStateOf { lazyPagingItems.loadState.refresh is LoadState.Loading } }
+                        val refreshState = rememberPullRefreshState(
+                            refreshing = isRefreshing,
+                            onRefresh = { lazyPagingItems.refresh() },
+                        )
+
+                        Box(Modifier.pullRefresh(refreshState, isSwipeEnabled)) {
+                            content.invoke(loadState)
+
+                            PullRefreshIndicator(
+                                refreshing = isRefreshing,
+                                state = refreshState,
+                                modifier = Modifier.align(Alignment.TopCenter)
+                            )
+                        }
                     }
                 }
             }

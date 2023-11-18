@@ -435,7 +435,7 @@ internal fun FanboxBellItemsEntity.translate(): PageNumberInfo<FanboxBell> {
                 }
             }
         },
-        nextPage = Uri.parse(body.nextUrl).getQueryParameter("page")?.toIntOrNull(),
+        nextPage = Uri.parse(body.nextUrl.orEmpty()).getQueryParameter("page")?.toIntOrNull(),
     )
 }
 

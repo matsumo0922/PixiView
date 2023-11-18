@@ -55,20 +55,15 @@ internal fun LibraryDiscoveryRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val paging = uiState.paging.collectAsLazyPagingItems()
 
-    LazyPagingItemsLoadContents(
+    LibraryDiscoveryScreen(
         modifier = modifier,
-        lazyPagingItems = paging,
-    ) {
-        LibraryDiscoveryScreen(
-            modifier = Modifier.fillMaxSize(),
-            openDrawer = openDrawer,
-            onClickSearch = navigateToPostSearch,
-            onClickCreator = navigateToCreatorPosts,
-            onClickFollow = viewModel::follow,
-            onClickUnfollow = viewModel::unfollow,
-            pagingAdapter = paging,
-        )
-    }
+        openDrawer = openDrawer,
+        onClickSearch = navigateToPostSearch,
+        onClickCreator = navigateToCreatorPosts,
+        onClickFollow = viewModel::follow,
+        onClickUnfollow = viewModel::unfollow,
+        pagingAdapter = paging,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,54 +99,59 @@ private fun LibraryDiscoveryScreen(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->
-        LazyColumn(
+        LazyPagingItemsLoadContents(
             modifier = Modifier
                 .padding(padding)
-                .drawVerticalScrollbar(state),
-            state = state,
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+                .fillMaxSize(),
+            lazyPagingItems = pagingAdapter,
         ) {
-            items(
-                count = pagingAdapter.itemCount,
-                key = pagingAdapter.itemKey(),
-                contentType = pagingAdapter.itemContentType(),
-            ) { index ->
-                pagingAdapter[index]?.let { creatorDetail ->
-                    var isFollowed by rememberSaveable { mutableStateOf(creatorDetail.isFollowed) }
+            LazyColumn(
+                modifier = Modifier.drawVerticalScrollbar(state),
+                state = state,
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                items(
+                    count = pagingAdapter.itemCount,
+                    key = pagingAdapter.itemKey(),
+                    contentType = pagingAdapter.itemContentType(),
+                ) { index ->
+                    pagingAdapter[index]?.let { creatorDetail ->
+                        var isFollowed by rememberSaveable { mutableStateOf(creatorDetail.isFollowed) }
 
-                    CreatorItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        creatorDetail = creatorDetail,
-                        isFollowed = isFollowed,
-                        onClickCreator = onClickCreator,
-                        onClickFollow = {
-                            scope.launch {
-                                isFollowed = true
-                                isFollowed = onClickFollow.invoke(it).isSuccess
-                            }
-                        },
-                        onClickUnfollow = {
-                            scope.launch {
-                                isFollowed = false
-                                isFollowed = !onClickUnfollow.invoke(it).isSuccess
-                            }
-                        },
-                    )
+                        CreatorItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            creatorDetail = creatorDetail,
+                            isFollowed = isFollowed,
+                            onClickCreator = onClickCreator,
+                            onClickFollow = {
+                                scope.launch {
+                                    isFollowed = true
+                                    isFollowed = onClickFollow.invoke(it).isSuccess
+                                }
+                            },
+                            onClickUnfollow = {
+                                scope.launch {
+                                    isFollowed = false
+                                    isFollowed = !onClickUnfollow.invoke(it).isSuccess
+                                }
+                            },
+                        )
+                    }
                 }
-            }
 
-            if (pagingAdapter.loadState.append is LoadState.Error) {
+                if (pagingAdapter.loadState.append is LoadState.Error) {
+                    item {
+                        PagingErrorSection(
+                            modifier = Modifier.fillMaxWidth(),
+                            onRetry = { pagingAdapter.retry() },
+                        )
+                    }
+                }
+
                 item {
-                    PagingErrorSection(
-                        modifier = Modifier.fillMaxWidth(),
-                        onRetry = { pagingAdapter.retry() },
-                    )
+                    Spacer(modifier = Modifier.navigationBarsPadding())
                 }
-            }
-
-            item {
-                Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
     }

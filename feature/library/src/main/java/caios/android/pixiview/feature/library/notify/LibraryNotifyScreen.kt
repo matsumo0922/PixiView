@@ -45,17 +45,12 @@ internal fun LibraryNotifyRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val paging = uiState.paging.collectAsLazyPagingItems()
 
-    LazyPagingItemsLoadContents(
+    LibraryNotifyScreen(
         modifier = modifier,
-        lazyPagingItems = paging,
-    ) {
-        LibraryNotifyScreen(
-            modifier = Modifier.fillMaxSize(),
-            openDrawer = openDrawer,
-            onClickBell = navigateToPostDetail,
-            pagingAdapter = paging,
-        )
-    }
+        openDrawer = openDrawer,
+        onClickBell = navigateToPostDetail,
+        pagingAdapter = paging,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,45 +80,50 @@ private fun LibraryNotifyScreen(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->
-        LazyColumn(
+        LazyPagingItemsLoadContents(
             modifier = Modifier
                 .padding(padding)
-                .drawVerticalScrollbar(state),
-            state = state,
+                .fillMaxSize(),
+            lazyPagingItems = pagingAdapter,
         ) {
-            items(
-                count = pagingAdapter.itemCount,
-                key = pagingAdapter.itemKey {
-                    when (it) {
-                        is FanboxBell.Comment -> "comment-${it.id}"
-                        is FanboxBell.Like -> "like-${it.id}"
-                        is FanboxBell.PostPublished -> "post-${it.id}"
+            LazyColumn(
+                modifier = Modifier.drawVerticalScrollbar(state),
+                state = state,
+            ) {
+                items(
+                    count = pagingAdapter.itemCount,
+                    key = pagingAdapter.itemKey {
+                        when (it) {
+                            is FanboxBell.Comment -> "comment-${it.id}"
+                            is FanboxBell.Like -> "like-${it.id}"
+                            is FanboxBell.PostPublished -> "post-${it.id}"
+                        }
+                    },
+                    contentType = pagingAdapter.itemContentType(),
+                ) { index ->
+                    pagingAdapter[index]?.let { bell ->
+                        LibraryNotifyBellItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            bell = bell,
+                            onClickBell = onClickBell,
+                        )
+
+                        HorizontalDivider()
                     }
-                },
-                contentType = pagingAdapter.itemContentType(),
-            ) { index ->
-                pagingAdapter[index]?.let { bell ->
-                    LibraryNotifyBellItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        bell = bell,
-                        onClickBell = onClickBell,
-                    )
-
-                    HorizontalDivider()
                 }
-            }
 
-            if (pagingAdapter.loadState.append is LoadState.Error) {
+                if (pagingAdapter.loadState.append is LoadState.Error) {
+                    item {
+                        PagingErrorSection(
+                            modifier = Modifier.fillMaxWidth(),
+                            onRetry = { pagingAdapter.retry() },
+                        )
+                    }
+                }
+
                 item {
-                    PagingErrorSection(
-                        modifier = Modifier.fillMaxWidth(),
-                        onRetry = { pagingAdapter.retry() },
-                    )
+                    Spacer(modifier = Modifier.navigationBarsPadding())
                 }
-            }
-
-            item {
-                Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
     }

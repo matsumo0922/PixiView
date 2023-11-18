@@ -147,7 +147,7 @@ class FanboxRepositoryImpl(
         fanboxCookiePreference.save(cookie)
     }
 
-    override suspend fun updateCsrfToken(): Unit = withContext(ioDispatcher) {
+    override suspend fun updateCsrfToken() = withContext(ioDispatcher) {
         val html = html("https://www.fanbox.cc/")
         val doc = Jsoup.parse(html)
         val meta = doc.select("meta[name=metadata]").first()?.attr("content")?.toString()
