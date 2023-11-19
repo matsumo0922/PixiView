@@ -25,12 +25,15 @@ PixiView は PIXIV FANBOX の非公式 Android クライアントアプリです
 
 
 ## Status
-#### Ready!! :rocket:
+#### Closed Testing... :rocket:
 
-長きに渡った開発期間を得て、ついに GooglePlay にリリースしました！
-しかし開発は今も継続中で、コントリビュートはいつでも歓迎です。下のセクションに従ってアプリをビルドしてみてください。
+Google Play にてクローズドテスト中です。近日中に配信できると思うので、もうしばらくお待ちください。
+待ちきれないという場合は、このリポジトリのリリースとして apk を置いているので、そちらをダウンロードしてください。
+また、Android 開発者の方はアプリをビルドして、自分でインストールすることもできます。
+コントリビュートはいつでも歓迎です。下のセクションに従ってアプリをビルドしてみてください。
 
 #### [Download](https://play.google.com/store/apps/details?id=caios.android.pixiview) from GooglePlay
+#### [Download](https://github.com/matsumo0922/PixiView/releases) from GitHub
 
 ## Why?
 
