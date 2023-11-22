@@ -6,6 +6,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import caios.android.pixiview.core.ui.extensition.navigateForResult
+import caios.android.pixiview.core.ui.extensition.popBackStackWithResult
+import caios.android.pixiview.core.ui.view.navigateToSimpleAlertDialog
+import caios.android.pixiview.core.ui.view.simpleAlertDialogDialog
 import caios.android.pixiview.feature.about.about.aboutScreen
 import caios.android.pixiview.feature.about.about.navigateToAbout
 import caios.android.pixiview.feature.about.billing.billingPlusBottomSheet
@@ -22,12 +26,12 @@ import caios.android.pixiview.feature.creator.top.creatorTopScreen
 import caios.android.pixiview.feature.creator.top.navigateToCreatorTop
 import caios.android.pixiview.feature.library.LibraryRoute
 import caios.android.pixiview.feature.library.libraryScreen
+import caios.android.pixiview.feature.post.bookmark.bookmarkedPostsScreen
+import caios.android.pixiview.feature.post.bookmark.navigateToBookmarkedPosts
 import caios.android.pixiview.feature.post.detail.navigateToPostDetail
 import caios.android.pixiview.feature.post.detail.postDetailScreen
 import caios.android.pixiview.feature.post.image.navigateToPostImage
 import caios.android.pixiview.feature.post.image.postImageScreen
-import caios.android.pixiview.feature.post.liked.likedPostsScreen
-import caios.android.pixiview.feature.post.liked.navigateToLikedPosts
 import caios.android.pixiview.feature.post.search.navigateToPostSearch
 import caios.android.pixiview.feature.post.search.postSearchScreen
 import caios.android.pixiview.feature.setting.developer.navigateToSettingDeveloper
@@ -67,7 +71,7 @@ internal fun PixiViewNavHost(
                 navigateToPostDetail = { navController.navigateToPostDetail(it) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-                navigateToLikedPosts = { navController.navigateToLikedPosts() },
+                navigateToBookmarkedPosts = { navController.navigateToBookmarkedPosts() },
                 navigateToFollowerCreators = { navController.navigateToFollowingCreators() },
                 navigateToSupportingCreators = { navController.navigateToSupportingCreators() },
                 navigateToSettingTop = { navController.navigateToSettingTop() },
@@ -94,7 +98,7 @@ internal fun PixiViewNavHost(
                 terminate = { navController.popBackStack() },
             )
 
-            likedPostsScreen(
+            bookmarkedPostsScreen(
                 navigateToPostDetail = { navController.navigateToPostDetail(it) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
@@ -132,6 +136,7 @@ internal fun PixiViewNavHost(
             settingTopScreen(
                 navigateToSettingTheme = { navController.navigateToSettingTheme() },
                 navigateToSettingDeveloper = { navController.navigateToSettingDeveloper() },
+                navigateToLogoutDialog = { contents, onResult -> navController.navigateToSimpleAlertDialog(contents, onResult)},
                 navigateToOpenSourceLicense = { navController.navigateToSettingLicense() },
                 terminate = { navController.popBackStack() },
             )
@@ -147,6 +152,12 @@ internal fun PixiViewNavHost(
 
             settingDeveloperDialog(
                 terminate = { navController.popBackStack() },
+            )
+
+            // dialog
+
+            simpleAlertDialogDialog(
+                terminateWithResult = { navController.popBackStackWithResult(it) },
             )
 
             // bottom sheet

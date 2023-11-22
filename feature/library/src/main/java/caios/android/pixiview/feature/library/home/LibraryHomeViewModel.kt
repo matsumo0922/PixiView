@@ -32,7 +32,7 @@ class LibraryHomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(
         LibraryUiState(
             userData = UserData.dummy(),
-            likedPosts = emptyList(),
+            bookmarkedPosts = emptyList(),
             homePaging = emptyPaging(),
             supportedPaging = emptyPaging(),
         ),
@@ -68,18 +68,18 @@ class LibraryHomeViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            fanboxRepository.likedPosts.collectLatest {
-                _uiState.value = uiState.value.copy(likedPosts = it)
+            fanboxRepository.bookmarkedPosts.collectLatest {
+                _uiState.value = uiState.value.copy(bookmarkedPosts = it)
             }
         }
     }
 
-    fun postLike(post: FanboxPost, isLiked: Boolean) {
+    fun postBookmark(post: FanboxPost, isBookmarked: Boolean) {
         viewModelScope.launch {
-            if (isLiked) {
-                fanboxRepository.likePost(post)
+            if (isBookmarked) {
+                fanboxRepository.bookmarkPost(post)
             } else {
-                fanboxRepository.unlikePost(post)
+                fanboxRepository.unbookmarkPost(post)
             }
         }
     }
@@ -88,7 +88,7 @@ class LibraryHomeViewModel @Inject constructor(
 @Stable
 data class LibraryUiState(
     val userData: UserData,
-    val likedPosts: List<PostId>,
+    val bookmarkedPosts: List<PostId>,
     val homePaging: Flow<PagingData<FanboxPost>>,
     val supportedPaging: Flow<PagingData<FanboxPost>>,
 )

@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.post.liked
+package caios.android.pixiview.feature.post.bookmark
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +39,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-internal fun LikedPostsRoute(
+internal fun BookmarkedPostsRoute(
     navigateToPostDetail: (PostId) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
@@ -53,12 +53,12 @@ internal fun LikedPostsRoute(
         modifier = modifier,
         screenState = screenState,
     ) {
-        LikedPostsScreen(
+        BookmarkedPostsScreen(
             modifier = Modifier.fillMaxSize(),
             userData = it.userData,
-            likedPosts = it.likedPosts.toImmutableList(),
+            bookmarkedPosts = it.bookmarkedPosts.toImmutableList(),
             onClickPost = navigateToPostDetail,
-            onClickPostLike = viewModel::postLike,
+            onClickPostBookmark = viewModel::postBookmark,
             onClickCreatorPosts = navigateToCreatorPosts,
             onClickCreatorPlans = navigateToCreatorPlans,
             onTerminate = terminate,
@@ -68,11 +68,11 @@ internal fun LikedPostsRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LikedPostsScreen(
+private fun BookmarkedPostsScreen(
     userData: UserData,
-    likedPosts: ImmutableList<FanboxPost>,
+    bookmarkedPosts: ImmutableList<FanboxPost>,
     onClickPost: (PostId) -> Unit,
-    onClickPostLike: (FanboxPost, Boolean) -> Unit,
+    onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreatorPosts: (CreatorId) -> Unit,
     onClickCreatorPlans: (CreatorId) -> Unit,
     onTerminate: () -> Unit,
@@ -86,7 +86,7 @@ private fun LikedPostsScreen(
         topBar = {
             PixiViewTopBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.library_navigation_like),
+                title = stringResource(R.string.library_navigation_bookmark),
                 onClickNavigation = onTerminate,
                 scrollBehavior = scrollBehavior,
             )
@@ -101,20 +101,20 @@ private fun LikedPostsScreen(
                 .padding(padding)
                 .fillMaxSize(),
         ) {
-            if (likedPosts.isNotEmpty()) {
+            if (bookmarkedPosts.isNotEmpty()) {
                 LazyColumn(
                     modifier = Modifier.drawVerticalScrollbar(state),
                     state = state,
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    items(likedPosts) { likedPost ->
+                    items(bookmarkedPosts) { likedPost ->
                         PostItem(
                             modifier = Modifier.fillMaxWidth(),
                             post = likedPost,
                             isHideAdultContents = userData.isHideAdultContents,
                             onClickPost = { if (!likedPost.isRestricted) onClickPost.invoke(it) },
-                            onClickLike = { _, isLiked -> onClickPostLike.invoke(likedPost, isLiked) },
+                            onClickBookmark = { _, isBookmarked -> onClickPostBookmark.invoke(likedPost, isBookmarked) },
                             onClickCreator = onClickCreatorPosts,
                             onClickPlanList = onClickCreatorPlans,
                         )

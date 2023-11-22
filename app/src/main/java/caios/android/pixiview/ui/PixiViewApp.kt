@@ -19,6 +19,7 @@ import caios.android.pixiview.core.ui.component.PixiViewBackground
 import caios.android.pixiview.feature.welcome.WelcomeNavHost
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import timber.log.Timber
 
 @Composable
 internal fun PixiViewApp(
@@ -29,17 +30,19 @@ internal fun PixiViewApp(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
 ) {
-    var isShowWelcomeScreen by remember { mutableStateOf(!isAgreedTeams || !isLoggedIn || !isAllowedPermission) }
-
     LaunchedEffect(true) {
         if (userData.pixiViewId.isBlank()) {
             viewModel.initPixiViewId()
         }
     }
 
+    LaunchedEffect(isLoggedIn) {
+        Timber.d("isShowWelcomeScreen:, $isLoggedIn")
+    }
+
     PixiViewBackground(modifier) {
         AnimatedContent(
-            targetState = isShowWelcomeScreen && (!isAgreedTeams || !isLoggedIn || !isAllowedPermission),
+            targetState = !isAgreedTeams || !isLoggedIn || !isAllowedPermission,
             label = "isShowWelcomeScreen",
         ) {
             if (it) {
@@ -48,7 +51,7 @@ internal fun PixiViewApp(
                     isAgreedTeams = isAgreedTeams,
                     isAllowedPermission = isAllowedPermission,
                     isLoggedIn = isLoggedIn,
-                    onComplete = { isShowWelcomeScreen = false },
+                    onComplete = viewModel::updateState,
                 )
             } else {
                 IdleScreen(

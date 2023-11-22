@@ -38,7 +38,7 @@ class PostSearchViewModel @Inject constructor(
         PostSearchUiState(
             query = "",
             userData = UserData.dummy(),
-            likedPosts = emptyList(),
+            bookmarkedPosts = emptyList(),
             creatorPaging = emptyPaging(),
             tagPaging = emptyPaging(),
             postPaging = emptyPaging(),
@@ -55,8 +55,8 @@ class PostSearchViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            fanboxRepository.likedPosts.collectLatest { ids ->
-                _uiState.value = uiState.value.copy(likedPosts = ids)
+            fanboxRepository.bookmarkedPosts.collectLatest { ids ->
+                _uiState.value = uiState.value.copy(bookmarkedPosts = ids)
             }
         }
     }
@@ -125,12 +125,12 @@ class PostSearchViewModel @Inject constructor(
         }
     }
 
-    fun postLike(post: FanboxPost, isLiked: Boolean) {
+    fun postBookmark(post: FanboxPost, isBookmarked: Boolean) {
         viewModelScope.launch {
-            if (isLiked) {
-                fanboxRepository.likePost(post)
+            if (isBookmarked) {
+                fanboxRepository.bookmarkPost(post)
             } else {
-                fanboxRepository.unlikePost(post)
+                fanboxRepository.unbookmarkPost(post)
             }
         }
     }
@@ -140,7 +140,7 @@ class PostSearchViewModel @Inject constructor(
 data class PostSearchUiState(
     val query: String,
     val userData: UserData,
-    val likedPosts: List<PostId>,
+    val bookmarkedPosts: List<PostId>,
     val creatorPaging: Flow<PagingData<FanboxCreatorDetail>>,
     val tagPaging: Flow<PagingData<FanboxPost>>,
     val postPaging: Flow<PagingData<FanboxPost>>,

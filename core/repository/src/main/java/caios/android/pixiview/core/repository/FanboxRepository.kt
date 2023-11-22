@@ -8,9 +8,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.webkit.CookieManager
 import android.webkit.MimeTypeMap
 import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
-import caios.android.pixiview.core.datastore.PreferenceLikedPosts
+import caios.android.pixiview.core.datastore.PreferenceBookmarkedPosts
 import caios.android.pixiview.core.model.PageCursorInfo
 import caios.android.pixiview.core.model.PageNumberInfo
 import caios.android.pixiview.core.model.fanbox.FanboxBell
@@ -55,11 +56,16 @@ import io.ktor.http.HttpMessageBuilder
 import io.ktor.util.InternalAPI
 import io.ktor.utils.io.jvm.javaio.copyTo
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
@@ -67,14 +73,18 @@ import kotlinx.serialization.json.put
 import org.jsoup.Jsoup
 import java.io.File
 import java.io.OutputStream
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 interface FanboxRepository {
     val cookie: SharedFlow<String>
-    val likedPosts: SharedFlow<List<PostId>>
+    val bookmarkedPosts: SharedFlow<List<PostId>>
     val metaData: SharedFlow<FanboxMetaData>
+    val logoutTrigger: Flow<OffsetDateTime>
 
     fun hasActiveCookie(): Boolean
+
+    suspend fun logout()
 
     suspend fun updateCookie(cookie: String)
     suspend fun updateCsrfToken()
@@ -108,9 +118,9 @@ interface FanboxRepository {
     suspend fun followCreator(creatorUserId: String)
     suspend fun unfollowCreator(creatorUserId: String)
 
-    suspend fun getLikedPosts(): List<FanboxPost>
-    suspend fun likePost(post: FanboxPost)
-    suspend fun unlikePost(post: FanboxPost)
+    suspend fun getBookmarkedPosts(): List<FanboxPost>
+    suspend fun bookmarkPost(post: FanboxPost)
+    suspend fun unbookmarkPost(post: FanboxPost)
 
     suspend fun downloadBitmap(bitmap: Bitmap, name: String)
     suspend fun downloadImage(url: String, name: String, extension: String)
@@ -122,16 +132,18 @@ class FanboxRepositoryImpl(
     private val client: HttpClient,
     private val formatter: Json,
     private val fanboxCookiePreference: PreferenceFanboxCookie,
-    private val likedPostsPreference: PreferenceLikedPosts,
+    private val bookmarkedPostsPreference: PreferenceBookmarkedPosts,
     private val ioDispatcher: CoroutineDispatcher,
 ) : FanboxRepository {
 
     private val _metaData = MutableSharedFlow<FanboxMetaData>(replay = 1)
     private val postCache = mutableMapOf<PostId, FanboxPostDetail>()
+    private val _logoutTrigger = Channel<OffsetDateTime>()
 
     override val cookie: SharedFlow<String> = fanboxCookiePreference.data
-    override val likedPosts: SharedFlow<List<PostId>> = likedPostsPreference.data
+    override val bookmarkedPosts: SharedFlow<List<PostId>> = bookmarkedPostsPreference.data
     override val metaData: SharedFlow<FanboxMetaData> = _metaData.asSharedFlow()
+    override val logoutTrigger: Flow<OffsetDateTime> = _logoutTrigger.receiveAsFlow()
 
     @Inject
     constructor(
@@ -139,18 +151,31 @@ class FanboxRepositoryImpl(
         client: HttpClient,
         formatter: Json,
         fanboxCookiePreference: PreferenceFanboxCookie,
-        likedPostsPreference: PreferenceLikedPosts,
+        bookmarkedPostsPreference: PreferenceBookmarkedPosts,
     ) : this(
         context = context,
         client = client,
         formatter = formatter,
         fanboxCookiePreference = fanboxCookiePreference,
-        likedPostsPreference = likedPostsPreference,
+        bookmarkedPostsPreference = bookmarkedPostsPreference,
         ioDispatcher = Dispatchers.IO,
     )
 
     override fun hasActiveCookie(): Boolean {
         return fanboxCookiePreference.get() != null
+    }
+
+    override suspend fun logout() {
+        CookieManager.getInstance().removeAllCookies {
+            if (it) {
+                CoroutineScope(ioDispatcher).launch {
+                    fanboxCookiePreference.save("")
+                    _logoutTrigger.send(OffsetDateTime.now())
+                }
+            } else {
+                error("Logout failed")
+            }
+        }
     }
 
     override suspend fun updateCookie(cookie: String) {
@@ -174,7 +199,7 @@ class FanboxRepositoryImpl(
                 put("maxId", cursor.maxId)
             }
         }.let {
-            get("post.listHome", it).parse<FanboxPostItemsEntity>()!!.translate(likedPosts.first())
+            get("post.listHome", it).parse<FanboxPostItemsEntity>()!!.translate(bookmarkedPosts.first())
         }
     }
 
@@ -187,7 +212,7 @@ class FanboxRepositoryImpl(
                 put("maxId", cursor.maxId)
             }
         }.let {
-            get("post.listSupporting", it).parse<FanboxPostItemsEntity>()!!.translate(likedPosts.first())
+            get("post.listSupporting", it).parse<FanboxPostItemsEntity>()!!.translate(bookmarkedPosts.first())
         }
     }
 
@@ -201,7 +226,7 @@ class FanboxRepositoryImpl(
                 put("maxId", cursor.maxId)
             }
         }.let {
-            get("post.listCreator", it).parse<FanboxPostItemsEntity>()!!.translate(likedPosts.first())
+            get("post.listCreator", it).parse<FanboxPostItemsEntity>()!!.translate(bookmarkedPosts.first())
         }
     }
 
@@ -214,7 +239,7 @@ class FanboxRepositoryImpl(
                 put("creatorId", creatorId.value)
             }
         }.let {
-            get("post.listTagged", it).parse<FanboxPostSearchEntity>()!!.translate(likedPosts.first())
+            get("post.listTagged", it).parse<FanboxPostSearchEntity>()!!.translate(bookmarkedPosts.first())
         }
     }
 
@@ -223,7 +248,7 @@ class FanboxRepositoryImpl(
     }
 
     override suspend fun getPost(postId: PostId): FanboxPostDetail = withContext(ioDispatcher) {
-        get("post.info", mapOf("postId" to postId.value)).parse<FanboxPostDetailEntity>()!!.translate(likedPosts.first()).also {
+        get("post.info", mapOf("postId" to postId.value)).parse<FanboxPostDetailEntity>()!!.translate(bookmarkedPosts.first()).also {
             postCache[postId] = it
         }
     }
@@ -290,16 +315,16 @@ class FanboxRepositoryImpl(
         post("follow.delete", mapOf("creatorUserId" to creatorUserId))
     }
 
-    override suspend fun getLikedPosts(): List<FanboxPost> = withContext(ioDispatcher) {
-        likedPostsPreference.get()
+    override suspend fun getBookmarkedPosts(): List<FanboxPost> = withContext(ioDispatcher) {
+        bookmarkedPostsPreference.get()
     }
 
-    override suspend fun likePost(post: FanboxPost) = withContext(ioDispatcher) {
-        likedPostsPreference.save(post)
+    override suspend fun bookmarkPost(post: FanboxPost) = withContext(ioDispatcher) {
+        bookmarkedPostsPreference.save(post)
     }
 
-    override suspend fun unlikePost(post: FanboxPost) {
-        likedPostsPreference.remove(post)
+    override suspend fun unbookmarkPost(post: FanboxPost) {
+        bookmarkedPostsPreference.remove(post)
     }
 
     override suspend fun downloadBitmap(bitmap: Bitmap, name: String): Unit = withContext(ioDispatcher) {

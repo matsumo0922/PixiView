@@ -50,8 +50,8 @@ class CreatorTopViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            fanboxRepository.likedPosts.collectLatest { ids ->
-                _screenState.value = screenState.value.changeContent { it.copy(likedPosts = ids) }
+            fanboxRepository.bookmarkedPosts.collectLatest { ids ->
+                _screenState.value = screenState.value.changeContent { it.copy(bookmarkedPosts = ids) }
             }
         }
     }
@@ -62,7 +62,7 @@ class CreatorTopViewModel @Inject constructor(
             _screenState.value = suspendRunCatching {
                 CreatorTopUiState(
                     userData = userDataRepository.userData.first(),
-                    likedPosts = fanboxRepository.likedPosts.first(),
+                    bookmarkedPosts = fanboxRepository.bookmarkedPosts.first(),
                     creatorDetail = fanboxRepository.getCreator(creatorId),
                     creatorPlans = fanboxRepository.getCreatorPlans(creatorId),
                     creatorTags = fanboxRepository.getCreatorTags(creatorId),
@@ -105,13 +105,13 @@ class CreatorTopViewModel @Inject constructor(
         }
     }
 
-    fun postLike(post: FanboxPost, isLiked: Boolean) {
+    fun postBookmark(post: FanboxPost, isBookmarked: Boolean) {
         viewModelScope.launch {
             (screenState.value as? ScreenState.Idle)?.also {
-                if (isLiked) {
-                    fanboxRepository.likePost(post)
+                if (isBookmarked) {
+                    fanboxRepository.bookmarkPost(post)
                 } else {
-                    fanboxRepository.unlikePost(post)
+                    fanboxRepository.unbookmarkPost(post)
                 }
             }
         }
@@ -134,7 +134,7 @@ class CreatorTopViewModel @Inject constructor(
 @Stable
 data class CreatorTopUiState(
     val userData: UserData,
-    val likedPosts: List<PostId>,
+    val bookmarkedPosts: List<PostId>,
     val creatorDetail: FanboxCreatorDetail,
     val creatorPlans: List<FanboxCreatorPlan>,
     val creatorTags: List<FanboxCreatorTag>,

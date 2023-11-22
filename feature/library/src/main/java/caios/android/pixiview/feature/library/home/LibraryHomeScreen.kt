@@ -118,7 +118,7 @@ internal fun LibraryHomeScreen(
                                 pagingAdapter = homePager,
                                 userData = uiState.userData,
                                 onClickPost = navigateToPostDetail,
-                                onClickPostLike = viewModel::postLike,
+                                onClickPostBookmark = viewModel::postBookmark,
                                 onClickCreator = navigateToCreatorPosts,
                                 onClickPlanList = navigateToCreatorPlans,
                             )
@@ -134,7 +134,7 @@ internal fun LibraryHomeScreen(
                                 pagingAdapter = supportedPager,
                                 userData = uiState.userData,
                                 onClickPost = navigateToPostDetail,
-                                onClickPostLike = viewModel::postLike,
+                                onClickPostBookmark = viewModel::postBookmark,
                                 onClickCreator = navigateToCreatorPosts,
                                 onClickPlanList = navigateToCreatorPlans,
                             )
@@ -145,13 +145,13 @@ internal fun LibraryHomeScreen(
         }
     }
 
-    LaunchedEffect(uiState.likedPosts) {
+    LaunchedEffect(uiState.bookmarkedPosts) {
         for (i in 0 until homePager.itemCount) {
-            homePager[i]?.isLiked = uiState.likedPosts.contains(homePager[i]?.id)
+            homePager[i]?.isBookmarked = uiState.bookmarkedPosts.contains(homePager[i]?.id)
         }
 
         for (i in 0 until supportedPager.itemCount) {
-            supportedPager[i]?.isLiked = uiState.likedPosts.contains(supportedPager[i]?.id)
+            supportedPager[i]?.isBookmarked = uiState.bookmarkedPosts.contains(supportedPager[i]?.id)
         }
     }
 }

@@ -31,7 +31,7 @@ internal fun PostSearchTagScreen(
     pagingAdapter: LazyPagingItems<FanboxPost>,
     userData: UserData,
     onClickPost: (PostId) -> Unit,
-    onClickPostLike: (FanboxPost, Boolean) -> Unit,
+    onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
@@ -66,7 +66,7 @@ internal fun PostSearchTagScreen(
                         post = post,
                         isHideAdultContents = userData.isHideAdultContents,
                         onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
-                        onClickLike = { _, isLiked -> onClickPostLike.invoke(post, isLiked) },
+                        onClickBookmark = { _, isLiked -> onClickPostBookmark.invoke(post, isLiked) },
                         onClickCreator = onClickCreator,
                         onClickPlanList = onClickPlanList,
                     )

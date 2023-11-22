@@ -17,30 +17,42 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.pixiview.core.common.PixiViewConfig
+import caios.android.pixiview.core.common.util.ToastUtil
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxMetaData
 import caios.android.pixiview.core.ui.AsyncLoadContents
+import caios.android.pixiview.core.ui.view.SimpleAlertContents
 import caios.android.pixiview.feature.setting.R
 import caios.android.pixiview.feature.setting.SettingTheme
 import caios.android.pixiview.feature.setting.top.items.SettingTopGeneralSection
+import caios.android.pixiview.feature.setting.top.items.SettingTopInformationSection
 import caios.android.pixiview.feature.setting.top.items.SettingTopOthersSection
 import caios.android.pixiview.feature.setting.top.items.SettingTopThemeSection
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun SettingTopRoute(
     navigateToSettingTheme: () -> Unit,
+    navigateToLogoutDialog: (SimpleAlertContents, () -> Unit) -> Unit,
     navigateToOpenSourceLicense: () -> Unit,
     navigateToSettingDeveloper: () -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingTopViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     AsyncLoadContents(
@@ -57,6 +69,21 @@ internal fun SettingTopRoute(
             onClickOpenSourceLicense = navigateToOpenSourceLicense,
             onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
             onClickHideAdultContents = viewModel::setHideAdultContents,
+            onClickLogout = {
+                navigateToLogoutDialog(SimpleAlertContents.Logout) {
+                    scope.launch {
+                        viewModel.logout().fold(
+                            onSuccess = {
+                                ToastUtil.show(context, R.string.setting_top_others_logout_dialog_success)
+                                terminate.invoke()
+                            },
+                            onFailure = {
+                                ToastUtil.show(context, R.string.setting_top_others_logout_dialog_failed)
+                            }
+                        )
+                    }
+                }
+            },
             onClickDeveloperMode = { isEnable ->
                 if (isEnable) {
                     navigateToSettingDeveloper.invoke()
@@ -79,6 +106,7 @@ private fun SettingTopScreen(
     onClickTheme: () -> Unit,
     onClickFollowTabDefaultHome: (Boolean) -> Unit,
     onClickHideAdultContents: (Boolean) -> Unit,
+    onClickLogout: () -> Unit,
     onClickOpenSourceLicense: () -> Unit,
     onClickDeveloperMode: (Boolean) -> Unit,
     onTerminate: () -> Unit,
@@ -128,12 +156,18 @@ private fun SettingTopScreen(
                     onClickHideAdultContents = onClickHideAdultContents,
                 )
 
-                SettingTopOthersSection(
+                SettingTopInformationSection(
                     modifier = Modifier.fillMaxWidth(),
                     config = config,
                     userData = userData,
                     fanboxMetaData = metaData,
                     fanboxSessionId = fanboxSessionId,
+                )
+
+                SettingTopOthersSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    userData = userData,
+                    onClickLogout = onClickLogout,
                     onClickOpenSourceLicense = onClickOpenSourceLicense,
                     onClickDeveloperMode = onClickDeveloperMode,
                 )

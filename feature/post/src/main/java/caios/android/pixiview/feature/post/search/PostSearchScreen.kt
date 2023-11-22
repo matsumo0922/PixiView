@@ -44,9 +44,9 @@ internal fun PostSearchRoute(
         }
     }
 
-    LaunchedEffect(uiState.likedPosts) {
+    LaunchedEffect(uiState.bookmarkedPosts) {
         for (i in 0 until tagPaging.itemCount) {
-            tagPaging[i]?.isLiked = uiState.likedPosts.contains(tagPaging[i]?.id)
+            tagPaging[i]?.isBookmarked = uiState.bookmarkedPosts.contains(tagPaging[i]?.id)
         }
     }
 
@@ -60,7 +60,7 @@ internal fun PostSearchRoute(
         onSearch = viewModel::search,
         onTerminate = terminate,
         onClickPost = navigateToPostDetail,
-        onClickPostLike = viewModel::postLike,
+        onClickPostBookmark = viewModel::postBookmark,
         onClickCreatorPosts = navigateToCreatorPosts,
         onClickCreatorPlans = navigateToCreatorPlans,
         onClickFollow = viewModel::follow,
@@ -79,7 +79,7 @@ private fun PostSearchScreen(
     onSearch: (PostSearchQuery) -> Unit,
     onTerminate: () -> Unit,
     onClickPost: (PostId) -> Unit,
-    onClickPostLike: (FanboxPost, Boolean) -> Unit,
+    onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreatorPosts: (CreatorId) -> Unit,
     onClickCreatorPlans: (CreatorId) -> Unit,
     onClickFollow: suspend (String) -> Result<Unit>,
@@ -121,7 +121,7 @@ private fun PostSearchScreen(
                     pagingAdapter = tagPaging,
                     userData = userData,
                     onClickPost = onClickPost,
-                    onClickPostLike = onClickPostLike,
+                    onClickPostBookmark = onClickPostBookmark,
                     onClickCreator = onClickCreatorPosts,
                     onClickPlanList = onClickCreatorPlans,
                 )

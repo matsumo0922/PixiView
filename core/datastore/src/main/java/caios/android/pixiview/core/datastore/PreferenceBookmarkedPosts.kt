@@ -11,7 +11,7 @@ import kotlinx.serialization.json.Json
 import java.io.File
 import javax.inject.Inject
 
-class PreferenceLikedPosts @Inject constructor(
+class PreferenceBookmarkedPosts @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
     private val accountFile get() = File(context.filesDir, FILE_NAME)
@@ -28,7 +28,7 @@ class PreferenceLikedPosts @Inject constructor(
     fun save(post: FanboxPost) {
         val posts = get().toMutableList().apply {
             distinct()
-            add(0, post.copy(isLiked = true))
+            add(0, post.copy(isBookmarked = true))
         }
 
         Json.encodeToString(serializer, posts).also {
@@ -60,6 +60,6 @@ class PreferenceLikedPosts @Inject constructor(
     }
 
     companion object {
-        private const val FILE_NAME = "PostLike.json"
+        private const val FILE_NAME = "BookmarkedPosts.json"
     }
 }

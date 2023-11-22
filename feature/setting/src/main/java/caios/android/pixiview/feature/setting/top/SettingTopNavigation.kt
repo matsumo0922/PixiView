@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import caios.android.pixiview.core.ui.animation.NavigateAnimation
+import caios.android.pixiview.core.ui.view.SimpleAlertContents
 
 const val SettingTopRoute = "settingTop"
 
@@ -15,6 +16,7 @@ fun NavController.navigateToSettingTop() {
 
 fun NavGraphBuilder.settingTopScreen(
     navigateToSettingTheme: () -> Unit,
+    navigateToLogoutDialog: (SimpleAlertContents, () -> Unit) -> Unit,
     navigateToOpenSourceLicense: () -> Unit,
     navigateToSettingDeveloper: () -> Unit,
     terminate: () -> Unit,
@@ -30,6 +32,7 @@ fun NavGraphBuilder.settingTopScreen(
             modifier = Modifier.fillMaxSize(),
             navigateToSettingTheme = navigateToSettingTheme,
             navigateToOpenSourceLicense = navigateToOpenSourceLicense,
+            navigateToLogoutDialog = navigateToLogoutDialog,
             navigateToSettingDeveloper = navigateToSettingDeveloper,
             terminate = terminate,
         )

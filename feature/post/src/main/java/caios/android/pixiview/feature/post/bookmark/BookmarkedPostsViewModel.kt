@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.post.liked
+package caios.android.pixiview.feature.post.bookmark
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -21,11 +21,11 @@ class LikedPostsViewModel @Inject constructor(
     private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
 
-    val screenState = combine(userDataRepository.userData, fanboxRepository.likedPosts) { userData, _ ->
+    val screenState = combine(userDataRepository.userData, fanboxRepository.bookmarkedPosts) { userData, _ ->
         ScreenState.Idle(
             LikedPostsUiState(
                 userData = userData,
-                likedPosts = fanboxRepository.getLikedPosts(),
+                bookmarkedPosts = fanboxRepository.getBookmarkedPosts(),
             ),
         )
     }.stateIn(
@@ -34,12 +34,12 @@ class LikedPostsViewModel @Inject constructor(
         initialValue = ScreenState.Loading,
     )
 
-    fun postLike(post: FanboxPost, isLiked: Boolean) {
+    fun postBookmark(post: FanboxPost, isBookmarked: Boolean) {
         viewModelScope.launch {
-            if (isLiked) {
-                fanboxRepository.likePost(post)
+            if (isBookmarked) {
+                fanboxRepository.bookmarkPost(post)
             } else {
-                fanboxRepository.unlikePost(post)
+                fanboxRepository.unbookmarkPost(post)
             }
         }
     }
@@ -48,5 +48,5 @@ class LikedPostsViewModel @Inject constructor(
 @Stable
 data class LikedPostsUiState(
     val userData: UserData,
-    val likedPosts: List<FanboxPost>,
+    val bookmarkedPosts: List<FanboxPost>,
 )

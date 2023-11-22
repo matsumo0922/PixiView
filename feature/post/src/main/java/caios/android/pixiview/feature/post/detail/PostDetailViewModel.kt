@@ -54,12 +54,12 @@ class PostDetailViewModel @Inject constructor(
         }
     }
 
-    fun postLike(post: FanboxPost, isLike: Boolean) {
+    fun postBookmark(post: FanboxPost, isBookmarked: Boolean) {
         viewModelScope.launch {
-            if (isLike) {
-                fanboxRepository.likePost(post)
+            if (isBookmarked) {
+                fanboxRepository.bookmarkPost(post)
             } else {
-                fanboxRepository.unlikePost(post)
+                fanboxRepository.unbookmarkPost(post)
             }
         }
     }

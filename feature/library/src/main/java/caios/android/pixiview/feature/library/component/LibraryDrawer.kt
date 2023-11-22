@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Home
@@ -62,7 +63,7 @@ internal fun LibraryDrawer(
     userData: UserData?,
     currentDestination: NavDestination?,
     onClickLibrary: (LibraryDestination) -> Unit,
-    navigateToLikedPosts: () -> Unit,
+    navigateToBookmarkedPosts: () -> Unit,
     navigateToFollowingCreators: () -> Unit,
     navigateToSupportingCreators: () -> Unit,
     navigateToSetting: () -> Unit,
@@ -125,9 +126,9 @@ internal fun LibraryDrawer(
 
             NavigationDrawerItem(
                 state = state,
-                label = stringResource(R.string.library_navigation_like),
-                icon = Icons.Outlined.Favorite,
-                onClick = navigateToLikedPosts,
+                label = stringResource(R.string.library_navigation_bookmark),
+                icon = Icons.Outlined.Bookmark,
+                onClick = navigateToBookmarkedPosts,
             )
 
             NavigationDrawerItem(

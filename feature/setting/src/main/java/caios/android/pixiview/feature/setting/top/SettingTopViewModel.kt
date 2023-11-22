@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import caios.android.pixiview.core.common.PixiViewConfig
+import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxMetaData
@@ -44,6 +45,12 @@ class SettingTopViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = ScreenState.Loading,
     )
+
+    suspend fun logout(): Result<Unit> {
+        return suspendRunCatching {
+            fanboxRepository.logout()
+        }
+    }
 
     fun setFollowTabDefaultHome(isFollowTabDefaultHome: Boolean) {
         viewModelScope.launch {

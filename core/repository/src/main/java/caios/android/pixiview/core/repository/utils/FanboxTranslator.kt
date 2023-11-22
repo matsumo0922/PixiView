@@ -39,21 +39,22 @@ import caios.android.pixiview.core.model.fanbox.id.PostId
 import timber.log.Timber
 import java.time.OffsetDateTime
 
-internal fun FanboxPostItemsEntity.translate(likedPosts: List<PostId>): PageCursorInfo<FanboxPost> {
+internal fun FanboxPostItemsEntity.translate(bookmarkedPosts: List<PostId>): PageCursorInfo<FanboxPost> {
     return PageCursorInfo(
-        contents = body.items.map { it.translate(likedPosts) },
+        contents = body.items.map { it.translate(bookmarkedPosts) },
         cursor = body.nextUrl?.translateToCursor(),
     )
 }
 
-internal fun FanboxPostItemsEntity.Body.Item.translate(likedPosts: List<PostId>): FanboxPost {
+internal fun FanboxPostItemsEntity.Body.Item.translate(bookmarkedPosts: List<PostId>): FanboxPost {
     return FanboxPost(
         id = PostId(id),
         title = title,
         excerpt = excerpt,
         publishedDatetime = OffsetDateTime.parse(publishedDatetime),
         updatedDatetime = OffsetDateTime.parse(updatedDatetime),
-        isLiked = likedPosts.contains(PostId(id)),
+        isLiked = isLiked,
+        isBookmarked = bookmarkedPosts.contains(PostId(id)),
         likeCount = likeCount,
         commentCount = commentCount,
         feeRequired = feeRequired,
@@ -117,7 +118,7 @@ internal fun FanboxCreatorEntity.Body.translate(): FanboxCreatorDetail {
     )
 }
 
-internal fun FanboxPostDetailEntity.translate(likedPosts: List<PostId>): FanboxPostDetail {
+internal fun FanboxPostDetailEntity.translate(bookmarkedPosts: List<PostId>): FanboxPostDetail {
     var bodyBlock: FanboxPostDetail.Body = FanboxPostDetail.Body.Unknown
 
     if (!body.body?.blocks.isNullOrEmpty()) {
@@ -169,7 +170,7 @@ internal fun FanboxPostDetailEntity.translate(likedPosts: List<PostId>): FanboxP
                             urls[it.urlEmbedId!!]?.let { url ->
                                 FanboxPostDetail.Body.Article.Block.Link(
                                     html = url.html,
-                                    post = url.postInfo?.translate(likedPosts),
+                                    post = url.postInfo?.translate(bookmarkedPosts),
                                 )
                             }
                         }
@@ -229,7 +230,8 @@ internal fun FanboxPostDetailEntity.translate(likedPosts: List<PostId>): FanboxP
         title = body.title,
         publishedDatetime = OffsetDateTime.parse(body.publishedDatetime),
         updatedDatetime = OffsetDateTime.parse(body.updatedDatetime),
-        isLiked = likedPosts.contains(PostId(body.id)),
+        isLiked = body.isLiked,
+        isBookmarked = bookmarkedPosts.contains(PostId(body.id)),
         likeCount = body.likeCount,
         coverImageUrl = body.coverImageUrl,
         commentCount = body.commentCount,
@@ -483,9 +485,9 @@ internal fun FanboxCreatorSearchEntity.translate(): PageNumberInfo<FanboxCreator
     )
 }
 
-internal fun FanboxPostSearchEntity.translate(likedPosts: List<PostId>): PageNumberInfo<FanboxPost> {
+internal fun FanboxPostSearchEntity.translate(bookmarkedPosts: List<PostId>): PageNumberInfo<FanboxPost> {
     return PageNumberInfo(
-        contents = body.items.map { it.translate(likedPosts) },
+        contents = body.items.map { it.translate(bookmarkedPosts) },
         nextPage = body.nextUrl?.let { Uri.parse(it).getQueryParameter("page")?.toIntOrNull() },
     )
 }

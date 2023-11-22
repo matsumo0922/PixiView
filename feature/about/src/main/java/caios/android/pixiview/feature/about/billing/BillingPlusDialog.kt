@@ -1,6 +1,7 @@
 package caios.android.pixiview.feature.about.billing
 
 import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -61,6 +62,10 @@ internal fun BillingPlusRoute(
     val activity = LocalContext.current as Activity
     val scope = rememberCoroutineScope()
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
+
+    BackHandler {
+        terminate.invoke()
+    }
 
     AsyncLoadContents(
         modifier = modifier,

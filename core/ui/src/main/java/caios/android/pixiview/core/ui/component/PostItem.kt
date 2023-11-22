@@ -60,7 +60,7 @@ fun PostItem(
     onClickPost: (PostId) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
-    onClickLike: (PostId, Boolean) -> Unit,
+    onClickBookmark: (PostId, Boolean) -> Unit,
     isHideAdultContents: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -185,7 +185,7 @@ fun PostItem(
                     isLiked = isPostLiked,
                     onClickLike = {
                         isPostLiked = !isPostLiked
-                        onClickLike.invoke(post.id, isPostLiked)
+                        onClickBookmark.invoke(post.id, isPostLiked)
                     },
                 )
             }
@@ -445,7 +445,7 @@ private fun PostItemPreview1() {
         onClickPost = {},
         onClickPlanList = {},
         onClickCreator = {},
-        onClickLike = { _, _ -> },
+        onClickBookmark = { _, _ -> },
         isHideAdultContents = false,
     )
 }
@@ -458,7 +458,7 @@ private fun PostItemPreview2() {
         onClickPost = {},
         onClickPlanList = {},
         onClickCreator = {},
-        onClickLike = { _, _ -> },
+        onClickBookmark = { _, _ -> },
         isHideAdultContents = false,
     )
 }
@@ -471,7 +471,7 @@ private fun PostItemPreview3() {
         onClickPost = {},
         onClickPlanList = {},
         onClickCreator = {},
-        onClickLike = { _, _ -> },
+        onClickBookmark = { _, _ -> },
         isHideAdultContents = true,
     )
 }

@@ -13,10 +13,12 @@ import caios.android.pixiview.core.repository.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.Timer
 import java.util.UUID
 import javax.inject.Inject
@@ -51,6 +53,13 @@ class MainViewModel @Inject constructor(
     init {
         billingClient.initialize()
 
+        viewModelScope.launch {
+            fanboxRepository.logoutTrigger.collectLatest {
+                Timber.d("logoutTrigger")
+                isLoggedInFlow.emit(false)
+            }
+        }
+
         Timer().schedule(0, 10.minutes.toLong(DurationUnit.MILLISECONDS)) {
             updateState()
         }
@@ -62,13 +71,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun updateState() {
+    fun updateState() {
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/").also {
                 suspendRunCatching {
                     fanboxRepository.updateCookie(it.orEmpty())
                     fanboxRepository.updateCsrfToken()
-                    fanboxRepository.getNewsLetters()
                 }.isSuccess.also {
                     isLoggedInFlow.emit(it)
                 }

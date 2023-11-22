@@ -60,7 +60,7 @@ internal fun CreatorTopPostsScreen(
     pagingAdapter: LazyPagingItems<FanboxPost>,
     creatorTags: ImmutableList<FanboxCreatorTag>,
     onClickPost: (PostId) -> Unit,
-    onClickPostLike: (FanboxPost, Boolean) -> Unit,
+    onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickTag: (FanboxCreatorTag) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
@@ -103,7 +103,7 @@ internal fun CreatorTopPostsScreen(
                     onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
                     onClickCreator = onClickCreator,
                     onClickPlanList = onClickPlanList,
-                    onClickLike = { _, isLiked -> onClickPostLike.invoke(post, isLiked) },
+                    onClickBookmark = { _, isBookmarked -> onClickPostBookmark.invoke(post, isBookmarked) },
                 )
             }
         }

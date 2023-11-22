@@ -27,7 +27,7 @@ internal fun LibraryHomeIdleSection(
     pagingAdapter: LazyPagingItems<FanboxPost>,
     userData: UserData,
     onClickPost: (PostId) -> Unit,
-    onClickPostLike: (FanboxPost, Boolean) -> Unit,
+    onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
@@ -53,7 +53,7 @@ internal fun LibraryHomeIdleSection(
                     onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
                     onClickCreator = onClickCreator,
                     onClickPlanList = onClickPlanList,
-                    onClickLike = { _, isLiked -> onClickPostLike.invoke(post, isLiked) },
+                    onClickBookmark = { _, isBookmarked -> onClickPostBookmark.invoke(post, isBookmarked) },
                 )
             }
         }

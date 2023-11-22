@@ -17,15 +17,11 @@ import caios.android.pixiview.feature.setting.SettingTextItem
 @Composable
 internal fun SettingTopOthersSection(
     userData: UserData,
-    fanboxMetaData: FanboxMetaData,
-    fanboxSessionId: String,
-    config: PixiViewConfig,
+    onClickLogout: () -> Unit,
     onClickOpenSourceLicense: () -> Unit,
     onClickDeveloperMode: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val clipboard = LocalClipboardManager.current
-
     Column(modifier) {
         SettingTopTitleItem(
             modifier = Modifier.fillMaxWidth(),
@@ -34,41 +30,15 @@ internal fun SettingTopOthersSection(
 
         SettingTextItem(
             modifier = Modifier.fillMaxWidth(),
-            title = stringResource(R.string.setting_top_others_id),
-            description = userData.pixiViewId,
-            onLongClick = { clipboard.setText(AnnotatedString(userData.pixiViewId)) },
+            title = R.string.setting_top_others_logout,
+            description = R.string.setting_top_others_logout_description,
+            onClick = onClickLogout,
         )
 
         SettingTextItem(
             modifier = Modifier.fillMaxWidth(),
-            title = stringResource(R.string.setting_top_others_fanbox_session_id),
-            description = fanboxSessionId,
-            onLongClick = { clipboard.setText(AnnotatedString(fanboxSessionId)) },
-        )
-
-        SettingTextItem(
-            modifier = Modifier.fillMaxWidth(),
-            title = stringResource(R.string.setting_top_others_csrf_token),
-            description = fanboxMetaData.csrfToken,
-            onLongClick = { clipboard.setText(AnnotatedString(fanboxMetaData.csrfToken)) },
-        )
-
-        SettingTextItem(
-            modifier = Modifier.fillMaxWidth(),
-            title = stringResource(R.string.setting_top_others_version),
-            description = "${config.versionName}:${config.versionCode}" + when {
-                userData.isPlusMode && userData.isDeveloperMode -> " [P+D]"
-                userData.isPlusMode -> " [Premium]"
-                userData.isDeveloperMode -> " [Developer]"
-                else -> ""
-            },
-            onClick = { /* do nothing */ },
-        )
-
-        SettingTextItem(
-            modifier = Modifier.fillMaxWidth(),
-            title = stringResource(R.string.setting_top_others_open_source_license),
-            description = stringResource(R.string.setting_top_others_open_source_license_description),
+            title = R.string.setting_top_others_open_source_license,
+            description = R.string.setting_top_others_open_source_license_description,
             onClick = { onClickOpenSourceLicense.invoke() },
         )
 

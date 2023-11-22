@@ -16,6 +16,7 @@ data class FanboxPostDetail(
     val hasAdultContent: Boolean,
     val imageForShare: String,
     val isLiked: Boolean,
+    var isBookmarked: Boolean,
     val isRestricted: Boolean,
     val likeCount: Int,
     val tags: List<String>,

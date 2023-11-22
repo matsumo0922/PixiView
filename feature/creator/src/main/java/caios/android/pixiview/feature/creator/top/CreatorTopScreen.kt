@@ -83,7 +83,7 @@ internal fun CreatorTopRoute(
             modifier = Modifier.fillMaxSize(),
             isPosts = isPosts,
             userData = uiState.userData,
-            likedPosts = uiState.likedPosts.toImmutableList(),
+            bookmarkedPosts = uiState.bookmarkedPosts.toImmutableList(),
             creatorDetail = uiState.creatorDetail,
             creatorPlans = uiState.creatorPlans.toImmutableList(),
             creatorTags = uiState.creatorTags.toImmutableList(),
@@ -95,7 +95,7 @@ internal fun CreatorTopRoute(
             onClickLink = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
             onClickFollow = viewModel::follow,
             onClickUnfollow = viewModel::unfollow,
-            onClickPostLike = viewModel::postLike,
+            onClickPostBookmark = viewModel::postBookmark,
         )
     }
 }
@@ -106,12 +106,12 @@ private fun CreatorTopScreen(
     isPosts: Boolean,
     creatorDetail: FanboxCreatorDetail,
     userData: UserData,
-    likedPosts: ImmutableList<PostId>,
+    bookmarkedPosts: ImmutableList<PostId>,
     creatorPlans: ImmutableList<FanboxCreatorPlan>,
     creatorTags: ImmutableList<FanboxCreatorTag>,
     creatorPostsPaging: LazyPagingItems<FanboxPost>,
     onClickPost: (PostId) -> Unit,
-    onClickPostLike: (FanboxPost, Boolean) -> Unit,
+    onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickPlan: (FanboxCreatorPlan) -> Unit,
     onClickTag: (FanboxCreatorTag) -> Unit,
     onClickLink: (String) -> Unit,
@@ -206,7 +206,7 @@ private fun CreatorTopScreen(
                                 pagingAdapter = creatorPostsPaging,
                                 creatorTags = creatorTags,
                                 onClickPost = onClickPost,
-                                onClickPostLike = onClickPostLike,
+                                onClickPostBookmark = onClickPostBookmark,
                                 onClickTag = onClickTag,
                                 onClickCreator = {
                                     scope.launch {
@@ -241,9 +241,9 @@ private fun CreatorTopScreen(
         )
     }
 
-    LaunchedEffect(likedPosts) {
+    LaunchedEffect(bookmarkedPosts) {
         for (i in 0 until creatorPostsPaging.itemCount) {
-            creatorPostsPaging[i]?.isLiked = likedPosts.contains(creatorPostsPaging[i]?.id)
+            creatorPostsPaging[i]?.isBookmarked = bookmarkedPosts.contains(creatorPostsPaging[i]?.id)
         }
     }
 }
