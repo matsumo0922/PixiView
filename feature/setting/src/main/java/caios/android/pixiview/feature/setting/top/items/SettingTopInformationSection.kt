@@ -11,7 +11,6 @@ import caios.android.pixiview.core.common.PixiViewConfig
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxMetaData
 import caios.android.pixiview.feature.setting.R
-import caios.android.pixiview.feature.setting.SettingSwitchItem
 import caios.android.pixiview.feature.setting.SettingTextItem
 
 @Composable

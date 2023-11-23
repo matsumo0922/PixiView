@@ -4,12 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import caios.android.pixiview.core.common.PixiViewConfig
 import caios.android.pixiview.core.model.UserData
-import caios.android.pixiview.core.model.fanbox.FanboxMetaData
 import caios.android.pixiview.feature.setting.R
 import caios.android.pixiview.feature.setting.SettingSwitchItem
 import caios.android.pixiview.feature.setting.SettingTextItem

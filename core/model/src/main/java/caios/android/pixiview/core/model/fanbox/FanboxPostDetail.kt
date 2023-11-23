@@ -172,9 +172,9 @@ data class FanboxPostDetail(
                         rootCommentId = CommentId(""),
                         replies = emptyList(),
                         user = FanboxUser.dummy(),
-                    )
+                    ),
                 ),
-                offset = null
+                offset = null,
             ),
             excerpt = "リクエストありがとうございました！",
             feeRequired = 0,

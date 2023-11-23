@@ -36,6 +36,7 @@ import caios.android.pixiview.core.ui.LazyPagingItemsLoadContents
 import caios.android.pixiview.feature.library.R
 import caios.android.pixiview.feature.library.home.items.LibraryHomeIdleSection
 import caios.android.pixiview.feature.library.home.items.LibrarySupportedIdleSection
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -116,7 +117,7 @@ internal fun LibraryHomeScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = homePager,
                                 userData = uiState.userData,
-                                bookmarkedPosts = uiState.bookmarkedPosts,
+                                bookmarkedPosts = uiState.bookmarkedPosts.toImmutableList(),
                                 onClickPost = navigateToPostDetail,
                                 onClickPostBookmark = viewModel::postBookmark,
                                 onClickCreator = navigateToCreatorPosts,
@@ -133,7 +134,7 @@ internal fun LibraryHomeScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = supportedPager,
                                 userData = uiState.userData,
-                                bookmarkedPosts = uiState.bookmarkedPosts,
+                                bookmarkedPosts = uiState.bookmarkedPosts.toImmutableList(),
                                 onClickPost = navigateToPostDetail,
                                 onClickPostBookmark = viewModel::postBookmark,
                                 onClickCreator = navigateToCreatorPosts,

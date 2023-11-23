@@ -36,7 +36,7 @@ class CreatorPostsDownloadViewModel @Inject constructor(
                 posts.map { it.await().contents }.flatten()
             }.fold(
                 onSuccess = { CreatorPostsDownloadUiState(it, true) },
-                onFailure = { CreatorPostsDownloadUiState(emptyList(), false) }
+                onFailure = { CreatorPostsDownloadUiState(emptyList(), false) },
             )
         }
     }

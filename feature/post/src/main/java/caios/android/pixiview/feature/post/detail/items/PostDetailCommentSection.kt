@@ -87,7 +87,7 @@ internal fun PostDetailCommentSection(
                 Icon(
                     imageVector = Icons.Default.Edit,
                     tint = MaterialTheme.colorScheme.onSurface,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
@@ -105,7 +105,7 @@ internal fun PostDetailCommentSection(
                 onClickCommentReply = { body, parentCommentId, rootCommentId ->
                     latestComment = body
                     onClickCommentReply.invoke(body, parentCommentId, rootCommentId)
-                }
+                },
             )
         }
 
@@ -157,7 +157,7 @@ internal fun PostDetailCommentSection(
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowDown,
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        contentDescription = null
+                        contentDescription = null,
                     )
 
                     Text(
@@ -183,7 +183,8 @@ private fun CommentItem(
 ) {
     var isShowReplyEditor by rememberSaveable(comment) { mutableStateOf(false) }
     var isLiked by rememberSaveable { mutableStateOf(comment.isLiked) }
-    val createdDateBefore = rememberSaveable { (Duration.between(comment.createdDatetime, OffsetDateTime.now()).toDays()) }
+    val createdDateBefore =
+        rememberSaveable { (Duration.between(comment.createdDatetime, OffsetDateTime.now()).toDays()) }
     val likeColor = if (isLiked) Color(0xffe0405e) else MaterialTheme.colorScheme.onSurfaceVariant
 
     Row(
@@ -382,7 +383,9 @@ private fun CommentEditor(
             Button(
                 modifier = Modifier.align(Alignment.End),
                 enabled = !isError,
-                onClick = { onClickCommentReply.invoke(value, parentCommentId, if (rootCommentId.value != "0") rootCommentId else parentCommentId) },
+                onClick = {
+                    onClickCommentReply.invoke(value, parentCommentId, if (rootCommentId.value != "0") rootCommentId else parentCommentId)
+                },
             ) {
                 Text(text = stringResource(R.string.post_detail_comment_reply))
             }

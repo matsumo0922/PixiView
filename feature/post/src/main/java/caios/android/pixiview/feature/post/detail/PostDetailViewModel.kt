@@ -99,8 +99,8 @@ class PostDetailViewModel @Inject constructor(
                         commentList = PageOffsetInfo(
                             contents = it.postDetail.commentList.contents + comments.contents,
                             offset = comments.offset,
-                        )
-                    )
+                        ),
+                    ),
                 )
             }
         }
@@ -126,14 +126,14 @@ class PostDetailViewModel @Inject constructor(
                             data.data.copy(
                                 postDetail = it,
                                 messageToast = R.string.post_detail_comment_commented,
-                            )
+                            ),
                         )
                     },
                     onFailure = {
                         ScreenState.Idle(
                             data.data.copy(
                                 messageToast = R.string.post_detail_comment_comment_failed,
-                            )
+                            ),
                         )
                     },
                 )
@@ -153,14 +153,14 @@ class PostDetailViewModel @Inject constructor(
                             data.data.copy(
                                 postDetail = it,
                                 messageToast = R.string.post_detail_comment_delete_success,
-                            )
+                            ),
                         )
                     },
                     onFailure = {
                         ScreenState.Idle(
                             data.data.copy(
                                 messageToast = R.string.post_detail_comment_delete_failed,
-                            )
+                            ),
                         )
                     },
                 )

@@ -86,7 +86,7 @@ internal fun PixiViewNavHost(
                 navigateToPostImage = { postId, index -> navController.navigateToPostImage(postId, index) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-                navigateToCommentDeleteDialog = { contents, onResult -> navController.navigateToSimpleAlertDialog(contents, onResult)},
+                navigateToCommentDeleteDialog = { contents, onResult -> navController.navigateToSimpleAlertDialog(contents, onResult) },
                 terminate = { navController.popBackStack() },
             )
 
@@ -141,7 +141,7 @@ internal fun PixiViewNavHost(
             settingTopScreen(
                 navigateToSettingTheme = { navController.navigateToSettingTheme() },
                 navigateToSettingDeveloper = { navController.navigateToSettingDeveloper() },
-                navigateToLogoutDialog = { contents, onResult -> navController.navigateToSimpleAlertDialog(contents, onResult)},
+                navigateToLogoutDialog = { contents, onResult -> navController.navigateToSimpleAlertDialog(contents, onResult) },
                 navigateToOpenSourceLicense = { navController.navigateToSettingLicense() },
                 terminate = { navController.popBackStack() },
             )

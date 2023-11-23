@@ -21,12 +21,13 @@ import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.component.PostItem
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 import caios.android.pixiview.core.ui.view.PagingErrorSection
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun LibraryHomeIdleSection(
     pagingAdapter: LazyPagingItems<FanboxPost>,
     userData: UserData,
-    bookmarkedPosts: List<PostId>,
+    bookmarkedPosts: ImmutableList<PostId>,
     onClickPost: (PostId) -> Unit,
     onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,

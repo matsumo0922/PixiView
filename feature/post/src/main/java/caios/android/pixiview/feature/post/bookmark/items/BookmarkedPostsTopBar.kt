@@ -98,7 +98,7 @@ internal fun BookmarkedPostsTopBar(
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
                         ) {
                             Box(Modifier.weight(1f)) {
                                 if (query.isEmpty()) {

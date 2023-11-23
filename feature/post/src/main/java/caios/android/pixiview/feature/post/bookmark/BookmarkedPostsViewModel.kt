@@ -52,14 +52,18 @@ class BookmarkedPostsViewModel @Inject constructor(
     fun search(query: String) {
         viewModelScope.launch {
             val posts = fanboxRepository.getBookmarkedPosts()
-            val result = if (query.isBlank()) posts else posts.filter { post ->
-                val isMatchTitle = post.title.contains(query, ignoreCase = true)
-                val isMatchBody = post.excerpt.contains(query, ignoreCase = true)
-                val isMatchTag = post.tags.any { tag -> tag.contains(query, ignoreCase = true) }
-                val isMatchCreatorName = post.user.name.contains(query, ignoreCase = true)
-                val isMatchCreatorId = post.user.creatorId.value.contains(query, ignoreCase = true)
+            val result = if (query.isBlank()) {
+                posts
+            } else {
+                posts.filter { post ->
+                    val isMatchTitle = post.title.contains(query, ignoreCase = true)
+                    val isMatchBody = post.excerpt.contains(query, ignoreCase = true)
+                    val isMatchTag = post.tags.any { tag -> tag.contains(query, ignoreCase = true) }
+                    val isMatchCreatorName = post.user.name.contains(query, ignoreCase = true)
+                    val isMatchCreatorId = post.user.creatorId.value.contains(query, ignoreCase = true)
 
-                isMatchTitle || isMatchBody || isMatchTag || isMatchCreatorName || isMatchCreatorId
+                    isMatchTitle || isMatchBody || isMatchTag || isMatchCreatorName || isMatchCreatorId
+                }
             }
 
             _screenState.value = screenState.value.changeContent { it.copy(bookmarkedPosts = result) }

@@ -23,6 +23,7 @@ import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.feature.post.search.items.PostSearchCreatorScreen
 import caios.android.pixiview.feature.post.search.items.PostSearchTagScreen
 import caios.android.pixiview.feature.post.search.items.PostSearchTopBar
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
@@ -70,7 +71,7 @@ private fun PostSearchScreen(
     query: String,
     initialQuery: String,
     userData: UserData,
-    bookmarkedPosts: List<PostId>,
+    bookmarkedPosts: ImmutableList<PostId>,
     creatorPaging: LazyPagingItems<FanboxCreatorDetail>,
     tagPaging: LazyPagingItems<FanboxPost>,
     onSearch: (PostSearchQuery) -> Unit,

@@ -1,3 +1,5 @@
+@file:Suppress("MatchingDeclarationName")
+
 package caios.android.pixiview.core.ui.view
 
 import androidx.compose.foundation.background
@@ -66,7 +68,7 @@ fun NavController.navigateToSimpleAlertDialog(
             } else {
                 onClickNegative?.invoke()
             }
-        }
+        },
     )
 }
 

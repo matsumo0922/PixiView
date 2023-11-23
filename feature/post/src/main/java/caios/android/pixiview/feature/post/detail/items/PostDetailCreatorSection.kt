@@ -139,7 +139,7 @@ private fun CreatorItem(
                     onClick = {
                         isFollowed = false
                         onClickUnfollow.invoke(creatorDetail.user.userId)
-                    }
+                    },
                 ) {
                     Text(stringResource(R.string.common_unfollow))
                 }

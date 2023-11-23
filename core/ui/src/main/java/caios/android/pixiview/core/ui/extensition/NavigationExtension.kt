@@ -56,7 +56,7 @@ fun <T> NavController.navigateForResult(
     route: String,
     navResultCallback: NavResultCallback<T>,
     navOptions: NavOptions? = null,
-    navigatorExtras: Navigator.Extras? = null
+    navigatorExtras: Navigator.Extras? = null,
 ) {
     setNavResultCallback(navResultCallback)
     navigate(route, navOptions, navigatorExtras)
@@ -75,7 +75,7 @@ fun <T> NavController.navigateForResult(
 fun <T> NavController.navigateForResult(
     route: String,
     navResultCallback: NavResultCallback<T>,
-    builder: NavOptionsBuilder.() -> Unit
+    builder: NavOptionsBuilder.() -> Unit,
 ) {
     setNavResultCallback(navResultCallback)
     navigate(route, builder)

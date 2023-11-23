@@ -17,8 +17,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -79,7 +77,7 @@ internal fun SettingTopRoute(
                             },
                             onFailure = {
                                 ToastUtil.show(context, R.string.setting_top_others_logout_dialog_failed)
-                            }
+                            },
                         )
                     }
                 }

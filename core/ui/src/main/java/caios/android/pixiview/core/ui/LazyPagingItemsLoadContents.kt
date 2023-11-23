@@ -48,7 +48,7 @@ fun <T : Any> LazyPagingItemsLoadContents(
                     targetState = loadState.refresh,
                     transitionSpec = { fadeIn().togetherWith(fadeOut()) },
                     contentKey = { it.javaClass },
-                    label = "LazyPagingItemsLoadContents"
+                    label = "LazyPagingItemsLoadContents",
                 ) {
                     when (it) {
                         is LoadState.Loading -> {

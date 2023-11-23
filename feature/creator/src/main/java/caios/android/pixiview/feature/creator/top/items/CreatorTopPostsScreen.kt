@@ -56,7 +56,7 @@ import kotlinx.collections.immutable.ImmutableList
 internal fun CreatorTopPostsScreen(
     state: LazyListState,
     userData: UserData,
-    bookmarkedPosts: List<PostId>,
+    bookmarkedPosts: ImmutableList<PostId>,
     pagingAdapter: LazyPagingItems<FanboxPost>,
     creatorTags: ImmutableList<FanboxCreatorTag>,
     onClickPost: (PostId) -> Unit,
@@ -152,7 +152,7 @@ private fun TagItem(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .background(MaterialTheme.colorScheme.secondaryContainer),
             )
         }
 
