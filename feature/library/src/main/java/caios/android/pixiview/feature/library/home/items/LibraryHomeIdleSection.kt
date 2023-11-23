@@ -26,6 +26,7 @@ import caios.android.pixiview.core.ui.view.PagingErrorSection
 internal fun LibraryHomeIdleSection(
     pagingAdapter: LazyPagingItems<FanboxPost>,
     userData: UserData,
+    bookmarkedPosts: List<PostId>,
     onClickPost: (PostId) -> Unit,
     onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
@@ -48,7 +49,7 @@ internal fun LibraryHomeIdleSection(
             pagingAdapter[index]?.let { post ->
                 PostItem(
                     modifier = Modifier.fillMaxWidth(),
-                    post = post,
+                    post = post.copy(isBookmarked = bookmarkedPosts.contains(post.id)),
                     isHideAdultContents = userData.isHideAdultContents,
                     onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
                     onClickCreator = onClickCreator,

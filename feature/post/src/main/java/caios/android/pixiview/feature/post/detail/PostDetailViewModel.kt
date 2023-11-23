@@ -37,6 +37,14 @@ class PostDetailViewModel @Inject constructor(
                 _screenState.value = screenState.value.changeContent { it.copy(userData = data) }
             }
         }
+
+        viewModelScope.launch {
+            fanboxRepository.bookmarkedPosts.collectLatest {  bookmarkedPosts ->
+                _screenState.value = screenState.value.changeContent {
+                    it.copy(postDetail = it.postDetail.copy(isBookmarked = it.postDetail.id in bookmarkedPosts))
+                }
+            }
+        }
     }
 
     fun fetch(postId: PostId) {
@@ -51,6 +59,14 @@ class PostDetailViewModel @Inject constructor(
                 onSuccess = { ScreenState.Idle(it) },
                 onFailure = { ScreenState.Error(R.string.error_network) },
             )
+        }
+
+        viewModelScope.launch {
+            fanboxRepository.bookmarkedPosts.collectLatest {  bookmarkedPosts ->
+                _screenState.value = screenState.value.changeContent {
+                    it.copy(postDetail = it.postDetail.copy(isBookmarked = it.postDetail.id in bookmarkedPosts))
+                }
+            }
         }
     }
 

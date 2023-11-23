@@ -57,6 +57,7 @@ import kotlinx.collections.immutable.ImmutableList
 internal fun CreatorTopPostsScreen(
     state: LazyListState,
     userData: UserData,
+    bookmarkedPosts: List<PostId>,
     pagingAdapter: LazyPagingItems<FanboxPost>,
     creatorTags: ImmutableList<FanboxCreatorTag>,
     onClickPost: (PostId) -> Unit,
@@ -98,7 +99,7 @@ internal fun CreatorTopPostsScreen(
             pagingAdapter[index]?.let { post ->
                 PostItem(
                     modifier = Modifier.fillMaxWidth(),
-                    post = post,
+                    post = post.copy(isBookmarked = bookmarkedPosts.contains(post.id)),
                     isHideAdultContents = userData.isHideAdultContents,
                     onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
                     onClickCreator = onClickCreator,

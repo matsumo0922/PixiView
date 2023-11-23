@@ -15,13 +15,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -89,7 +88,7 @@ internal fun LibraryHomeScreen(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->
         Column(Modifier.padding(padding)) {
-            PrimaryTabRow(
+            TabRow(
                 modifier = Modifier.fillMaxWidth(),
                 selectedTabIndex = pagerState.currentPage,
             ) {
@@ -117,6 +116,7 @@ internal fun LibraryHomeScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = homePager,
                                 userData = uiState.userData,
+                                bookmarkedPosts = uiState.bookmarkedPosts,
                                 onClickPost = navigateToPostDetail,
                                 onClickPostBookmark = viewModel::postBookmark,
                                 onClickCreator = navigateToCreatorPosts,
@@ -133,6 +133,7 @@ internal fun LibraryHomeScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 pagingAdapter = supportedPager,
                                 userData = uiState.userData,
+                                bookmarkedPosts = uiState.bookmarkedPosts,
                                 onClickPost = navigateToPostDetail,
                                 onClickPostBookmark = viewModel::postBookmark,
                                 onClickCreator = navigateToCreatorPosts,
@@ -142,16 +143,6 @@ internal fun LibraryHomeScreen(
                     }
                 }
             }
-        }
-    }
-
-    LaunchedEffect(uiState.bookmarkedPosts) {
-        for (i in 0 until homePager.itemCount) {
-            homePager[i]?.isBookmarked = uiState.bookmarkedPosts.contains(homePager[i]?.id)
-        }
-
-        for (i in 0 until supportedPager.itemCount) {
-            supportedPager[i]?.isBookmarked = uiState.bookmarkedPosts.contains(supportedPager[i]?.id)
         }
     }
 }

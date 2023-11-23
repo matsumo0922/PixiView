@@ -28,6 +28,29 @@ data class FanboxPostDetail(
 ) {
     val browserUri get() = "https://www.fanbox.cc/@${user.creatorId}/posts/$id".toUri()
 
+    fun asPost(): FanboxPost {
+        return FanboxPost(
+            id = id,
+            title = title,
+            excerpt = excerpt,
+            cover = FanboxCover(
+                url = coverImageUrl ?: body.imageItems.firstOrNull()?.thumbnailUrl.orEmpty(),
+                type = "From Detail",
+            ),
+            hasAdultContent = hasAdultContent,
+            isLiked = isLiked,
+            isBookmarked = isBookmarked,
+            isRestricted = isRestricted,
+            likeCount = likeCount,
+            commentCount = commentCount,
+            updatedDatetime = updatedDatetime,
+            publishedDatetime = publishedDatetime,
+            feeRequired = feeRequired,
+            user = user,
+            tags = tags,
+        )
+    }
+
     sealed interface Body {
         val imageItems get() = when (this) {
             is Article -> blocks.filterIsInstance<Article.Block.Image>().map { it.item }

@@ -23,6 +23,7 @@ import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.feature.post.search.items.PostSearchCreatorScreen
 import caios.android.pixiview.feature.post.search.items.PostSearchTagScreen
 import caios.android.pixiview.feature.post.search.items.PostSearchTopBar
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun PostSearchRoute(
@@ -44,17 +45,12 @@ internal fun PostSearchRoute(
         }
     }
 
-    LaunchedEffect(uiState.bookmarkedPosts) {
-        for (i in 0 until tagPaging.itemCount) {
-            tagPaging[i]?.isBookmarked = uiState.bookmarkedPosts.contains(tagPaging[i]?.id)
-        }
-    }
-
     PostSearchScreen(
         modifier = modifier,
         query = uiState.query,
         initialQuery = query,
         userData = uiState.userData,
+        bookmarkedPosts = uiState.bookmarkedPosts.toImmutableList(),
         creatorPaging = creatorPaging,
         tagPaging = tagPaging,
         onSearch = viewModel::search,
@@ -74,6 +70,7 @@ private fun PostSearchScreen(
     query: String,
     initialQuery: String,
     userData: UserData,
+    bookmarkedPosts: List<PostId>,
     creatorPaging: LazyPagingItems<FanboxCreatorDetail>,
     tagPaging: LazyPagingItems<FanboxPost>,
     onSearch: (PostSearchQuery) -> Unit,
@@ -120,6 +117,7 @@ private fun PostSearchScreen(
                         .fillMaxSize(),
                     pagingAdapter = tagPaging,
                     userData = userData,
+                    bookmarkedPosts = bookmarkedPosts,
                     onClickPost = onClickPost,
                     onClickPostBookmark = onClickPostBookmark,
                     onClickCreator = onClickCreatorPosts,

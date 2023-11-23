@@ -10,8 +10,8 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.webkit.CookieManager
 import android.webkit.MimeTypeMap
-import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
 import caios.android.pixiview.core.datastore.PreferenceBookmarkedPosts
+import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
 import caios.android.pixiview.core.model.PageCursorInfo
 import caios.android.pixiview.core.model.PageNumberInfo
 import caios.android.pixiview.core.model.fanbox.FanboxBell
@@ -78,8 +78,8 @@ import javax.inject.Inject
 
 interface FanboxRepository {
     val cookie: SharedFlow<String>
-    val bookmarkedPosts: SharedFlow<List<PostId>>
     val metaData: SharedFlow<FanboxMetaData>
+    val bookmarkedPosts: SharedFlow<List<PostId>>
     val logoutTrigger: Flow<OffsetDateTime>
 
     fun hasActiveCookie(): Boolean
@@ -141,9 +141,10 @@ class FanboxRepositoryImpl(
     private val _logoutTrigger = Channel<OffsetDateTime>()
 
     override val cookie: SharedFlow<String> = fanboxCookiePreference.data
-    override val bookmarkedPosts: SharedFlow<List<PostId>> = bookmarkedPostsPreference.data
     override val metaData: SharedFlow<FanboxMetaData> = _metaData.asSharedFlow()
     override val logoutTrigger: Flow<OffsetDateTime> = _logoutTrigger.receiveAsFlow()
+
+    override val bookmarkedPosts: SharedFlow<List<PostId>> = bookmarkedPostsPreference.data
 
     @Inject
     constructor(

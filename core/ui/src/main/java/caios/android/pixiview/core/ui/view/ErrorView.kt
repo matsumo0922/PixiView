@@ -1,5 +1,6 @@
 package caios.android.pixiview.core.ui.view
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,9 +23,11 @@ import caios.android.pixiview.core.ui.theme.center
 
 @Composable
 fun ErrorView(
-    errorState: ScreenState.Error,
-    retryAction: (() -> Unit)?,
+    @StringRes title: Int,
+    @StringRes message: Int,
     modifier: Modifier = Modifier,
+    @StringRes retryTitle: Int? = null,
+    retryAction: (() -> Unit)? = null,
 ) {
     Column(
         modifier = modifier
@@ -38,14 +41,14 @@ fun ErrorView(
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.error_executed),
+            text = stringResource(title),
             style = MaterialTheme.typography.titleMedium.bold().center(),
             color = MaterialTheme.colorScheme.onSurface,
         )
 
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = stringResource(errorState.message),
+            text = stringResource(message),
             style = MaterialTheme.typography.bodyMedium.center(),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -56,13 +59,28 @@ fun ErrorView(
                 onClick = { retryAction.invoke() },
             ) {
                 Text(
-                    text = stringResource(errorState.retryTitle ?: R.string.common_reload),
+                    text = stringResource(retryTitle ?: R.string.common_reload),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onPrimary,
                 )
             }
         }
     }
+}
+
+@Composable
+fun ErrorView(
+    errorState: ScreenState.Error,
+    retryAction: (() -> Unit)?,
+    modifier: Modifier = Modifier,
+) {
+    ErrorView(
+        modifier = modifier,
+        title = R.string.error_executed,
+        message = errorState.message,
+        retryTitle = errorState.retryTitle,
+        retryAction = retryAction,
+    )
 }
 
 @Preview

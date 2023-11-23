@@ -243,7 +243,7 @@ private fun TitleItem(modifier: Modifier = Modifier) {
         append("Buy ")
 
         withStyle(titleStyle.copy(color = MaterialTheme.colorScheme.primary).toSpanStyle()) {
-            append("Kanade+")
+            append("FANBOX Viewer+")
         }
     }
 

@@ -80,7 +80,7 @@ internal fun LoginScreen(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .fillMaxWidth(),
-                    progress = { it.progress },
+                    progress = it.progress,
                 )
             }
         }

@@ -1,16 +1,16 @@
 package caios.android.pixiview.ui
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import caios.android.pixiview.MainViewModel
@@ -43,6 +43,7 @@ internal fun PixiViewApp(
     PixiViewBackground(modifier) {
         AnimatedContent(
             targetState = !isAgreedTeams || !isLoggedIn || !isAllowedPermission,
+            transitionSpec = { fadeIn().togetherWith(fadeOut()) },
             label = "isShowWelcomeScreen",
         ) {
             if (it) {

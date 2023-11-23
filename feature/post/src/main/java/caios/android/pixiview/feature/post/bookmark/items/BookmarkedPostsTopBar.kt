@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.post.search.items
+package caios.android.pixiview.feature.post.bookmark.items
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutLinearInEasing
@@ -27,52 +27,33 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.feature.post.R
-import caios.android.pixiview.feature.post.search.PostSearchMode
-import caios.android.pixiview.feature.post.search.PostSearchQuery
-import caios.android.pixiview.feature.post.search.parseQuery
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun PostSearchTopBar(
-    query: String,
-    initialQuery: String,
+internal fun BookmarkedPostsTopBar(
     scrollBehavior: TopAppBarScrollBehavior?,
     onClickTerminate: () -> Unit,
-    onClickSearch: (PostSearchQuery) -> Unit,
+    onClickSearch: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-
-    var queryText by rememberSaveable(query) { mutableStateOf(query) }
-    val focusRequester = remember { FocusRequester() }
+    var query by remember { mutableStateOf("") }
 
     val colorTransitionFraction = scrollBehavior?.state?.overlappedFraction ?: 0f
     val fraction = if (colorTransitionFraction > 0.01f) 1f else 0f
@@ -86,12 +67,6 @@ internal fun PostSearchTopBar(
         label = "appBarContainerColor",
     )
 
-    LaunchedEffect(true) {
-        if (initialQuery.isEmpty()) {
-            focusRequester.requestFocus()
-        }
-    }
-
     TopAppBar(
         modifier = modifier,
         title = {
@@ -103,22 +78,17 @@ internal fun PostSearchTopBar(
                     .padding(16.dp, 10.dp),
             ) {
                 BasicTextField(
-                    modifier = Modifier
-                        .clickable { keyboardController?.show() }
-                        .focusRequester(focusRequester)
-                        .fillMaxWidth(),
-                    value = queryText,
-                    onValueChange = { queryText = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    value = query,
+                    onValueChange = {
+                        query = it
+                        onClickSearch.invoke(it)
+                    },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(
                         onSearch = {
-                            parseQuery(queryText).also {
-                                if (it.mode != PostSearchMode.Unknown) {
-                                    keyboardController?.hide()
-                                    focusManager.clearFocus()
-                                    onClickSearch.invoke(it)
-                                }
-                            }
+                            keyboardController?.hide()
+                            onClickSearch.invoke(query)
                         },
                     ),
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
@@ -131,9 +101,9 @@ internal fun PostSearchTopBar(
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             Box(Modifier.weight(1f)) {
-                                if (queryText.isEmpty()) {
+                                if (query.isEmpty()) {
                                     Text(
-                                        text = stringResource(R.string.post_search_placeholder),
+                                        text = stringResource(R.string.bookmark_search_placeholder),
                                         style = MaterialTheme.typography.bodyLarge,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
@@ -144,19 +114,17 @@ internal fun PostSearchTopBar(
 
                             Icon(
                                 modifier = Modifier
-                                    .alpha(if (queryText.isNotEmpty()) 1f else 0f)
+                                    .alpha(if (query.isNotEmpty()) 1f else 0f)
                                     .clip(CircleShape)
-                                    .clickable(queryText.isNotEmpty()) { queryText = "" },
+                                    .clickable(query.isNotEmpty()) {
+                                        query = ""
+                                        onClickSearch.invoke("")
+                                    },
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = null,
                             )
                         }
                     },
-                    visualTransformation = QueryTransformation(
-                        tagStyle = SpanStyle(
-                            color = MaterialTheme.colorScheme.primary,
-                        ),
-                    ),
                 )
             }
         },
@@ -172,34 +140,11 @@ internal fun PostSearchTopBar(
     )
 }
 
-private class QueryTransformation(val tagStyle: SpanStyle) : VisualTransformation {
-    override fun filter(text: AnnotatedString): TransformedText {
-        return TransformedText(
-            text = buildAnnotatedQuery(text.text, tagStyle),
-            offsetMapping = OffsetMapping.Identity,
-        )
-    }
-
-    private fun buildAnnotatedQuery(query: String, tagStyle: SpanStyle): AnnotatedString = buildAnnotatedString {
-        append(query)
-
-        for (url in Regex("#\\S+").findAll(query)) {
-            addStyle(
-                style = tagStyle,
-                start = url.range.first,
-                end = url.range.last + 1,
-            )
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun PostSearchTopBarPreview() {
-    PostSearchTopBar(
-        query = "#限定イラスト from:@lambda",
-        initialQuery = "",
+    BookmarkedPostsTopBar(
         onClickTerminate = {},
         onClickSearch = {},
         scrollBehavior = null,

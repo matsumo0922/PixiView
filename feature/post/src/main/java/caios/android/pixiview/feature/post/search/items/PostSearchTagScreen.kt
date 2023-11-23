@@ -30,6 +30,7 @@ import caios.android.pixiview.core.ui.view.PagingErrorSection
 internal fun PostSearchTagScreen(
     pagingAdapter: LazyPagingItems<FanboxPost>,
     userData: UserData,
+    bookmarkedPosts: List<PostId>,
     onClickPost: (PostId) -> Unit,
     onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
@@ -63,7 +64,7 @@ internal fun PostSearchTagScreen(
                 pagingAdapter[index]?.let { post ->
                     PostItem(
                         modifier = Modifier.fillMaxWidth(),
-                        post = post,
+                        post = post.copy(isBookmarked = bookmarkedPosts.contains(post.id)),
                         isHideAdultContents = userData.isHideAdultContents,
                         onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
                         onClickBookmark = { _, isLiked -> onClickPostBookmark.invoke(post, isLiked) },

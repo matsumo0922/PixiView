@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Bookmark
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Info
@@ -33,8 +32,8 @@ import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
@@ -118,7 +117,7 @@ internal fun LibraryDrawer(
                 onClick = { onClickLibrary.invoke(LibraryDestination.Message) },
             )
 
-            HorizontalDivider(
+            Divider(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .fillMaxWidth(),
@@ -145,7 +144,7 @@ internal fun LibraryDrawer(
                 onClick = navigateToSupportingCreators,
             )
 
-            HorizontalDivider(
+            Divider(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .fillMaxWidth(),
@@ -167,7 +166,7 @@ internal fun LibraryDrawer(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            HorizontalDivider(
+            Divider(
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .fillMaxWidth(),

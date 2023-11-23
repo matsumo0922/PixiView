@@ -16,7 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
@@ -54,7 +57,6 @@ import caios.android.pixiview.core.ui.extensition.marquee
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
 import caios.android.pixiview.feature.post.detail.items.PostDetailArticleHeader
-import caios.android.pixiview.feature.post.detail.items.PostDetailCommentLikeButton
 import caios.android.pixiview.feature.post.detail.items.PostDetailCommentSection
 import caios.android.pixiview.feature.post.detail.items.PostDetailCreatorSection
 import caios.android.pixiview.feature.post.detail.items.PostDetailDownloadSection
@@ -136,6 +138,7 @@ private fun PostDetailScreen(
     modifier: Modifier = Modifier,
 ) {
     var isShowMenu by remember { mutableStateOf(false) }
+    var isBookmarked by remember(postDetail.isBookmarked) { mutableStateOf(postDetail.isBookmarked) }
 
     val isShowCoordinateHeader = when (val content = postDetail.body) {
         is FanboxPostDetail.Body.Article -> content.blocks.first() !is FanboxPostDetail.Body.Article.Block.Image
@@ -199,10 +202,18 @@ private fun PostDetailScreen(
                     onClickTag = { },
                 )
 
-                PostDetailCommentLikeButton(
-                    commentCount = postDetail.commentCount,
-                    likeCount = postDetail.likeCount,
-                )
+                IconButton(
+                    onClick = {
+                        isBookmarked = !isBookmarked
+                        onClickPostBookmark.invoke(postDetail.asPost(), isBookmarked)
+                    },
+                ) {
+                    Icon(
+                        imageVector = if (isBookmarked) Icons.Default.Bookmark else Icons.Outlined.Bookmark,
+                        tint = if (isBookmarked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                        contentDescription = null,
+                    )
+                }
             }
         }
 

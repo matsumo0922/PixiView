@@ -94,8 +94,8 @@ class MainActivity : ComponentActivity(), PostDownloader {
                 screenState = screenState,
                 containerColor = if (shouldUseDarkTheme) DarkDefaultColorScheme.surface else LightDefaultColorScheme.surface,
             ) {
-                val isAgreedTeams = remember { it.userData.isAgreedPrivacyPolicy && it.userData.isAgreedTermsOfService }
-                val isAllowedPermission = remember { isAllowedPermission() }
+                val isAgreedTeams = remember(it.userData) { it.userData.isAgreedPrivacyPolicy && it.userData.isAgreedTermsOfService }
+                val isAllowedPermission = remember(it.userData, it.isLoggedIn) { isAllowedPermission() }
 
                 PixiViewTheme(
                     fanboxCookie = it.fanboxCookie,

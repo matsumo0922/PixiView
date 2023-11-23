@@ -12,9 +12,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -100,13 +101,13 @@ internal fun CreatorTopRoute(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun CreatorTopScreen(
     isPosts: Boolean,
     creatorDetail: FanboxCreatorDetail,
     userData: UserData,
-    bookmarkedPosts: ImmutableList<PostId>,
+    bookmarkedPosts: List<PostId>,
     creatorPlans: ImmutableList<FanboxCreatorPlan>,
     creatorTags: ImmutableList<FanboxCreatorTag>,
     creatorPostsPaging: LazyPagingItems<FanboxPost>,
@@ -164,7 +165,7 @@ private fun CreatorTopScreen(
         scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
     ) {
         Column(Modifier.fillMaxSize()) {
-            PrimaryTabRow(
+            TabRow(
                 modifier = Modifier.fillMaxWidth(),
                 selectedTabIndex = pagerState.currentPage,
             ) {
@@ -203,6 +204,7 @@ private fun CreatorTopScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 state = postsListState,
                                 userData = userData,
+                                bookmarkedPosts = bookmarkedPosts,
                                 pagingAdapter = creatorPostsPaging,
                                 creatorTags = creatorTags,
                                 onClickPost = onClickPost,
@@ -239,12 +241,6 @@ private fun CreatorTopScreen(
             description = creatorDetail.description,
             onDismissRequest = { isShowDescriptionDialog = false },
         )
-    }
-
-    LaunchedEffect(bookmarkedPosts) {
-        for (i in 0 until creatorPostsPaging.itemCount) {
-            creatorPostsPaging[i]?.isBookmarked = bookmarkedPosts.contains(creatorPostsPaging[i]?.id)
-        }
     }
 }
 

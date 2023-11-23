@@ -94,6 +94,11 @@
     <string name="creator_tag_is_supported">支援中</string>
     <string name="creator_tag_is_accepting_request">リクエスト受付中</string>
 
+    <!-- Bookmark -->
+    <string name="bookmark_search_placeholder">ブックマークを検索</string>
+    <string name="bookmark_empty_title">ブックマークはありません</string>
+    <string name="bookmark_empty_description">お気に入りの投稿を見つけてブックマークしよう！</string>
+
     <!-- PostDetail -->
     <string name="post_detail_title">投稿詳細</string>
     <string name="post_detail_download_images">画像を全てダウンロード (%1$d枚)</string>

@@ -1,7 +1,6 @@
 package caios.android.pixiview.core.ui.theme
 
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.LocalTonalElevationEnabled
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -80,8 +79,7 @@ val Teal90 = Color(0xFFBEEAF6)
 
 @Composable
 fun ColorScheme.applyTonalElevation(backgroundColor: Color, elevation: Dp): Color {
-    val tonalElevationEnabled = LocalTonalElevationEnabled.current
-    return if (backgroundColor == surface && tonalElevationEnabled) {
+    return if (backgroundColor == surface) {
         surfaceColorAtElevation(elevation)
     } else {
         backgroundColor

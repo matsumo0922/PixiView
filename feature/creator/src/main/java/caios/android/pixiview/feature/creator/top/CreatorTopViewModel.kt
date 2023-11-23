@@ -50,8 +50,8 @@ class CreatorTopViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            fanboxRepository.bookmarkedPosts.collectLatest { ids ->
-                _screenState.value = screenState.value.changeContent { it.copy(bookmarkedPosts = ids) }
+            fanboxRepository.bookmarkedPosts.collectLatest { data ->
+                _screenState.value = screenState.value.changeContent { it.copy(bookmarkedPosts = data) }
             }
         }
     }

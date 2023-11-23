@@ -55,8 +55,8 @@ class PostSearchViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            fanboxRepository.bookmarkedPosts.collectLatest { ids ->
-                _uiState.value = uiState.value.copy(bookmarkedPosts = ids)
+            fanboxRepository.bookmarkedPosts.collectLatest { data ->
+                _uiState.value = uiState.value.copy(bookmarkedPosts = data)
             }
         }
     }

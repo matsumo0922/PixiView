@@ -1,12 +1,12 @@
 package caios.android.pixiview.core.ui.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,20 +17,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Comment
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.NoAdultContent
+import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,11 +67,8 @@ fun PostItem(
     isHideAdultContents: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    var isPostLiked by rememberSaveable(post.isLiked) { mutableStateOf(post.isLiked) }
-    val likeCount by rememberSaveable(post.isLiked, isPostLiked) {
-        mutableStateOf(post.likeCount + if (isPostLiked) 1 else 0)
-    }
-    var isHideAdultContent by rememberSaveable(isHideAdultContents) { mutableStateOf(isHideAdultContents) }
+    var isPostBookmarked by remember(post.isBookmarked) { mutableStateOf(post.isBookmarked) }
+    var isHideAdultContent by remember { mutableStateOf(isHideAdultContents) }
 
     Card(
         modifier = modifier
@@ -161,7 +161,7 @@ fun PostItem(
                 if (post.excerpt.isNotBlank()) {
                     Text(
                         modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .padding(horizontal = 16.dp)
                             .fillMaxWidth(),
                         text = post.excerpt,
                         style = MaterialTheme.typography.bodySmall,
@@ -173,19 +173,19 @@ fun PostItem(
 
                 CommentLikeButton(
                     modifier = Modifier
-                        .align(Alignment.End)
+                        .fillMaxWidth()
                         .padding(
-                            top = 8.dp,
                             start = 16.dp,
-                            end = 16.dp,
-                            bottom = 16.dp,
+                            end = 8.dp,
+                            bottom = 8.dp,
                         ),
                     commentCount = post.commentCount,
-                    likeCount = likeCount,
-                    isLiked = isPostLiked,
-                    onClickLike = {
-                        isPostLiked = !isPostLiked
-                        onClickBookmark.invoke(post.id, isPostLiked)
+                    likeCount = post.likeCount,
+                    isBookmarked = isPostBookmarked,
+                    isLiked = post.isLiked,
+                    onClickBookmark = {
+                        isPostBookmarked = it
+                        onClickBookmark.invoke(post.id, it)
                     },
                 )
             }
@@ -372,11 +372,13 @@ private fun FileThumbnail(
 private fun CommentLikeButton(
     commentCount: Int,
     likeCount: Int,
+    isBookmarked: Boolean,
     isLiked: Boolean,
-    onClickLike: () -> Unit,
+    onClickBookmark: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val likeColor = if (isLiked) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
+    val bookmarkColor = if (isBookmarked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
 
     Row(
         modifier = modifier,
@@ -384,18 +386,11 @@ private fun CommentLikeButton(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Row(
-            modifier = Modifier
-                .border(
-                    width = 0.5.dp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    shape = CircleShape,
-                )
-                .padding(8.dp, 6.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Icon(
-                modifier = Modifier.size(16.dp),
+                modifier = Modifier.size(20.dp),
                 imageVector = Icons.AutoMirrored.Filled.Comment,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 contentDescription = null,
@@ -409,20 +404,11 @@ private fun CommentLikeButton(
         }
 
         Row(
-            modifier = Modifier
-                .clip(CircleShape)
-                .border(
-                    width = 0.5.dp,
-                    color = likeColor,
-                    shape = CircleShape,
-                )
-                .clickable { onClickLike.invoke() }
-                .padding(8.dp, 6.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Icon(
-                modifier = Modifier.size(16.dp),
+                modifier = Modifier.size(20.dp),
                 imageVector = Icons.Default.Favorite,
                 tint = likeColor,
                 contentDescription = null,
@@ -432,6 +418,18 @@ private fun CommentLikeButton(
                 text = likeCount.toString(),
                 style = MaterialTheme.typography.bodySmall,
                 color = likeColor,
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        IconButton(
+            onClick = { onClickBookmark.invoke(!isBookmarked) },
+        ) {
+            Icon(
+                imageVector = if (isBookmarked) Icons.Default.Bookmark else Icons.Outlined.Bookmark,
+                tint = bookmarkColor,
+                contentDescription = null,
             )
         }
     }
