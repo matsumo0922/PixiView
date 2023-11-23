@@ -12,5 +12,12 @@
     "date": "2023/11/18",
     "logJp": "・PlayStoreにてアルファ版の公開を開始",
     "logEn": "・Alpha version now available on Play Store"
+  },
+  {
+    "versionName": "1.0.0",
+    "versionCode": 4,
+    "date": "2023/11/24",
+    "logJp": "・正式版の公開を開始",
+    "logEn": "・Official version released in Google Play Store"
   }
 ]
