@@ -230,7 +230,7 @@ private fun LikeItem(
                 .clip(CircleShape)
                 .size(36.dp),
             imageVector = Icons.Default.Favorite,
-            tint = Color.Red,
+            tint = Color(0xffe0405e),
             contentDescription = null,
         )
 

@@ -90,7 +90,7 @@ internal fun CreatorTopRoute(
             creatorTags = uiState.creatorTags.toImmutableList(),
             creatorPostsPaging = uiState.creatorPostsPaging.collectAsLazyPagingItems(),
             onClickPost = navigateToPostDetail,
-            onClickPlan = { context.startActivity(Intent(Intent.ACTION_VIEW, it.browserUri)) },
+            onClickPlan = { context.startActivity(Intent(Intent.ACTION_VIEW, it.planBrowserUri)) },
             onClickTag = { navigateToPostSearch.invoke(it.tag, uiState.creatorDetail.creatorId) },
             onTerminate = terminate,
             onClickLink = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },

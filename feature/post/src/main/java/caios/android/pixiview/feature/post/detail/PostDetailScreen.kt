@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,8 +44,11 @@ import caios.android.pixiview.core.common.util.ToastUtil
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.contract.PostDownloader
+import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
+import caios.android.pixiview.core.model.fanbox.FanboxMetaData
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
+import caios.android.pixiview.core.model.fanbox.id.CommentId
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.AsyncLoadContents
@@ -57,13 +61,13 @@ import caios.android.pixiview.core.ui.extensition.marquee
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
 import caios.android.pixiview.feature.post.detail.items.PostDetailArticleHeader
+import caios.android.pixiview.feature.post.detail.items.PostDetailCommentLikeButton
 import caios.android.pixiview.feature.post.detail.items.PostDetailCommentSection
 import caios.android.pixiview.feature.post.detail.items.PostDetailCreatorSection
 import caios.android.pixiview.feature.post.detail.items.PostDetailDownloadSection
 import caios.android.pixiview.feature.post.detail.items.PostDetailFileHeader
 import caios.android.pixiview.feature.post.detail.items.PostDetailImageHeader
 import caios.android.pixiview.feature.post.detail.items.PostDetailMenuDialog
-import caios.android.pixiview.feature.post.detail.items.PostDetailOtherPostSection
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.toImmutableList
@@ -72,6 +76,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 internal fun PostDetailRoute(
     postId: PostId,
+    navigateToPostSearch: (String, CreatorId) -> Unit,
     navigateToPostDetail: (PostId) -> Unit,
     navigateToPostImage: (PostId, Int) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
@@ -98,9 +103,15 @@ internal fun PostDetailRoute(
         PostDetailScreen(
             modifier = Modifier.fillMaxSize(),
             postDetail = uiState.postDetail,
+            creatorDetail = uiState.creatorDetail,
             userData = uiState.userData,
+            metaData = uiState.metaData,
             onClickPost = navigateToPostDetail,
             onClickPostBookmark = viewModel::postBookmark,
+            onClickCommentLoadMore = viewModel::loadMoreComment,
+            onClickCommentLike = viewModel::commentLike,
+            onClickCommentReply = viewModel::commentReply,
+            onClickTag = { navigateToPostSearch.invoke(it, uiState.postDetail.user.creatorId) },
             onClickCreator = navigateToCreatorPlans,
             onClickImage = { item ->
                 uiState.postDetail.body.imageItems.indexOf(item).let { index ->
@@ -111,12 +122,15 @@ internal fun PostDetailRoute(
             onClickDownloadImages = postDownloader::onDownloadImages,
             onClickCreatorPosts = navigateToCreatorPosts,
             onClickCreatorPlans = navigateToCreatorPlans,
+            onClickFollow = viewModel::follow,
+            onClickUnfollow = viewModel::unfollow,
             onClickOpenBrowser = { context.startActivity(Intent(Intent.ACTION_VIEW, it)) },
             onTerminate = terminate,
         )
 
         LaunchedEffect(uiState.messageToast) {
             uiState.messageToast?.let { ToastUtil.show(context, it) }
+            viewModel.consumeToast()
         }
     }
 }
@@ -124,15 +138,23 @@ internal fun PostDetailRoute(
 @Composable
 private fun PostDetailScreen(
     postDetail: FanboxPostDetail,
+    creatorDetail: FanboxCreatorDetail,
     userData: UserData,
+    metaData: FanboxMetaData,
     onClickPost: (PostId) -> Unit,
     onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
+    onClickCommentLoadMore: (PostId, Int) -> Unit,
+    onClickCommentLike: (CommentId) -> Unit,
+    onClickCommentReply: (PostId, String, CommentId, CommentId) -> Unit,
+    onClickTag: (String) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
     onClickFile: (FanboxPostDetail.FileItem) -> Unit,
     onClickDownloadImages: (List<FanboxPostDetail.ImageItem>) -> Unit,
     onClickCreatorPosts: (CreatorId) -> Unit,
     onClickCreatorPlans: (CreatorId) -> Unit,
+    onClickFollow: (String) -> Unit,
+    onClickUnfollow: (String) -> Unit,
     onClickOpenBrowser: (Uri) -> Unit,
     onTerminate: () -> Unit,
     modifier: Modifier = Modifier,
@@ -151,6 +173,7 @@ private fun PostDetailScreen(
         modifier = modifier,
         onClickNavigateUp = onTerminate,
         onClickMenu = { isShowMenu = true },
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         header = {
             if (!isShowCoordinateHeader) {
                 PostDetailContent(
@@ -188,18 +211,30 @@ private fun PostDetailScreen(
             }
         }
 
+        if (postDetail.tags.isNotEmpty()) {
+            item {
+                TagItems(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                    tags = postDetail.tags.toImmutableList(),
+                    onClickTag = onClickTag,
+                )
+            }
+        }
+
         item {
             Row(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                TagItems(
+                PostDetailCommentLikeButton(
                     modifier = Modifier.weight(1f),
-                    tags = postDetail.tags.toImmutableList(),
-                    onClickTag = { },
+                    likeCount = postDetail.likeCount,
+                    commentCount = postDetail.commentCount,
                 )
 
                 IconButton(
@@ -221,7 +256,7 @@ private fun PostDetailScreen(
             item {
                 RestrictCardItem(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(horizontal = 16.dp)
                         .fillMaxWidth(),
                     feeRequired = postDetail.feeRequired,
                     backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp),
@@ -232,7 +267,7 @@ private fun PostDetailScreen(
             item {
                 PostDetailDownloadSection(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(horizontal = 16.dp)
                         .fillMaxWidth(),
                     postDetail = postDetail,
                     onClickDownload = onClickDownloadImages,
@@ -243,31 +278,28 @@ private fun PostDetailScreen(
         item {
             PostDetailCreatorSection(
                 modifier = Modifier.fillMaxWidth(),
-                post = postDetail,
-                onClickCreator = { onClickCreatorPlans.invoke(it) },
+                postDetail = postDetail,
+                creatorDetail = creatorDetail,
+                onClickCreator = { onClickCreatorPosts.invoke(it) },
+                onClickFollow = onClickFollow,
+                onClickUnfollow = onClickUnfollow,
+                onClickSupporting = onClickOpenBrowser,
             )
         }
 
-        if (postDetail.commentCount != 0) {
+        if (postDetail.commentList.contents.isNotEmpty()) {
             item {
                 PostDetailCommentSection(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(horizontal = 16.dp)
                         .fillMaxWidth(),
-                    post = postDetail,
+                    postDetail = postDetail,
+                    metaData = metaData,
+                    onClickLoadMore = onClickCommentLoadMore,
+                    onClickCommentLike = onClickCommentLike,
+                    onClickCommentReply = { body, parent, root -> onClickCommentReply.invoke(postDetail.id, body, parent, root) },
                 )
             }
-        }
-
-        item {
-            PostDetailOtherPostSection(
-                modifier = Modifier.fillMaxWidth(),
-                nextPost = postDetail.nextPost,
-                previousPost = postDetail.prevPost,
-                onClickNextPost = onClickPost,
-                onClickPreviousPost = onClickPost,
-                onClickAllPosts = { onClickCreatorPosts.invoke(postDetail.user.creatorId) },
-            )
         }
 
         item {
@@ -425,4 +457,31 @@ private fun FileThumbnail(
             contentDescription = null,
         )
     }
+}
+
+@Preview
+@Composable
+private fun PostDetailScreenPreview() {
+    PostDetailScreen(
+        postDetail = FanboxPostDetail.dummy(),
+        creatorDetail = FanboxCreatorDetail.dummy(),
+        userData = UserData.dummy(),
+        metaData = FanboxMetaData.dummy(),
+        onClickPost = {},
+        onClickPostBookmark = { _, _ -> },
+        onClickCommentLoadMore = { _, _ -> },
+        onClickCommentLike = {},
+        onClickCommentReply = { _, _, _, _ -> },
+        onClickTag = {},
+        onClickCreator = {},
+        onClickImage = {},
+        onClickFile = {},
+        onClickDownloadImages = {},
+        onClickCreatorPosts = {},
+        onClickCreatorPlans = {},
+        onClickFollow = {},
+        onClickUnfollow = {},
+        onClickOpenBrowser = {},
+        onTerminate = {},
+    )
 }

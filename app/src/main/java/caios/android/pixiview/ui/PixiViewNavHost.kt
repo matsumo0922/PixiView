@@ -6,7 +6,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import caios.android.pixiview.core.ui.extensition.navigateForResult
 import caios.android.pixiview.core.ui.extensition.popBackStackWithResult
 import caios.android.pixiview.core.ui.view.navigateToSimpleAlertDialog
 import caios.android.pixiview.core.ui.view.simpleAlertDialogDialog
@@ -80,6 +79,7 @@ internal fun PixiViewNavHost(
             )
 
             postDetailScreen(
+                navigateToPostSearch = { query, creatorId -> navController.navigateToPostSearch(tag = query, creatorId = creatorId) },
                 navigateToPostDetail = { navController.navigateToPostDetail(it) },
                 navigateToPostImage = { postId, index -> navController.navigateToPostImage(postId, index) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },

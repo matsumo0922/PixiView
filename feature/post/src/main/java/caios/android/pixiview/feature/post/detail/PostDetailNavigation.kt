@@ -19,6 +19,7 @@ fun NavController.navigateToPostDetail(postId: PostId) {
 }
 
 fun NavGraphBuilder.postDetailScreen(
+    navigateToPostSearch: (String, CreatorId) -> Unit,
     navigateToPostDetail: (PostId) -> Unit,
     navigateToPostImage: (PostId, Int) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
@@ -36,6 +37,7 @@ fun NavGraphBuilder.postDetailScreen(
         PostDetailRoute(
             modifier = Modifier.fillMaxSize(),
             postId = PostId(it.arguments?.getString(PostDetailId) ?: ""),
+            navigateToPostSearch = navigateToPostSearch,
             navigateToPostDetail = navigateToPostDetail,
             navigateToPostImage = navigateToPostImage,
             navigateToCreatorPosts = navigateToCreatorPosts,

@@ -26,6 +26,8 @@ import caios.android.pixiview.core.model.ThemeConfig
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.core.ui.component.PixiViewBackground
+import caios.android.pixiview.core.ui.theme.DarkDefaultColorScheme
+import caios.android.pixiview.core.ui.theme.LightDefaultColorScheme
 import caios.android.pixiview.core.ui.theme.PixiViewTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,6 +76,7 @@ class CrushReportActivity : ComponentActivity() {
             AsyncLoadContents(
                 modifier = Modifier.fillMaxSize(),
                 screenState = screenState,
+                containerColor = if (shouldUseDarkTheme) DarkDefaultColorScheme.surface else LightDefaultColorScheme.surface,
             ) { userData ->
                 PixiViewTheme(
                     themeColorConfig = userData.themeColorConfig,

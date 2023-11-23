@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.core.net.toUri
 import caios.android.pixiview.core.model.PageCursorInfo
 import caios.android.pixiview.core.model.PageNumberInfo
+import caios.android.pixiview.core.model.PageOffsetInfo
 import caios.android.pixiview.core.model.fanbox.FanboxBell
 import caios.android.pixiview.core.model.fanbox.FanboxCover
 import caios.android.pixiview.core.model.fanbox.FanboxCreator
@@ -28,6 +29,7 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxMetaDataEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxNewsLattersEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPaidRecordEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxPostCommentItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostSearchEntity
@@ -247,29 +249,10 @@ internal fun FanboxPostDetailEntity.translate(bookmarkedPosts: List<PostId>): Fa
         ),
         body = bodyBlock,
         excerpt = body.excerpt,
-        commentList = body.commentList.let { commentList ->
-            FanboxPostDetail.Comment(
-                items = commentList.items.map {
-                    FanboxPostDetail.Comment.CommentItem(
-                        body = it.body,
-                        createdDatetime = OffsetDateTime.parse(it.createdDatetime),
-                        id = it.id,
-                        isLiked = it.isLiked,
-                        isOwn = it.isOwn,
-                        likeCount = it.likeCount,
-                        parentCommentId = it.parentCommentId,
-                        rootCommentId = it.rootCommentId,
-                        user = FanboxUser(
-                            userId = it.user.userId,
-                            creatorId = CreatorId(""),
-                            name = it.user.name,
-                            iconUrl = it.user.iconUrl,
-                        ),
-                    )
-                },
-                nextUrl = commentList.nextUrl,
-            )
-        },
+        commentList = PageOffsetInfo(
+            contents = body.commentList.items.map { it.translate() },
+            offset = body.commentList.nextUrl?.let { Uri.parse(it).getQueryParameter("offset")?.toIntOrNull() },
+        ),
         nextPost = body.nextPost?.let {
             FanboxPostDetail.OtherPost(
                 id = PostId(it.id),
@@ -285,6 +268,26 @@ internal fun FanboxPostDetailEntity.translate(bookmarkedPosts: List<PostId>): Fa
             )
         },
         imageForShare = body.imageForShare,
+    )
+}
+
+internal fun FanboxPostDetailEntity.Body.CommentList.Item.translate(): FanboxPostDetail.Comment.CommentItem {
+    return FanboxPostDetail.Comment.CommentItem(
+        body = body,
+        createdDatetime = OffsetDateTime.parse(createdDatetime),
+        id = CommentId(id),
+        isLiked = isLiked,
+        isOwn = isOwn,
+        likeCount = likeCount,
+        parentCommentId = CommentId(parentCommentId),
+        rootCommentId = CommentId(rootCommentId),
+        replies = replies.map { it.translate() }.sortedBy { it.createdDatetime },
+        user = FanboxUser(
+            userId = user.userId,
+            creatorId = CreatorId(""),
+            name = user.name,
+            iconUrl = user.iconUrl,
+        ),
     )
 }
 
@@ -489,6 +492,13 @@ internal fun FanboxPostSearchEntity.translate(bookmarkedPosts: List<PostId>): Pa
     return PageNumberInfo(
         contents = body.items.map { it.translate(bookmarkedPosts) },
         nextPage = body.nextUrl?.let { Uri.parse(it).getQueryParameter("page")?.toIntOrNull() },
+    )
+}
+
+internal fun FanboxPostCommentItemsEntity.translate(): PageOffsetInfo<FanboxPostDetail.Comment.CommentItem> {
+    return PageOffsetInfo(
+        contents = body.items.map { it.translate() },
+        offset = body.nextUrl?.let { Uri.parse(it).getQueryParameter("offset")?.toIntOrNull() },
     )
 }
 

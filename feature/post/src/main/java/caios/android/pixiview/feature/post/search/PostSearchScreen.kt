@@ -40,7 +40,7 @@ internal fun PostSearchRoute(
     val tagPaging = uiState.tagPaging.collectAsLazyPagingItems()
 
     LaunchedEffect(true) {
-        if (query.isNotBlank()) {
+        if (query.isNotBlank() && uiState.query.isBlank()) {
             viewModel.search(parseQuery(query))
         }
     }

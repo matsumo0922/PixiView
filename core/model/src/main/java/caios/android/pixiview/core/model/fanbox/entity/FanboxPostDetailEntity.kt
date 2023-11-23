@@ -126,6 +126,8 @@ data class FanboxPostDetailEntity(
                 val rootCommentId: String,
                 @SerialName("user")
                 val user: User,
+                @SerialName("replies")
+                val replies: List<Item> = emptyList(),
             ) {
                 @Serializable
                 data class User(

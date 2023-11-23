@@ -145,7 +145,7 @@ private fun CoordinatorScaffoldPreview() {
                 )
             }
 
-            items(listOf(Color.Blue, Color.Red, Color.Yellow, Color.Cyan)) {
+            items(listOf(Color.Blue, Color(0xffe0405e), Color.Yellow, Color.Cyan)) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

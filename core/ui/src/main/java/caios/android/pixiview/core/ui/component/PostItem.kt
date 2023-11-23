@@ -377,7 +377,7 @@ private fun CommentLikeButton(
     onClickBookmark: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val likeColor = if (isLiked) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
+    val likeColor = if (isLiked) Color(0xffe0405e) else MaterialTheme.colorScheme.onSurfaceVariant
     val bookmarkColor = if (isBookmarked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
 
     Row(

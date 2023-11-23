@@ -14,6 +14,7 @@ import caios.android.pixiview.core.datastore.PreferenceBookmarkedPosts
 import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
 import caios.android.pixiview.core.model.PageCursorInfo
 import caios.android.pixiview.core.model.PageNumberInfo
+import caios.android.pixiview.core.model.PageOffsetInfo
 import caios.android.pixiview.core.model.fanbox.FanboxBell
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
@@ -35,9 +36,11 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxMetaDataEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxNewsLattersEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPaidRecordEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxPostCommentItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostSearchEntity
+import caios.android.pixiview.core.model.fanbox.id.CommentId
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.utils.parse
@@ -94,11 +97,13 @@ interface FanboxRepository {
     suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
     suspend fun getPost(postId: PostId): FanboxPostDetail
     suspend fun getPostCached(postId: PostId): FanboxPostDetail
+    suspend fun getPostComment(postId: PostId, offset: Int = 0): PageOffsetInfo<FanboxPostDetail.Comment.CommentItem>
 
     suspend fun getFollowingCreators(): List<FanboxCreatorDetail>
     suspend fun getRecommendedCreators(): List<FanboxCreatorDetail>
 
     suspend fun getCreator(creatorId: CreatorId): FanboxCreatorDetail
+    suspend fun getCreatorCached(creatorId: CreatorId): FanboxCreatorDetail
     suspend fun getCreatorTags(creatorId: CreatorId): List<FanboxCreatorTag>
 
     suspend fun getPostFromQuery(query: String, creatorId: CreatorId? = null, page: Int = 0): PageNumberInfo<FanboxPost>
@@ -112,8 +117,13 @@ interface FanboxRepository {
     suspend fun getUnpaidRecords(): List<FanboxPaidRecord>
 
     suspend fun getNewsLetters(): List<FanboxNewsLetter>
-
     suspend fun getBells(page: Int = 0): PageNumberInfo<FanboxBell>
+
+    suspend fun likePost(postId: PostId)
+    suspend fun likeComment(commentId: CommentId)
+
+    suspend fun addComment(postId: PostId, comment: String, rootCommentId: CommentId? = null, parentCommentId: CommentId? = null)
+    suspend fun deleteComment(commentId: CommentId)
 
     suspend fun followCreator(creatorUserId: String)
     suspend fun unfollowCreator(creatorUserId: String)
@@ -136,8 +146,10 @@ class FanboxRepositoryImpl(
     private val ioDispatcher: CoroutineDispatcher,
 ) : FanboxRepository {
 
-    private val _metaData = MutableSharedFlow<FanboxMetaData>(replay = 1)
+    private val creatorCache = mutableMapOf<CreatorId, FanboxCreatorDetail>()
     private val postCache = mutableMapOf<PostId, FanboxPostDetail>()
+
+    private val _metaData = MutableSharedFlow<FanboxMetaData>(replay = 1)
     private val _logoutTrigger = Channel<OffsetDateTime>()
 
     override val cookie: SharedFlow<String> = fanboxCookiePreference.data
@@ -258,6 +270,10 @@ class FanboxRepositoryImpl(
         postCache.getOrPut(postId) { getPost(postId) }
     }
 
+    override suspend fun getPostComment(postId: PostId, offset: Int): PageOffsetInfo<FanboxPostDetail.Comment.CommentItem> = withContext(ioDispatcher) {
+        get("post.listComments", mapOf("postId" to postId.value, "offset" to offset.toString(), "limit" to "10")).parse<FanboxPostCommentItemsEntity>()!!.translate()
+    }
+
     override suspend fun getFollowingCreators(): List<FanboxCreatorDetail> = withContext(ioDispatcher) {
         get("creator.listFollowing").parse<FanboxCreatorItemsEntity>()!!.translate()
     }
@@ -267,7 +283,13 @@ class FanboxRepositoryImpl(
     }
 
     override suspend fun getCreator(creatorId: CreatorId): FanboxCreatorDetail = withContext(ioDispatcher) {
-        get("creator.get", mapOf("creatorId" to creatorId.value)).parse<FanboxCreatorEntity>()!!.translate()
+        get("creator.get", mapOf("creatorId" to creatorId.value)).parse<FanboxCreatorEntity>()!!.translate().also {
+            creatorCache[creatorId] = it
+        }
+    }
+
+    override suspend fun getCreatorCached(creatorId: CreatorId): FanboxCreatorDetail = withContext(ioDispatcher) {
+        creatorCache.getOrPut(creatorId) { getCreator(creatorId) }
     }
 
     override suspend fun getCreatorTags(creatorId: CreatorId): List<FanboxCreatorTag> = withContext(ioDispatcher) {
@@ -306,6 +328,30 @@ class FanboxRepositoryImpl(
         }.let {
             get("bell.list", it).parse<FanboxBellItemsEntity>()!!.translate()
         }
+    }
+
+    override suspend fun likePost(postId: PostId): Unit = withContext(ioDispatcher) {
+        post("post.likePost", mapOf("postId" to postId.value))
+    }
+
+    override suspend fun likeComment(commentId: CommentId): Unit = withContext(ioDispatcher) {
+        post("post.likeComment", mapOf("commentId" to commentId.value))
+    }
+
+    override suspend fun addComment(postId: PostId, comment: String, rootCommentId: CommentId?, parentCommentId: CommentId?): Unit = withContext(ioDispatcher) {
+        post(
+            dir = "post.addComment",
+            parameters = mapOf(
+                "postId" to postId.value,
+                "rootCommentId" to rootCommentId?.value.orEmpty(),
+                "parentCommentId" to parentCommentId?.value.orEmpty(),
+                "body" to comment,
+            ),
+        )
+    }
+
+    override suspend fun deleteComment(commentId: CommentId): Unit = withContext(ioDispatcher) {
+        post("post.deleteComment", mapOf("commentId" to commentId.value))
     }
 
     override suspend fun followCreator(creatorUserId: String): Unit = withContext(ioDispatcher) {

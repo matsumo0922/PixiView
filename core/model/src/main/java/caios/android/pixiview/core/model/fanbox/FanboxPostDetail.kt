@@ -1,6 +1,8 @@
 package caios.android.pixiview.core.model.fanbox
 
 import androidx.core.net.toUri
+import caios.android.pixiview.core.model.PageOffsetInfo
+import caios.android.pixiview.core.model.fanbox.id.CommentId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import java.time.OffsetDateTime
 
@@ -10,7 +12,7 @@ data class FanboxPostDetail(
     val body: Body,
     val coverImageUrl: String?,
     val commentCount: Int,
-    val commentList: Comment,
+    val commentList: PageOffsetInfo<Comment.CommentItem>,
     val excerpt: String,
     val feeRequired: Int,
     val hasAdultContent: Boolean,
@@ -52,19 +54,21 @@ data class FanboxPostDetail(
     }
 
     sealed interface Body {
-        val imageItems get() = when (this) {
-            is Article -> blocks.filterIsInstance<Article.Block.Image>().map { it.item }
-            is Image -> images
-            is File -> emptyList()
-            is Unknown -> emptyList()
-        }
+        val imageItems
+            get() = when (this) {
+                is Article -> blocks.filterIsInstance<Article.Block.Image>().map { it.item }
+                is Image -> images
+                is File -> emptyList()
+                is Unknown -> emptyList()
+            }
 
-        val fileItems get() = when (this) {
-            is Article -> blocks.filterIsInstance<Article.Block.File>().map { it.item }
-            is Image -> emptyList()
-            is File -> files
-            is Unknown -> emptyList()
-        }
+        val fileItems
+            get() = when (this) {
+                is Article -> blocks.filterIsInstance<Article.Block.File>().map { it.item }
+                is Image -> emptyList()
+                is File -> files
+                is Unknown -> emptyList()
+            }
 
         data class Article(val blocks: List<Block>) : Body {
             sealed interface Block {
@@ -101,12 +105,13 @@ data class FanboxPostDetail(
         data class CommentItem(
             val body: String,
             val createdDatetime: OffsetDateTime,
-            val id: String,
+            val id: CommentId,
             val isLiked: Boolean,
             val isOwn: Boolean,
             val likeCount: Int,
-            val parentCommentId: String,
-            val rootCommentId: String,
+            val parentCommentId: CommentId,
+            val rootCommentId: CommentId,
+            val replies: List<CommentItem>,
             val user: FanboxUser,
         )
     }
@@ -134,4 +139,65 @@ data class FanboxPostDetail(
         val size: Long,
         val url: String,
     )
+
+    companion object {
+        fun dummy() = FanboxPostDetail(
+            id = PostId("123"),
+            title = "オリキャラSkeb絵",
+            body = Body.Unknown,
+            coverImageUrl = null,
+            commentCount = 3,
+            commentList = PageOffsetInfo(
+                contents = listOf(
+                    Comment.CommentItem(
+                        body = "かわいい～！",
+                        createdDatetime = OffsetDateTime.now(),
+                        id = CommentId("123"),
+                        isLiked = false,
+                        isOwn = false,
+                        likeCount = 0,
+                        parentCommentId = CommentId(""),
+                        rootCommentId = CommentId(""),
+                        replies = emptyList(),
+                        user = FanboxUser.dummy(),
+                    ),
+                    Comment.CommentItem(
+                        body = "なるほどこれが天才か...",
+                        createdDatetime = OffsetDateTime.now(),
+                        id = CommentId("124"),
+                        isLiked = false,
+                        isOwn = false,
+                        likeCount = 0,
+                        parentCommentId = CommentId(""),
+                        rootCommentId = CommentId(""),
+                        replies = emptyList(),
+                        user = FanboxUser.dummy(),
+                    )
+                ),
+                offset = null
+            ),
+            excerpt = "リクエストありがとうございました！",
+            feeRequired = 0,
+            hasAdultContent = true,
+            imageForShare = "",
+            isLiked = false,
+            isBookmarked = false,
+            isRestricted = false,
+            likeCount = 879,
+            tags = listOf("オリキャラ", "Skeb絵"),
+            updatedDatetime = OffsetDateTime.now(),
+            publishedDatetime = OffsetDateTime.now(),
+            nextPost = OtherPost(
+                id = PostId("456"),
+                title = "ゆんゆん",
+                publishedDatetime = OffsetDateTime.now(),
+            ),
+            prevPost = OtherPost(
+                id = PostId("789"),
+                title = "ポニテこころん",
+                publishedDatetime = OffsetDateTime.now(),
+            ),
+            user = FanboxUser.dummy(),
+        )
+    }
 }

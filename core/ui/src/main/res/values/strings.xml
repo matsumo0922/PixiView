@@ -23,6 +23,7 @@
     <string name="common_delete">削除</string>
     <string name="common_download">ダウンロード</string>
     <string name="common_downloaded">ダウンロードしました</string>
+    <string name="common_supporting">支援中</string>
     <string name="common_follow">フォロー</string>
     <string name="common_unfollow">フォロー中</string>
     <string name="common_see_more">もっと見る</string>
@@ -104,6 +105,12 @@
     <string name="post_detail_download_images">画像を全てダウンロード (%1$d枚)</string>
     <string name="post_detail_creator">クリエイター</string>
     <string name="post_detail_comment_title">コメント</string>
+    <string name="post_detail_comment_reply">返信</string>
+    <string name="post_detail_comment_placeholder">コメントを入力</string>
+    <string name="post_detail_comment_commented">コメントしました</string>
+    <string name="post_detail_comment_comment_failed">コメントに失敗しました</string>
+    <string name="post_detail_comment_delete_title">コメントを削除</string>
+    <string name="post_detail_comment_delete_message">このコメントを削除しますか？</string>
     <string name="post_detail_oldest_post">前の投稿はありません</string>
     <string name="post_detail_newest_post">次の投稿はありません</string>
     <string name="post_detail_all_posts">すべての投稿を見る</string>
@@ -195,7 +202,7 @@
 
     <!-- Report -->
     <string name="report_crush_title">Oops! Something went wrong</string>
-    <string name="report_crush_description">申し訳ありません…\n技術的な要因により、FANBOX Viewer がクラッシュしました。\n以下のレポートを開発者に送付してください。</string>
+    <string name="report_crush_description">技術的な要因により、FANBOX Viewer がクラッシュしました。以下のレポートを開発者に送付してください。</string>
     <string name="report_crush_copy">コピー</string>
     <string name="report_crush_toast_copy">コピーしました</string>
 

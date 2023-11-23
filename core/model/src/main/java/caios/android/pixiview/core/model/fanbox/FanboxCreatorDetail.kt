@@ -17,6 +17,8 @@ data class FanboxCreatorDetail(
     val profileLinks: List<ProfileLink>,
     val user: FanboxUser,
 ) {
+    val supportingBrowserUri get() = "https://www.fanbox.cc/creators/supporting/@${user.creatorId}".toUri()
+
     data class ProfileItem(
         val id: String,
         val imageUrl: String?,

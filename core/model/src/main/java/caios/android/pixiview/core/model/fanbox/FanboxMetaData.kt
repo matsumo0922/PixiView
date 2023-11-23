@@ -36,11 +36,57 @@ data class FanboxMetaData(
             val planCount: Int,
             val showAdultContent: Boolean,
             val userId: String,
-        )
+        ) {
+            companion object {
+                fun User.asFanboxUser() = FanboxUser(
+                    iconUrl = iconUrl.orEmpty(),
+                    name = name,
+                    userId = userId,
+                    creatorId = CreatorId(creatorId?.value.orEmpty()),
+                )
+            }
+        }
     }
 
     data class UrlContext(
         val creatorOriginPattern: String,
         val rootOriginPattern: String,
     )
+
+    companion object {
+        fun dummy() = FanboxMetaData(
+            apiUrl = "",
+            context = Context(
+                privacyPolicy = Context.PrivacyPolicy(
+                    policyUrl = "",
+                    revisionHistoryUrl = "",
+                    shouldShowNotice = false,
+                    updateDate = "",
+                ),
+                user = Context.User(
+                    creatorId = null,
+                    fanboxUserStatus = 0,
+                    hasAdultContent = false,
+                    hasUnpaidPayments = false,
+                    iconUrl = null,
+                    isCreator = false,
+                    isMailAddressOutdated = false,
+                    isSupporter = false,
+                    lang = "ja",
+                    name = "ゆしまる",
+                    planCount = 0,
+                    showAdultContent = false,
+                    userId = "5658",
+                ),
+            ),
+            csrfToken = "",
+            invitationsDisabled = false,
+            isOnCc = false,
+            urlContext = UrlContext(
+                creatorOriginPattern = "",
+                rootOriginPattern = "",
+            ),
+            wwwUrl = "",
+        )
+    }
 }
