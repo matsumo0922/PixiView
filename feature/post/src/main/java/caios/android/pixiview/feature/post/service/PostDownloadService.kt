@@ -11,6 +11,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.NotificationConfigs
+import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.FanboxRepository
@@ -20,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -34,12 +36,12 @@ class PostDownloadService : Service() {
 
     private val manager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
     private val notifyConfig = NotificationConfigs.download
+    private var isForeground = false
 
     private val binder = PostDownloadBinder()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private val imageMutex = Mutex()
-    private val fileMutex = Mutex()
+    private val mutex = Mutex()
 
     private val _downloadedEvent = Channel<PostId>()
 
@@ -49,7 +51,7 @@ class PostDownloadService : Service() {
 
     fun downloadImages(imageItems: List<FanboxPostDetail.ImageItem>) {
         scope.launch {
-            imageMutex.withLock {
+            mutex.withLock {
                 createNotifyChannel()
 
                 for (item in imageItems) {
@@ -74,7 +76,7 @@ class PostDownloadService : Service() {
 
     fun downloadFile(fileItem: FanboxPostDetail.FileItem) {
         scope.launch {
-            fileMutex.withLock {
+            mutex.withLock {
                 createNotifyChannel()
 
                 val name = "file-${fileItem.postId}-${fileItem.id}"
@@ -95,19 +97,85 @@ class PostDownloadService : Service() {
         }
     }
 
-    private fun setForegroundService(isForeground: Boolean, name: String = "") {
-        if (isForeground) {
-            startForeground(notifyConfig.notifyId, createNotify(baseContext, name))
-        } else {
-            stopForeground(STOP_FOREGROUND_REMOVE)
+    fun downloadPosts(posts: List<FanboxPost>, isIgnoreFree: Boolean, isIgnoreFile: Boolean) {
+        scope.launch {
+            mutex.withLock {
+                createNotifyChannel()
+
+                for ((index, post) in posts.withIndex()) {
+                    if (isIgnoreFree && post.feeRequired == 0) continue
+
+                    val postDetail = fanboxRepository.getPost(post.id)
+                    val title = getString(R.string.creator_posts_download_notify_title, post.user.name)
+                    val subMessage = "%.2f %%".format((index + 1).toFloat() / posts.size * 100)
+
+                    for (item in postDetail.body.imageItems) {
+                        val name = "illust-${item.postId}-${item.id}"
+
+                        setForegroundService(true, title, "$name.${item.extension}", subMessage)
+
+                        suspendRunCatching {
+                            fanboxRepository.downloadImage(
+                                url = item.originalUrl,
+                                name = name,
+                                extension = item.extension,
+                                dir = post.user.creatorId.value,
+                            )
+                        }
+                    }
+
+                    if (!isIgnoreFile) {
+                        for (item in postDetail.body.fileItems) {
+                            val name = "file-${item.postId}-${item.id}"
+
+                            setForegroundService(true, title, "$name.${item.extension}", subMessage)
+
+                            suspendRunCatching {
+                                fanboxRepository.downloadFile(
+                                    url = item.url,
+                                    name = name,
+                                    extension = item.extension,
+                                    dir = post.user.creatorId.value,
+                                )
+                            }
+                        }
+                    }
+
+                    delay(1000)
+                }
+
+                _downloadedEvent.send(PostId("-1"))
+
+                setForegroundService(false)
+            }
         }
     }
 
-    private fun createNotify(context: Context, name: String): Notification {
+    private fun setForegroundService(
+        isForeground: Boolean,
+        title: String = "",
+        message: String = "",
+        subMessage: String = "",
+    ) {
+        if (isForeground) {
+            if (!this.isForeground) {
+                startForeground(notifyConfig.notifyId, createNotify(baseContext, title, message, subMessage))
+            } else {
+                manager.notify(notifyConfig.notifyId, createNotify(baseContext, title, message, subMessage))
+            }
+        } else {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        }
+
+        this.isForeground = isForeground
+    }
+
+    private fun createNotify(context: Context, title: String, message: String, subMessage: String): Notification {
         return NotificationCompat.Builder(context, notifyConfig.channelId)
-            .setSmallIcon(R.drawable.vec_songs_off)
-            .setContentTitle(getString(R.string.post_detail_downloading))
-            .setContentText(name)
+            .setSmallIcon(R.drawable.vec_app_icon_translate)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setSubText(subMessage)
             .setAutoCancel(false)
             .setColorized(true)
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
@@ -124,7 +192,7 @@ class PostDownloadService : Service() {
         val channel = NotificationChannel(
             notifyConfig.channelId,
             channelName,
-            NotificationManager.IMPORTANCE_HIGH,
+            NotificationManager.IMPORTANCE_LOW,
         ).apply {
             description = channelDescription
         }

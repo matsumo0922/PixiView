@@ -28,6 +28,7 @@ import caios.android.pixiview.core.common.util.ToastUtil
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.ThemeConfig
 import caios.android.pixiview.core.model.contract.PostDownloader
+import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.ui.AsyncLoadContents
 import caios.android.pixiview.core.ui.theme.DarkDefaultColorScheme
@@ -132,6 +133,7 @@ class MainActivity : ComponentActivity(), PostDownloader {
 
     override fun onDownloadImages(imageItems: List<FanboxPostDetail.ImageItem>) {
         if (isPostDownloadServiceBound) {
+            startForegroundService(Intent(this, PostDownloadService::class.java))
             postDownloadService.downloadImages(imageItems)
         } else {
             ToastUtil.show(this, R.string.error_unknown)
@@ -140,7 +142,17 @@ class MainActivity : ComponentActivity(), PostDownloader {
 
     override fun onDownloadFile(fileItem: FanboxPostDetail.FileItem) {
         if (isPostDownloadServiceBound) {
+            startForegroundService(Intent(this, PostDownloadService::class.java))
             postDownloadService.downloadFile(fileItem)
+        } else {
+            ToastUtil.show(this, R.string.error_unknown)
+        }
+    }
+
+    override fun onDownloadPosts(posts: List<FanboxPost>, isIgnoreFree: Boolean, isIgnoreFile: Boolean) {
+        if (isPostDownloadServiceBound) {
+            startForegroundService(Intent(this, PostDownloadService::class.java))
+            postDownloadService.downloadPosts(posts, isIgnoreFree, isIgnoreFile)
         } else {
             ToastUtil.show(this, R.string.error_unknown)
         }

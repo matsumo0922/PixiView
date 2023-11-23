@@ -31,6 +31,7 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlanEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlansEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPostsPaginateEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorSearchEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxMetaDataEntity
@@ -95,6 +96,7 @@ interface FanboxRepository {
     suspend fun getHomePosts(cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
     suspend fun getSupportedPosts(cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
     suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
+    suspend fun getCreatorPostsPaginate(creatorId: CreatorId): List<FanboxCursor>
     suspend fun getPost(postId: PostId): FanboxPostDetail
     suspend fun getPostCached(postId: PostId): FanboxPostDetail
     suspend fun getPostComment(postId: PostId, offset: Int = 0): PageOffsetInfo<FanboxPostDetail.Comment.CommentItem>
@@ -133,8 +135,8 @@ interface FanboxRepository {
     suspend fun unbookmarkPost(post: FanboxPost)
 
     suspend fun downloadBitmap(bitmap: Bitmap, name: String)
-    suspend fun downloadImage(url: String, name: String, extension: String)
-    suspend fun downloadFile(url: String, name: String, extension: String)
+    suspend fun downloadImage(url: String, name: String, extension: String, dir: String = "")
+    suspend fun downloadFile(url: String, name: String, extension: String, dir: String = "")
 }
 
 class FanboxRepositoryImpl(
@@ -254,6 +256,10 @@ class FanboxRepositoryImpl(
         }.let {
             get("post.listTagged", it).parse<FanboxPostSearchEntity>()!!.translate(bookmarkedPosts.first())
         }
+    }
+
+    override suspend fun getCreatorPostsPaginate(creatorId: CreatorId): List<FanboxCursor> = withContext(ioDispatcher) {
+        get("post.paginateCreator", mapOf("creatorId" to creatorId.value)).parse<FanboxCreatorPostsPaginateEntity>()!!.translate()
     }
 
     override suspend fun getCreatorFromQuery(query: String, page: Int): PageNumberInfo<FanboxCreatorDetail> = withContext(ioDispatcher) {
@@ -393,27 +399,16 @@ class FanboxRepositoryImpl(
         }
     }
 
-    override suspend fun downloadImage(url: String, name: String, extension: String) = withContext(ioDispatcher) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-            val itemFile = getExternalFile("$name.$extension", Environment.DIRECTORY_PICTURES)
-
-            download(url, itemFile.outputStream())
-            MediaScannerConnection.scanFile(context, arrayOf(itemFile.absolutePath), arrayOf(mime), null)
-        } else {
-            val uri = getUri(context, "$name.$extension", Environment.DIRECTORY_PICTURES)
-            download(url, context.contentResolver.openOutputStream(uri!!)!!)
-        }
+    override suspend fun downloadImage(url: String, name: String, extension: String, dir: String) = withContext(ioDispatcher) {
+        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        val uri = getUri(context, "$name.$extension", Environment.DIRECTORY_PICTURES, dir, mime.orEmpty())
+        download(url, context.contentResolver.openOutputStream(uri!!)!!)
     }
 
-    override suspend fun downloadFile(url: String, name: String, extension: String) = withContext(ioDispatcher) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            val itemFile = getExternalFile("$name.$extension", Environment.DIRECTORY_DOWNLOADS)
-            download(url, itemFile.outputStream())
-        } else {
-            val uri = getUri(context, "$name.$extension", Environment.DIRECTORY_DOWNLOADS)
-            download(url, context.contentResolver.openOutputStream(uri!!)!!)
-        }
+    override suspend fun downloadFile(url: String, name: String, extension: String, dir: String) = withContext(ioDispatcher) {
+        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        val uri = getUri(context, "$name.$extension", Environment.DIRECTORY_DOWNLOADS, dir, mime.orEmpty())
+        download(url, context.contentResolver.openOutputStream(uri!!)!!)
     }
 
     private fun getExternalFile(name: String, parent: String): File {
@@ -427,17 +422,29 @@ class FanboxRepositoryImpl(
         return pixiViewFile.resolve(name)
     }
 
-    private fun getUri(context: Context, name: String, parent: String): Uri? {
+    private fun getUri(context: Context, name: String, parent: String, child: String = "", mimeType: String = ""): Uri? {
         val contentResolver = context.contentResolver
         val contentValues = ContentValues().apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(MediaStore.Images.ImageColumns.RELATIVE_PATH, "$parent/FANBOX")
+                val path = when {
+                    mimeType.contains("image") -> MediaStore.Images.ImageColumns.RELATIVE_PATH
+                    mimeType.contains("video") -> MediaStore.Video.VideoColumns.RELATIVE_PATH
+                    mimeType.contains("audio") -> MediaStore.Audio.AudioColumns.RELATIVE_PATH
+                    else -> MediaStore.Files.FileColumns.RELATIVE_PATH
+                }
+
+                put(path, "$parent/FANBOX" + if (child.isBlank()) "" else "/$child")
             } else {
-                val path = Environment.getExternalStorageDirectory().path + "/$parent/FANBOX/"
+                val path = Environment.getExternalStorageDirectory().path + "/$parent/FANBOX" + if (child.isEmpty()) "" else "/$child"
                 val dir = File(Environment.getExternalStorageDirectory().path + "/$parent", "FANBOX")
+                val childDir = File(dir, child)
 
                 if (!dir.exists()) {
                     dir.mkdir()
+                }
+
+                if (child.isNotBlank() && !childDir.exists()) {
+                    childDir.mkdir()
                 }
 
                 put(MediaStore.Images.ImageColumns.DATA, path + name)

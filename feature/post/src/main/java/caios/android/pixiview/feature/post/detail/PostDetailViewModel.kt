@@ -108,7 +108,9 @@ class PostDetailViewModel @Inject constructor(
 
     fun commentLike(commentId: CommentId) {
         viewModelScope.launch {
-            fanboxRepository.likeComment(commentId)
+            suspendRunCatching {
+                fanboxRepository.likeComment(commentId)
+            }
         }
     }
 
@@ -130,7 +132,34 @@ class PostDetailViewModel @Inject constructor(
                     onFailure = {
                         ScreenState.Idle(
                             data.data.copy(
-                                messageToast = R.string.error_network,
+                                messageToast = R.string.post_detail_comment_comment_failed,
+                            )
+                        )
+                    },
+                )
+            }
+        }
+    }
+
+    fun commentDelete(commentId: CommentId) {
+        viewModelScope.launch {
+            (screenState.value as? ScreenState.Idle)?.also { data ->
+                _screenState.value = suspendRunCatching {
+                    fanboxRepository.deleteComment(commentId)
+                    fanboxRepository.getPost(data.data.postDetail.id)
+                }.fold(
+                    onSuccess = {
+                        ScreenState.Idle(
+                            data.data.copy(
+                                postDetail = it,
+                                messageToast = R.string.post_detail_comment_delete_success,
+                            )
+                        )
+                    },
+                    onFailure = {
+                        ScreenState.Idle(
+                            data.data.copy(
+                                messageToast = R.string.post_detail_comment_delete_failed,
                             )
                         )
                     },

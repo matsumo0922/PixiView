@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.animation.NavigateAnimation
+import caios.android.pixiview.core.ui.view.SimpleAlertContents
 
 const val PostDetailId = "postDetailId"
 const val PostDetailRoute = "postDetail/{$PostDetailId}"
@@ -24,6 +25,7 @@ fun NavGraphBuilder.postDetailScreen(
     navigateToPostImage: (PostId, Int) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
+    navigateToCommentDeleteDialog: (SimpleAlertContents, () -> Unit) -> Unit,
     terminate: () -> Unit,
 ) {
     composable(
@@ -42,6 +44,7 @@ fun NavGraphBuilder.postDetailScreen(
             navigateToPostImage = navigateToPostImage,
             navigateToCreatorPosts = navigateToCreatorPosts,
             navigateToCreatorPlans = navigateToCreatorPlans,
+            navigateToCommentDeleteDialog = navigateToCommentDeleteDialog,
             terminate = terminate,
         )
     }

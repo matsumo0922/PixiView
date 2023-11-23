@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -29,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -41,6 +43,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxUser
 import caios.android.pixiview.core.model.fanbox.id.CommentId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.theme.bold
+import caios.android.pixiview.core.ui.theme.center
 import caios.android.pixiview.feature.post.R
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -54,6 +57,7 @@ internal fun PostDetailCommentSection(
     onClickLoadMore: (PostId, Int) -> Unit,
     onClickCommentLike: (CommentId) -> Unit,
     onClickCommentReply: (String, CommentId, CommentId) -> Unit,
+    onClickCommentDelete: (CommentId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isShowCommentEditor by rememberSaveable { mutableStateOf(false) }
@@ -105,26 +109,39 @@ internal fun PostDetailCommentSection(
             )
         }
 
-        Column(
-            modifier = Modifier
-                .padding(top = 24.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-        ) {
-            for (comment in postDetail.commentList.contents) {
-                CommentItem(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .fillMaxWidth(),
-                    metaData = metaData,
-                    comment = comment,
-                    onClickCommentLike = onClickCommentLike,
-                    onClickCommentReply = { body, parentCommentId, rootCommentId ->
-                        latestComment = body
-                        onClickCommentReply.invoke(body, parentCommentId, rootCommentId)
-                    }
-                )
+        if (postDetail.commentList.contents.isNotEmpty()) {
+            Column(
+                modifier = Modifier
+                    .padding(top = 24.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+            ) {
+                for (comment in postDetail.commentList.contents) {
+                    CommentItem(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .fillMaxWidth(),
+                        metaData = metaData,
+                        comment = comment,
+                        onClickCommentLike = onClickCommentLike,
+                        onClickCommentReply = { body, parentCommentId, rootCommentId ->
+                            latestComment = body
+                            onClickCommentReply.invoke(body, parentCommentId, rootCommentId)
+                        },
+                        onClickCommentDelete = onClickCommentDelete,
+                    )
+                }
             }
+        } else {
+            Text(
+                modifier = Modifier
+                    .alpha(if (!isShowCommentEditor) 1f else 0f)
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = stringResource(R.string.post_detail_comment_empty),
+                style = MaterialTheme.typography.bodyMedium.center(),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
 
         if (postDetail.commentList.offset != null) {
@@ -161,6 +178,7 @@ private fun CommentItem(
     metaData: FanboxMetaData,
     onClickCommentLike: (CommentId) -> Unit,
     onClickCommentReply: (String, CommentId, CommentId) -> Unit,
+    onClickCommentDelete: (CommentId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isShowReplyEditor by rememberSaveable(comment) { mutableStateOf(false) }
@@ -262,6 +280,30 @@ private fun CommentItem(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
+
+                if (comment.isOwn) {
+                    Row(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable { onClickCommentDelete.invoke(comment.id) }
+                            .padding(4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(16.dp),
+                            imageVector = Icons.Default.Delete,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            contentDescription = null,
+                        )
+
+                        Text(
+                            text = stringResource(R.string.common_delete),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
             }
 
             for (reply in comment.replies) {
@@ -273,6 +315,7 @@ private fun CommentItem(
                     comment = reply,
                     onClickCommentLike = onClickCommentLike,
                     onClickCommentReply = onClickCommentReply,
+                    onClickCommentDelete = onClickCommentDelete,
                 )
             }
 
@@ -339,7 +382,7 @@ private fun CommentEditor(
             Button(
                 modifier = Modifier.align(Alignment.End),
                 enabled = !isError,
-                onClick = { onClickCommentReply.invoke(value, parentCommentId, rootCommentId) },
+                onClick = { onClickCommentReply.invoke(value, parentCommentId, if (rootCommentId.value != "0") rootCommentId else parentCommentId) },
             ) {
                 Text(text = stringResource(R.string.post_detail_comment_reply))
             }
@@ -366,5 +409,6 @@ private fun CommentItemPreview() {
         metaData = FanboxMetaData.dummy(),
         onClickCommentLike = {},
         onClickCommentReply = { _, _, _ -> },
+        onClickCommentDelete = {},
     )
 }

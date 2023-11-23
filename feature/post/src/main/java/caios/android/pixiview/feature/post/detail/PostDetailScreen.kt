@@ -60,6 +60,7 @@ import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.core.ui.extensition.marquee
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
+import caios.android.pixiview.core.ui.view.SimpleAlertContents
 import caios.android.pixiview.feature.post.detail.items.PostDetailArticleHeader
 import caios.android.pixiview.feature.post.detail.items.PostDetailCommentLikeButton
 import caios.android.pixiview.feature.post.detail.items.PostDetailCommentSection
@@ -81,6 +82,7 @@ internal fun PostDetailRoute(
     navigateToPostImage: (PostId, Int) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
+    navigateToCommentDeleteDialog: (SimpleAlertContents, () -> Unit) -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PostDetailViewModel = hiltViewModel(),
@@ -111,6 +113,11 @@ internal fun PostDetailRoute(
             onClickCommentLoadMore = viewModel::loadMoreComment,
             onClickCommentLike = viewModel::commentLike,
             onClickCommentReply = viewModel::commentReply,
+            onClickCommentDelete = {
+                navigateToCommentDeleteDialog.invoke(SimpleAlertContents.CommentDelete) {
+                    viewModel.commentDelete(it)
+                }
+            },
             onClickTag = { navigateToPostSearch.invoke(it, uiState.postDetail.user.creatorId) },
             onClickCreator = navigateToCreatorPlans,
             onClickImage = { item ->
@@ -146,6 +153,7 @@ private fun PostDetailScreen(
     onClickCommentLoadMore: (PostId, Int) -> Unit,
     onClickCommentLike: (CommentId) -> Unit,
     onClickCommentReply: (PostId, String, CommentId, CommentId) -> Unit,
+    onClickCommentDelete: (CommentId) -> Unit,
     onClickTag: (String) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
@@ -287,19 +295,18 @@ private fun PostDetailScreen(
             )
         }
 
-        if (postDetail.commentList.contents.isNotEmpty()) {
-            item {
-                PostDetailCommentSection(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
-                    postDetail = postDetail,
-                    metaData = metaData,
-                    onClickLoadMore = onClickCommentLoadMore,
-                    onClickCommentLike = onClickCommentLike,
-                    onClickCommentReply = { body, parent, root -> onClickCommentReply.invoke(postDetail.id, body, parent, root) },
-                )
-            }
+        item {
+            PostDetailCommentSection(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+                postDetail = postDetail,
+                metaData = metaData,
+                onClickLoadMore = onClickCommentLoadMore,
+                onClickCommentLike = onClickCommentLike,
+                onClickCommentReply = { body, parent, root -> onClickCommentReply.invoke(postDetail.id, body, parent, root) },
+                onClickCommentDelete = onClickCommentDelete,
+            )
         }
 
         item {
@@ -472,6 +479,7 @@ private fun PostDetailScreenPreview() {
         onClickCommentLoadMore = { _, _ -> },
         onClickCommentLike = {},
         onClickCommentReply = { _, _, _, _ -> },
+        onClickCommentDelete = {},
         onClickTag = {},
         onClickCreator = {},
         onClickImage = {},

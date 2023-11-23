@@ -26,19 +26,28 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import caios.android.pixiview.core.ui.R
 import caios.android.pixiview.core.ui.extensition.navigateForResult
+import caios.android.pixiview.core.ui.theme.bold
 
 enum class SimpleAlertContents(
     val titleRes: Int,
     val descriptionRes: Int,
     val positiveTextRes: Int? = null,
     val negativeTextRes: Int? = null,
+    val isCaution: Boolean = false,
 ) {
     Logout(
         titleRes = R.string.setting_top_others_logout,
         descriptionRes = R.string.setting_top_others_logout_dialog_description,
         positiveTextRes = R.string.setting_top_others_logout,
         negativeTextRes = R.string.common_cancel,
-    )
+    ),
+    CommentDelete(
+        titleRes = R.string.post_detail_comment_delete_title,
+        descriptionRes = R.string.post_detail_comment_delete_message,
+        positiveTextRes = R.string.common_delete,
+        negativeTextRes = R.string.common_cancel,
+        isCaution = true,
+    ),
 }
 
 const val SimpleAlertDialogContent = "simpleAlertDialogSongs"
@@ -67,8 +76,8 @@ fun NavGraphBuilder.simpleAlertDialogDialog(
     dialog(
         route = SimpleAlertDialog,
         arguments = listOf(navArgument(SimpleAlertDialogContent) { type = NavType.StringType }),
-    ) {
-        val content = SimpleAlertContents.valueOf(it.arguments?.getString(SimpleAlertDialogContent).orEmpty())
+    ) { entry ->
+        val content = SimpleAlertContents.valueOf(entry.arguments?.getString(SimpleAlertDialogContent).orEmpty())
 
         SimpleAlertDialog(
             modifier = Modifier
@@ -81,6 +90,7 @@ fun NavGraphBuilder.simpleAlertDialogDialog(
             negativeText = content.negativeTextRes?.let { stringResource(it) },
             onClickPositive = { terminateWithResult.invoke(true) },
             onClickNegative = { terminateWithResult.invoke(false) },
+            isCaution = content.isCaution,
         )
     }
 }
@@ -93,6 +103,7 @@ private fun SimpleAlertDialog(
     negativeText: String?,
     onClickPositive: () -> Unit,
     onClickNegative: () -> Unit,
+    isCaution: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -104,7 +115,7 @@ private fun SimpleAlertDialog(
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = title,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleMedium.bold(),
             color = MaterialTheme.colorScheme.onSurface,
         )
 
@@ -136,6 +147,7 @@ private fun SimpleAlertDialog(
                 Button(
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(4.dp),
+                    colors = ButtonDefaults.buttonColors(if (isCaution) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary),
                     onClick = { onClickPositive.invoke() },
                 ) {
                     Text(text = positiveText)

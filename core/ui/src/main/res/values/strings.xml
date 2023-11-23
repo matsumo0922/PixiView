@@ -94,6 +94,15 @@
     <string name="creator_tag_has_booth_shop">BOOTHショップ有り</string>
     <string name="creator_tag_is_supported">支援中</string>
     <string name="creator_tag_is_accepting_request">リクエスト受付中</string>
+    <string name="creator_download_all">投稿を一括ダウンロード</string>
+    <string name="creator_download_all_error">一括ダウンロードはFANBOX Viewer+専用機能です</string>
+    <string name="creator_posts_download_title">一括ダウンロード</string>
+    <string name="creator_posts_download_message">クリエイターの投稿を一括でダウンロードします。\n\n※FANBOXへのアクセス集中を防ぐため、ダウンロード速度にはあえて遅延を入れております。ご了承ください。</string>
+    <string name="creator_posts_download_prepare">クリエイター情報を収集中です\nしばらくお待ちください</string>
+    <string name="creator_posts_download_ignore_free">無料コンテンツを省く</string>
+    <string name="creator_posts_download_ignore_file">ファイルを省く</string>
+    <string name="creator_posts_download_start">一括ダウンロードを開始しました</string>
+    <string name="creator_posts_download_notify_title">%1$sの投稿を一括ダウンロードしています</string>
 
     <!-- Bookmark -->
     <string name="bookmark_search_placeholder">ブックマークを検索</string>
@@ -106,11 +115,14 @@
     <string name="post_detail_creator">クリエイター</string>
     <string name="post_detail_comment_title">コメント</string>
     <string name="post_detail_comment_reply">返信</string>
+    <string name="post_detail_comment_empty">コメントはまだありません</string>
     <string name="post_detail_comment_placeholder">コメントを入力</string>
     <string name="post_detail_comment_commented">コメントしました</string>
     <string name="post_detail_comment_comment_failed">コメントに失敗しました</string>
     <string name="post_detail_comment_delete_title">コメントを削除</string>
     <string name="post_detail_comment_delete_message">このコメントを削除しますか？</string>
+    <string name="post_detail_comment_delete_success">削除しました</string>
+    <string name="post_detail_comment_delete_failed">削除に失敗しました</string>
     <string name="post_detail_oldest_post">前の投稿はありません</string>
     <string name="post_detail_newest_post">次の投稿はありません</string>
     <string name="post_detail_all_posts">すべての投稿を見る</string>

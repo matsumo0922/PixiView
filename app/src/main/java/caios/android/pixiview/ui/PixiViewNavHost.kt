@@ -15,6 +15,8 @@ import caios.android.pixiview.feature.about.billing.billingPlusBottomSheet
 import caios.android.pixiview.feature.about.billing.navigateToBillingPlus
 import caios.android.pixiview.feature.about.versions.navigateToVersionHistory
 import caios.android.pixiview.feature.about.versions.versionHistoryBottomSheet
+import caios.android.pixiview.feature.creator.download.creatorPostsDownloadDialog
+import caios.android.pixiview.feature.creator.download.navigateToCreatorPostsDownload
 import caios.android.pixiview.feature.creator.fancard.fanCardScreen
 import caios.android.pixiview.feature.creator.fancard.navigateToFanCard
 import caios.android.pixiview.feature.creator.follow.followingCreatorsScreen
@@ -84,6 +86,7 @@ internal fun PixiViewNavHost(
                 navigateToPostImage = { postId, index -> navController.navigateToPostImage(postId, index) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+                navigateToCommentDeleteDialog = { contents, onResult -> navController.navigateToSimpleAlertDialog(contents, onResult)},
                 terminate = { navController.popBackStack() },
             )
 
@@ -108,6 +111,8 @@ internal fun PixiViewNavHost(
             creatorTopScreen(
                 navigateToPostDetail = { navController.navigateToPostDetail(it) },
                 navigateToPostSearch = { query, creatorId -> navController.navigateToPostSearch(tag = query, creatorId = creatorId) },
+                navigateToBillingPlus = { navController.navigateToBillingPlus() },
+                navigateToDownloadAll = { navController.navigateToCreatorPostsDownload(it) },
                 terminate = { navController.popBackStack() },
             )
 
@@ -158,6 +163,10 @@ internal fun PixiViewNavHost(
 
             simpleAlertDialogDialog(
                 terminateWithResult = { navController.popBackStackWithResult(it) },
+            )
+
+            creatorPostsDownloadDialog(
+                terminate = { navController.popBackStack() },
             )
 
             // bottom sheet

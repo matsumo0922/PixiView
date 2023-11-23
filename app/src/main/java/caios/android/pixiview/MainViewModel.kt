@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.Timer
 import java.util.UUID
 import javax.inject.Inject
@@ -55,7 +54,6 @@ class MainViewModel @Inject constructor(
 
         viewModelScope.launch {
             fanboxRepository.logoutTrigger.collectLatest {
-                Timber.d("logoutTrigger")
                 isLoggedInFlow.emit(false)
             }
         }

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -119,7 +118,7 @@ internal fun CreatorTopPostsScreen(
         }
 
         item {
-            Spacer(modifier = Modifier.navigationBarsPadding())
+            Spacer(modifier = Modifier.height(128.dp))
         }
     }
 }
@@ -136,18 +135,26 @@ private fun TagItem(
             .clip(RoundedCornerShape(8.dp))
             .clickable { onClickTag.invoke(tag) },
     ) {
-        SubcomposeAsyncImage(
-            modifier = Modifier.fillMaxSize(),
-            model = ImageRequest.Builder(LocalContext.current)
-                .fanboxHeader()
-                .data(tag.coverImageUrl)
-                .build(),
-            loading = {
-                FadePlaceHolder()
-            },
-            contentScale = ContentScale.Crop,
-            contentDescription = null,
-        )
+        if (tag.coverImageUrl != null) {
+            SubcomposeAsyncImage(
+                modifier = Modifier.fillMaxSize(),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .fanboxHeader()
+                    .data(tag.coverImageUrl)
+                    .build(),
+                loading = {
+                    FadePlaceHolder()
+                },
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
+            )
+        }
 
         Box(
             modifier = Modifier

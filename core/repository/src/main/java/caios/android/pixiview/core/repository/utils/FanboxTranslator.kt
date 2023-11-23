@@ -24,6 +24,7 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlanEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPlansEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorPostsPaginateEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorSearchEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorTagsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxMetaDataEntity
@@ -500,6 +501,10 @@ internal fun FanboxPostCommentItemsEntity.translate(): PageOffsetInfo<FanboxPost
         contents = body.items.map { it.translate() },
         offset = body.nextUrl?.let { Uri.parse(it).getQueryParameter("offset")?.toIntOrNull() },
     )
+}
+
+internal fun FanboxCreatorPostsPaginateEntity.translate(): List<FanboxCursor> {
+    return body.map { it.translateToCursor() }
 }
 
 private fun String.translateToCursor(): FanboxCursor {

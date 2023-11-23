@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -22,7 +21,6 @@ import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.component.PostItem
 import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 import caios.android.pixiview.core.ui.view.PagingErrorSection
-import timber.log.Timber
 
 @Composable
 internal fun LibrarySupportedIdleSection(
@@ -36,10 +34,6 @@ internal fun LibrarySupportedIdleSection(
     modifier: Modifier = Modifier,
 ) {
     val state = rememberLazyListState()
-
-    LaunchedEffect(pagingAdapter.itemSnapshotList) {
-        Timber.d("LibrarySupportedIdleSection: ${pagingAdapter.itemSnapshotList.map { it?.isBookmarked }}")
-    }
 
     LazyColumn(
         modifier = modifier.drawVerticalScrollbar(state),

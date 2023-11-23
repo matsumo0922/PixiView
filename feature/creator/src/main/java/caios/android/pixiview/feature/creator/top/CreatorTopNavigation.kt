@@ -22,6 +22,8 @@ fun NavController.navigateToCreatorTop(creatorId: CreatorId, isPosts: Boolean = 
 fun NavGraphBuilder.creatorTopScreen(
     navigateToPostDetail: (PostId) -> Unit,
     navigateToPostSearch: (String, CreatorId) -> Unit,
+    navigateToBillingPlus: () -> Unit,
+    navigateToDownloadAll: (CreatorId) -> Unit,
     terminate: () -> Unit,
 ) {
     composable(
@@ -41,6 +43,8 @@ fun NavGraphBuilder.creatorTopScreen(
             isPosts = it.arguments?.getBoolean(CreatorTopIsPosts) ?: false,
             navigateToPostDetail = navigateToPostDetail,
             navigateToPostSearch = navigateToPostSearch,
+            navigateToBillingPlus = navigateToBillingPlus,
+            navigateToDownloadAll = navigateToDownloadAll,
             terminate = terminate,
         )
     }
