@@ -27,10 +27,9 @@ PixiView is an unofficial Android client app for PIXIV FANBOX.
 <p align="center">Do you speak Japanese? Japanese <a href="./README-JA.md">READEME</a> is Here!</p>
 
 ## Status
-#### Closed Testing... :rocket:
+#### Ready!! :rocket:
 
-Currently undergoing closed testing on Google Play. I think it will be distributed soon, so please wait for a while.
-If you can't wait, we have an apk as a release in this repository, so you can download it.
+Now available on Google Play! Please download from the link below.
 Or, if you're an Android developer, you can build the app and install it yourself.
 Contributions are always welcome. Try building your app by following the section below.
 
