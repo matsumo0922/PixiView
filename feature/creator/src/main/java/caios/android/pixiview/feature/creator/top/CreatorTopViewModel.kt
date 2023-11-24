@@ -105,6 +105,14 @@ class CreatorTopViewModel @Inject constructor(
         }
     }
 
+    fun postLike(postId: PostId) {
+        viewModelScope.launch {
+            suspendRunCatching {
+                fanboxRepository.likePost(postId)
+            }
+        }
+    }
+
     fun postBookmark(post: FanboxPost, isBookmarked: Boolean) {
         viewModelScope.launch {
             (screenState.value as? ScreenState.Idle)?.also {

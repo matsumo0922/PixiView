@@ -70,6 +70,7 @@ internal fun BookmarkedPostsRoute(
             bookmarkedPosts = it.bookmarkedPosts.toImmutableList(),
             onSearch = viewModel::search,
             onClickPost = navigateToPostDetail,
+            onCLickPostLike = viewModel::postLike,
             onClickPostBookmark = viewModel::postBookmark,
             onClickCreatorPosts = navigateToCreatorPosts,
             onClickCreatorPlans = navigateToCreatorPlans,
@@ -85,6 +86,7 @@ private fun BookmarkedPostsScreen(
     bookmarkedPosts: ImmutableList<FanboxPost>,
     onSearch: (String) -> Unit,
     onClickPost: (PostId) -> Unit,
+    onCLickPostLike: (PostId) -> Unit,
     onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreatorPosts: (CreatorId) -> Unit,
     onClickCreatorPlans: (CreatorId) -> Unit,
@@ -139,6 +141,7 @@ private fun BookmarkedPostsScreen(
                                 onClickPost = { if (!likedPost.isRestricted) onClickPost.invoke(it) },
                                 onClickBookmark = { _, isBookmarked -> onClickPostBookmark.invoke(likedPost, isBookmarked) },
                                 onClickCreator = onClickCreatorPosts,
+                                onClickLike = onCLickPostLike,
                                 onClickPlanList = onClickCreatorPlans,
                             )
                         }

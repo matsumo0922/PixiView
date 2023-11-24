@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,11 +66,13 @@ fun PostItem(
     onClickPost: (PostId) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
+    onClickLike: (PostId) -> Unit,
     onClickBookmark: (PostId, Boolean) -> Unit,
     isHideAdultContents: Boolean,
     modifier: Modifier = Modifier,
 ) {
     var isPostBookmarked by remember(post.isBookmarked) { mutableStateOf(post.isBookmarked) }
+    var isPostLiked by rememberSaveable(post.isLiked) { mutableStateOf(post.isLiked) }
     var isHideAdultContent by remember { mutableStateOf(isHideAdultContents) }
 
     Card(
@@ -185,9 +188,13 @@ fun PostItem(
                             bottom = 8.dp,
                         ),
                     commentCount = post.commentCount,
-                    likeCount = post.likeCount,
+                    likeCount = post.likeCount + if (isPostLiked) 1 else 0,
                     isBookmarked = isPostBookmarked,
-                    isLiked = post.isLiked,
+                    isLiked = isPostLiked,
+                    onClickLike = {
+                        isPostLiked = true
+                        onClickLike.invoke(post.id)
+                    },
                     onClickBookmark = {
                         isPostBookmarked = it
                         onClickBookmark.invoke(post.id, it)
@@ -385,6 +392,7 @@ private fun CommentLikeButton(
     likeCount: Int,
     isBookmarked: Boolean,
     isLiked: Boolean,
+    onClickLike: () -> Unit,
     onClickBookmark: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -415,6 +423,13 @@ private fun CommentLikeButton(
         }
 
         Row(
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable {
+                    if (!isLiked) { onClickLike.invoke() }
+                    onClickBookmark.invoke(true)
+                }
+                .padding(4.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -454,6 +469,7 @@ private fun PostItemPreview1() {
         onClickPost = {},
         onClickPlanList = {},
         onClickCreator = {},
+        onClickLike = {},
         onClickBookmark = { _, _ -> },
         isHideAdultContents = false,
     )
@@ -467,6 +483,7 @@ private fun PostItemPreview2() {
         onClickPost = {},
         onClickPlanList = {},
         onClickCreator = {},
+        onClickLike = {},
         onClickBookmark = { _, _ -> },
         isHideAdultContents = false,
     )
@@ -480,6 +497,7 @@ private fun PostItemPreview3() {
         onClickPost = {},
         onClickPlanList = {},
         onClickCreator = {},
+        onClickLike = {},
         onClickBookmark = { _, _ -> },
         isHideAdultContents = true,
     )

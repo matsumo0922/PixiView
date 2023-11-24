@@ -3,10 +3,12 @@ package caios.android.pixiview.feature.post.bookmark
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.changeContent
 import caios.android.pixiview.core.model.fanbox.FanboxPost
+import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.FanboxRepository
 import caios.android.pixiview.core.repository.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,12 +72,22 @@ class BookmarkedPostsViewModel @Inject constructor(
         }
     }
 
+    fun postLike(postId: PostId) {
+        viewModelScope.launch {
+            suspendRunCatching {
+                fanboxRepository.likePost(postId)
+            }
+        }
+    }
+
     fun postBookmark(post: FanboxPost, isBookmarked: Boolean) {
         viewModelScope.launch {
-            if (isBookmarked) {
-                fanboxRepository.bookmarkPost(post)
-            } else {
-                fanboxRepository.unbookmarkPost(post)
+            suspendRunCatching {
+                if (isBookmarked) {
+                    fanboxRepository.bookmarkPost(post)
+                } else {
+                    fanboxRepository.unbookmarkPost(post)
+                }
             }
         }
     }

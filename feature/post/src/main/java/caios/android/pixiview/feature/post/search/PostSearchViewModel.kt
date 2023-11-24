@@ -119,12 +119,22 @@ class PostSearchViewModel @Inject constructor(
         }
     }
 
+    fun postLike(postId: PostId) {
+        viewModelScope.launch {
+            suspendRunCatching {
+                fanboxRepository.likePost(postId)
+            }
+        }
+    }
+
     fun postBookmark(post: FanboxPost, isBookmarked: Boolean) {
         viewModelScope.launch {
-            if (isBookmarked) {
-                fanboxRepository.bookmarkPost(post)
-            } else {
-                fanboxRepository.unbookmarkPost(post)
+            suspendRunCatching {
+                if (isBookmarked) {
+                    fanboxRepository.bookmarkPost(post)
+                } else {
+                    fanboxRepository.unbookmarkPost(post)
+                }
             }
         }
     }

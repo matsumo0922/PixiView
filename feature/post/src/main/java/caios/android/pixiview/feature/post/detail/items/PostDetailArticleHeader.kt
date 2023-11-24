@@ -20,6 +20,7 @@ internal fun PostDetailArticleHeader(
     content: FanboxPostDetail.Body.Article,
     userData: UserData,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (PostId) -> Unit,
     onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickImage: (FanboxPostDetail.ImageItem) -> Unit,
@@ -63,6 +64,7 @@ internal fun PostDetailArticleHeader(
                         item = item,
                         isHideAdultContents = userData.isHideAdultContents,
                         onClickPost = onClickPost,
+                        onClickPostLike = onClickPostLike,
                         onClickPostBookmark = { _, isLiked -> item.post?.let { onClickPostBookmark.invoke(it, isLiked) } },
                         onClickCreator = onClickCreator,
                     )
@@ -90,6 +92,7 @@ private fun ArticleLinkItem(
     item: FanboxPostDetail.Body.Article.Block.Link,
     isHideAdultContents: Boolean,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (PostId) -> Unit,
     onClickPostBookmark: (PostId, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
@@ -102,6 +105,7 @@ private fun ArticleLinkItem(
             onClickPost = onClickPost,
             onClickCreator = onClickCreator,
             onClickPlanList = {},
+            onClickLike = onClickPostLike,
             onClickBookmark = onClickPostBookmark,
         )
     }

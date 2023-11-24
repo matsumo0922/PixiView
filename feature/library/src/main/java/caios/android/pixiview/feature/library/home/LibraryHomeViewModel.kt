@@ -7,6 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.PostId
@@ -74,12 +75,22 @@ class LibraryHomeViewModel @Inject constructor(
         }
     }
 
+    fun postLike(postId: PostId) {
+        viewModelScope.launch {
+            suspendRunCatching {
+                fanboxRepository.likePost(postId)
+            }
+        }
+    }
+
     fun postBookmark(post: FanboxPost, isBookmarked: Boolean) {
         viewModelScope.launch {
-            if (isBookmarked) {
-                fanboxRepository.bookmarkPost(post)
-            } else {
-                fanboxRepository.unbookmarkPost(post)
+            suspendRunCatching {
+                if (isBookmarked) {
+                    fanboxRepository.bookmarkPost(post)
+                } else {
+                    fanboxRepository.unbookmarkPost(post)
+                }
             }
         }
     }

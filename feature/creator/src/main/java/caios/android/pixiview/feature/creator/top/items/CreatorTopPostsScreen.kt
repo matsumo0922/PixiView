@@ -63,6 +63,7 @@ internal fun CreatorTopPostsScreen(
     onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickTag: (FanboxCreatorTag) -> Unit,
+    onClickPostLike: (PostId) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -103,6 +104,7 @@ internal fun CreatorTopPostsScreen(
                     onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
                     onClickCreator = onClickCreator,
                     onClickPlanList = onClickPlanList,
+                    onClickLike = onClickPostLike,
                     onClickBookmark = { _, isBookmarked -> onClickPostBookmark.invoke(post, isBookmarked) },
                 )
             }

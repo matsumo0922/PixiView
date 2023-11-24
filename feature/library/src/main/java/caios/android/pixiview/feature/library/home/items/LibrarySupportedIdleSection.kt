@@ -29,6 +29,7 @@ internal fun LibrarySupportedIdleSection(
     userData: UserData,
     bookmarkedPosts: ImmutableList<PostId>,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (PostId) -> Unit,
     onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     onClickPlanList: (CreatorId) -> Unit,
@@ -55,6 +56,7 @@ internal fun LibrarySupportedIdleSection(
                     onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
                     onClickCreator = onClickCreator,
                     onClickPlanList = onClickPlanList,
+                    onClickLike = onClickPostLike,
                     onClickBookmark = { _, isBookmarked -> onClickPostBookmark.invoke(post, isBookmarked) },
                 )
             }

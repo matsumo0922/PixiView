@@ -46,7 +46,9 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxTagsEntity
 import caios.android.pixiview.core.model.fanbox.id.CommentId
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
+import caios.android.pixiview.core.repository.utils.isSuccess
 import caios.android.pixiview.core.repository.utils.parse
+import caios.android.pixiview.core.repository.utils.requireSuccess
 import caios.android.pixiview.core.repository.utils.translate
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.HttpClient
@@ -344,11 +346,11 @@ class FanboxRepositoryImpl(
     }
 
     override suspend fun likePost(postId: PostId): Unit = withContext(ioDispatcher) {
-        post("post.likePost", mapOf("postId" to postId.value))
+        post("post.likePost", mapOf("postId" to postId.value)).requireSuccess()
     }
 
     override suspend fun likeComment(commentId: CommentId): Unit = withContext(ioDispatcher) {
-        post("post.likeComment", mapOf("commentId" to commentId.value))
+        post("post.likeComment", mapOf("commentId" to commentId.value)).requireSuccess()
     }
 
     override suspend fun addComment(postId: PostId, comment: String, rootCommentId: CommentId?, parentCommentId: CommentId?): Unit = withContext(ioDispatcher) {
@@ -360,19 +362,19 @@ class FanboxRepositoryImpl(
                 "parentCommentId" to parentCommentId?.value.orEmpty(),
                 "body" to comment,
             ),
-        )
+        ).requireSuccess()
     }
 
     override suspend fun deleteComment(commentId: CommentId): Unit = withContext(ioDispatcher) {
-        post("post.deleteComment", mapOf("commentId" to commentId.value))
+        post("post.deleteComment", mapOf("commentId" to commentId.value)).requireSuccess()
     }
 
     override suspend fun followCreator(creatorUserId: String): Unit = withContext(ioDispatcher) {
-        post("follow.create", mapOf("creatorUserId" to creatorUserId))
+        post("follow.create", mapOf("creatorUserId" to creatorUserId)).requireSuccess()
     }
 
     override suspend fun unfollowCreator(creatorUserId: String): Unit = withContext(ioDispatcher) {
-        post("follow.delete", mapOf("creatorUserId" to creatorUserId))
+        post("follow.delete", mapOf("creatorUserId" to creatorUserId)).requireSuccess()
     }
 
     override suspend fun getBookmarkedPosts(): List<FanboxPost> = withContext(ioDispatcher) {

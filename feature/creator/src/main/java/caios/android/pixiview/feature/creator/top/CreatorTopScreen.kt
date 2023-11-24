@@ -115,6 +115,7 @@ internal fun CreatorTopRoute(
             onClickFollow = viewModel::follow,
             onClickUnfollow = viewModel::unfollow,
             onClickPostBookmark = viewModel::postBookmark,
+            onClickPostLike = viewModel::postLike,
         )
     }
 }
@@ -132,6 +133,7 @@ private fun CreatorTopScreen(
     onClickAllDownload: (CreatorId) -> Unit,
     onClickBillingPlus: () -> Unit,
     onClickPost: (PostId) -> Unit,
+    onClickPostLike: (PostId) -> Unit,
     onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
     onClickPlan: (FanboxCreatorPlan) -> Unit,
     onClickTag: (FanboxCreatorTag) -> Unit,
@@ -235,6 +237,7 @@ private fun CreatorTopScreen(
                                     pagingAdapter = creatorPostsPaging,
                                     creatorTags = creatorTags,
                                     onClickPost = onClickPost,
+                                    onClickPostLike = onClickPostLike,
                                     onClickPostBookmark = onClickPostBookmark,
                                     onClickTag = onClickTag,
                                     onClickCreator = {
