@@ -33,11 +33,11 @@ class PaymentsViewModel @Inject constructor(
             _screenState.value = ScreenState.Loading
             _screenState.value = suspendRunCatching {
                 PaymentsUiState(
-                    payments = fanboxRepository.getPaidRecords().translate()
+                    payments = fanboxRepository.getPaidRecords().translate(),
                 )
             }.fold(
                 onSuccess = { ScreenState.Idle(it) },
-                onFailure = { ScreenState.Error(R.string.error_network) }
+                onFailure = { ScreenState.Error(R.string.error_network) },
             )
         }
     }
@@ -48,7 +48,9 @@ class PaymentsViewModel @Inject constructor(
         return paymentDates.map { paymentDate ->
             Payment(
                 paymentDateTime = paymentDate,
-                paidRecords = filter { it.paymentDateTime.year == paymentDate.year && it.paymentDateTime.dayOfYear == paymentDate.dayOfYear }
+                paidRecords = filter {
+                    it.paymentDateTime.year == paymentDate.year && it.paymentDateTime.dayOfYear == paymentDate.dayOfYear
+                },
             )
         }
     }

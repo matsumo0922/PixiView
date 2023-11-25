@@ -81,7 +81,7 @@ class PostSearchViewModel @Inject constructor(
                     ).flow.cachedIn(viewModelScope).also {
                         _uiState.value = uiState.value.copy(
                             suggestTags = fanboxRepository.getTagFromQuery(query.creatorQuery.orEmpty()),
-                            creatorPaging = it
+                            creatorPaging = it,
                         )
                     }
                 }
