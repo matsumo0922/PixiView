@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun LoadingView(
+fun LoadingView(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier) {

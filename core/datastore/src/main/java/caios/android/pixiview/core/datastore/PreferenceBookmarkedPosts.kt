@@ -27,7 +27,6 @@ class PreferenceBookmarkedPosts @Inject constructor(
 
     fun save(post: FanboxPost) {
         val posts = get().toMutableList().apply {
-            distinct()
             add(0, post.copy(isBookmarked = true))
         }
 
@@ -40,7 +39,6 @@ class PreferenceBookmarkedPosts @Inject constructor(
 
     fun remove(post: FanboxPost) {
         val posts = get().toMutableList().apply {
-            distinct()
             removeIf { it.id == post.id }
         }
 
@@ -54,8 +52,8 @@ class PreferenceBookmarkedPosts @Inject constructor(
     fun get(): List<FanboxPost> {
         if (!accountFile.exists()) return emptyList()
 
-        return accountFile.readText().let {
-            Json.decodeFromString(serializer, it)
+        return accountFile.readText().let { text ->
+            Json.decodeFromString(serializer, text).distinctBy { it.id }
         }
     }
 

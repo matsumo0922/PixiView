@@ -50,10 +50,13 @@ import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.ui.R
+import caios.android.pixiview.core.ui.extensition.FadePlaceHolder
+import caios.android.pixiview.core.ui.extensition.SimmerPlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.core.ui.theme.bold
 import caios.android.pixiview.core.ui.theme.center
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import java.time.format.DateTimeFormatter
 
@@ -75,7 +78,7 @@ fun PostItem(
             .clip(RoundedCornerShape(8.dp))
             .clickable { onClickPost.invoke(post.id) },
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp)),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)),
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -110,7 +113,7 @@ fun PostItem(
                 }
 
                 else -> {
-                    AsyncImage(
+                    SubcomposeAsyncImage(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(16f / 9),
@@ -118,6 +121,9 @@ fun PostItem(
                             .fanboxHeader()
                             .data(post.cover?.url)
                             .build(),
+                        loading = {
+                            SimmerPlaceHolder()
+                        },
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
                     )
@@ -213,7 +219,7 @@ private fun UserSection(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            AsyncImage(
+            SubcomposeAsyncImage(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(CircleShape),
@@ -221,6 +227,9 @@ private fun UserSection(
                     .error(R.drawable.im_default_user)
                     .data(post.user.iconUrl)
                     .build(),
+                loading = {
+                    FadePlaceHolder()
+                },
                 contentDescription = null,
             )
 
@@ -296,7 +305,7 @@ private fun AdultContentThumbnail(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             modifier = Modifier
                 .fillMaxSize()
                 .blur(16.dp),
@@ -304,6 +313,9 @@ private fun AdultContentThumbnail(
                 .fanboxHeader()
                 .data(coverImageUrl)
                 .build(),
+            loading = {
+                SimmerPlaceHolder()
+            },
             contentScale = ContentScale.Crop,
             contentDescription = null,
         )

@@ -8,6 +8,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import caios.android.pixiview.core.common.util.suspendRunCatching
+import caios.android.pixiview.core.model.FanboxTag
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxPost
@@ -39,6 +40,7 @@ class PostSearchViewModel @Inject constructor(
             query = "",
             userData = UserData.dummy(),
             bookmarkedPosts = emptyList(),
+            suggestTags = emptyList(),
             creatorPaging = emptyPaging(),
             tagPaging = emptyPaging(),
             postPaging = emptyPaging(),
@@ -77,7 +79,10 @@ class PostSearchViewModel @Inject constructor(
                             PostSearchCreatorPagingSource(fanboxRepository, query.creatorQuery.orEmpty())
                         },
                     ).flow.cachedIn(viewModelScope).also {
-                        _uiState.value = uiState.value.copy(creatorPaging = it)
+                        _uiState.value = uiState.value.copy(
+                            suggestTags = fanboxRepository.getTagFromQuery(query.creatorQuery.orEmpty()),
+                            creatorPaging = it
+                        )
                     }
                 }
                 PostSearchMode.Tag -> {
@@ -91,18 +96,7 @@ class PostSearchViewModel @Inject constructor(
                         _uiState.value = uiState.value.copy(tagPaging = it)
                     }
                 }
-                PostSearchMode.Post -> {
-                    Pager(
-                        config = PagingConfig(pageSize = 10),
-                        initialKey = null,
-                        pagingSourceFactory = {
-                            PostSearchTagPagingSource(fanboxRepository, query.creatorId, query.postQuery.orEmpty())
-                        },
-                    ).flow.cachedIn(viewModelScope).also {
-                        _uiState.value = uiState.value.copy(postPaging = it)
-                    }
-                }
-                PostSearchMode.Unknown -> {
+                else -> {
                     _uiState.value = uiState.value.copy(
                         creatorPaging = emptyPaging(),
                         tagPaging = emptyPaging(),
@@ -141,6 +135,7 @@ data class PostSearchUiState(
     val query: String,
     val userData: UserData,
     val bookmarkedPosts: List<PostId>,
+    val suggestTags: List<FanboxTag>,
     val creatorPaging: Flow<PagingData<FanboxCreatorDetail>>,
     val tagPaging: Flow<PagingData<FanboxPost>>,
     val postPaging: Flow<PagingData<FanboxPost>>,

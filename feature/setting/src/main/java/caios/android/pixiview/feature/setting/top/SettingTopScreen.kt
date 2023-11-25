@@ -17,12 +17,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.pixiview.core.common.PixiViewConfig
@@ -30,6 +32,7 @@ import caios.android.pixiview.core.common.util.ToastUtil
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxMetaData
 import caios.android.pixiview.core.ui.AsyncLoadContents
+import caios.android.pixiview.core.ui.view.BiometricDialog
 import caios.android.pixiview.core.ui.view.SimpleAlertContents
 import caios.android.pixiview.feature.setting.R
 import caios.android.pixiview.feature.setting.SettingTheme
@@ -51,6 +54,7 @@ internal fun SettingTopRoute(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val biometricDialog = remember { BiometricDialog(context as FragmentActivity) }
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     AsyncLoadContents(
@@ -65,9 +69,19 @@ internal fun SettingTopRoute(
             config = uiState.config,
             onClickTheme = navigateToSettingTheme,
             onClickOpenSourceLicense = navigateToOpenSourceLicense,
-            onClickAppLock = viewModel::setAppLock,
             onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
             onClickHideAdultContents = viewModel::setHideAdultContents,
+            onClickAppLock = {
+                if (it) {
+                    scope.launch {
+                        if (biometricDialog.auth()) {
+                            viewModel.setAppLock(true)
+                        }
+                    }
+                } else {
+                    viewModel.setAppLock(false)
+                }
+            },
             onClickLogout = {
                 navigateToLogoutDialog(SimpleAlertContents.Logout) {
                     scope.launch {

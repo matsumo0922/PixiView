@@ -20,6 +20,7 @@ fun NavController.navigateToPostSearch(creatorId: CreatorId? = null, creatorQuer
 }
 
 fun NavGraphBuilder.postSearchScreen(
+    navigateToPostSearch: (CreatorId?, String?, String?) -> Unit,
     navigateToPostDetail: (PostId) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
@@ -46,6 +47,7 @@ fun NavGraphBuilder.postSearchScreen(
 
         PostSearchRoute(
             query = query,
+            navigateToPostSearch = navigateToPostSearch,
             navigateToPostDetail = navigateToPostDetail,
             navigateToCreatorPosts = navigateToCreatorPosts,
             navigateToCreatorPlans = navigateToCreatorPlans,

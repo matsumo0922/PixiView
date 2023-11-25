@@ -174,7 +174,7 @@ private fun TagItem(
         ) {
             Text(
                 modifier = Modifier.weight(1f, fill = false),
-                text = "#${tag.tag}",
+                text = "#${tag.name}",
                 style = MaterialTheme.typography.bodyLarge.bold().copy(
                     shadow = Shadow(
                         color = Color.Black,

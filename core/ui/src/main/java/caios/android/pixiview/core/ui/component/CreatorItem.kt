@@ -68,7 +68,7 @@ fun CreatorItem(
             .clip(RoundedCornerShape(8.dp))
             .clickable { onClickCreator.invoke(creatorDetail.creatorId) },
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp)),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)),
     ) {
         if (creatorDetail.coverImageUrl != null) {
             SubcomposeAsyncImage(

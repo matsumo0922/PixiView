@@ -2,6 +2,7 @@ package caios.android.pixiview.core.repository.utils
 
 import android.net.Uri
 import androidx.core.net.toUri
+import caios.android.pixiview.core.model.FanboxTag
 import caios.android.pixiview.core.model.PageCursorInfo
 import caios.android.pixiview.core.model.PageNumberInfo
 import caios.android.pixiview.core.model.PageOffsetInfo
@@ -34,6 +35,7 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxPostCommentItemsEnt
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostSearchEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxTagsEntity
 import caios.android.pixiview.core.model.fanbox.id.CommentId
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.NewsLetterId
@@ -297,7 +299,7 @@ internal fun FanboxCreatorTagsEntity.translate(): List<FanboxCreatorTag> {
         FanboxCreatorTag(
             count = it.count,
             coverImageUrl = it.coverImageUrl,
-            tag = it.tag,
+            name = it.tag,
         )
     }
 }
@@ -505,6 +507,15 @@ internal fun FanboxPostCommentItemsEntity.translate(): PageOffsetInfo<FanboxPost
 
 internal fun FanboxCreatorPostsPaginateEntity.translate(): List<FanboxCursor> {
     return body.map { it.translateToCursor() }
+}
+
+internal fun FanboxTagsEntity.translate(): List<FanboxTag> {
+    return body.map {
+        FanboxTag(
+            name = it.value,
+            count = it.count,
+        )
+    }
 }
 
 private fun String.translateToCursor(): FanboxCursor {

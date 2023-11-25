@@ -12,6 +12,7 @@ import android.webkit.CookieManager
 import android.webkit.MimeTypeMap
 import caios.android.pixiview.core.datastore.PreferenceBookmarkedPosts
 import caios.android.pixiview.core.datastore.PreferenceFanboxCookie
+import caios.android.pixiview.core.model.FanboxTag
 import caios.android.pixiview.core.model.PageCursorInfo
 import caios.android.pixiview.core.model.PageNumberInfo
 import caios.android.pixiview.core.model.PageOffsetInfo
@@ -41,6 +42,7 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxPostCommentItemsEnt
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostDetailEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxPostSearchEntity
+import caios.android.pixiview.core.model.fanbox.entity.FanboxTagsEntity
 import caios.android.pixiview.core.model.fanbox.id.CommentId
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
@@ -110,6 +112,7 @@ interface FanboxRepository {
 
     suspend fun getPostFromQuery(query: String, creatorId: CreatorId? = null, page: Int = 0): PageNumberInfo<FanboxPost>
     suspend fun getCreatorFromQuery(query: String, page: Int = 0): PageNumberInfo<FanboxCreatorDetail>
+    suspend fun getTagFromQuery(query: String): List<FanboxTag>
 
     suspend fun getSupportedPlans(): List<FanboxCreatorPlan>
     suspend fun getCreatorPlans(creatorId: CreatorId): List<FanboxCreatorPlan>
@@ -264,6 +267,10 @@ class FanboxRepositoryImpl(
 
     override suspend fun getCreatorFromQuery(query: String, page: Int): PageNumberInfo<FanboxCreatorDetail> = withContext(ioDispatcher) {
         get("creator.search", mapOf("q" to query, "page" to page.toString())).parse<FanboxCreatorSearchEntity>()!!.translate()
+    }
+
+    override suspend fun getTagFromQuery(query: String): List<FanboxTag> = withContext(ioDispatcher) {
+        get("tag.search", mapOf("q" to query)).parse<FanboxTagsEntity>()!!.translate()
     }
 
     override suspend fun getPost(postId: PostId): FanboxPostDetail = withContext(ioDispatcher) {

@@ -95,6 +95,7 @@ internal fun PixiViewNavHost(
             )
 
             postSearchScreen(
+                navigateToPostSearch = { creatorId, creatorQuery, tag -> navController.navigateToPostSearch(creatorId, creatorQuery, tag) },
                 navigateToPostDetail = { navController.navigateToPostDetail(it) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },

@@ -109,7 +109,7 @@ internal fun CreatorTopRoute(
             onClickBillingPlus = navigateToBillingPlus,
             onClickPost = navigateToPostDetail,
             onClickPlan = { context.startActivity(Intent(Intent.ACTION_VIEW, it.planBrowserUri)) },
-            onClickTag = { navigateToPostSearch.invoke(it.tag, uiState.creatorDetail.creatorId) },
+            onClickTag = { navigateToPostSearch.invoke(it.name, uiState.creatorDetail.creatorId) },
             onTerminate = terminate,
             onClickLink = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
             onClickFollow = viewModel::follow,

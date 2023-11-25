@@ -27,6 +27,9 @@
     <string name="common_follow">フォロー</string>
     <string name="common_unfollow">フォロー中</string>
     <string name="common_see_more">もっと見る</string>
+    <string name="common_tag">タグ</string>
+    <string name="common_post">投稿</string>
+    <string name="common_creator">投稿</string>
 
     <!-- Common Error -->
     <string name="error_executed">エラーが発生しました</string>
@@ -46,6 +49,7 @@
     <string name="unit_minute_before">%1$d分前</string>
     <string name="unit_second_before">%1$d秒前</string>
     <string name="unit_favorite">%1$dいいね</string>
+    <string name="unit_tag">%1$d件</string>
 
     <!-- Notify -->
     <string name="notify_download_channel_name">ダウンロード</string>
@@ -71,6 +75,8 @@
     <!-- Home -->
     <string name="home_tab_home">フォロー中</string>
     <string name="home_tab_supported">支援中</string>
+    <string name="home_app_lock_title">認証が必要です</string>
+    <string name="home_app_lock_message">アプリを使用するにはロック解除が必要です</string>
 
     <!-- Notify -->
     <string name="notify_load_more">もっと見る</string>
@@ -141,7 +147,7 @@
     <string name="setting_top_theme_app_dark">ダークテーマ</string>
     <string name="setting_top_theme_app_system">システムのテーマ</string>
     <string name="setting_top_general">一般</string>
-    <string name="setting_top_general_app_lock">パスワードを要求する</string>
+    <string name="setting_top_general_app_lock">アプリ起動にパスワードを要求する</string>
     <string name="setting_top_general_app_lock_description">アプリを起動する際にパスワードを要求します。</string>
     <string name="setting_top_general_default_follow_tab">フォロー中をデフォルトにする</string>
     <string name="setting_top_general_default_follow_tab_description">ホーム画面のデフォルトタブをフォロー中にします。</string>

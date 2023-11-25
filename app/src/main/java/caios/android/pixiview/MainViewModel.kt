@@ -12,7 +12,9 @@ import caios.android.pixiview.core.repository.FanboxRepository
 import caios.android.pixiview.core.repository.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -33,14 +35,22 @@ class MainViewModel @Inject constructor(
     private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
 
-    private val isLoggedInFlow: MutableSharedFlow<Boolean> = MutableSharedFlow(replay = 1)
+    private val _isLoggedInFlow: MutableSharedFlow<Boolean> = MutableSharedFlow(replay = 1)
 
-    val screenState = combine(userDataRepository.userData, fanboxRepository.cookie, isLoggedInFlow, ::Triple).map { (userData, cookie, isLoggedIn) ->
+    private val _isAppLockedFlow: MutableStateFlow<Boolean> = MutableStateFlow(true)
+
+    val screenState = combine(
+        userDataRepository.userData,
+        fanboxRepository.cookie,
+        _isLoggedInFlow,
+        _isAppLockedFlow,
+    ) { userData, cookie, isLoggedIn, isAppLocked ->
         ScreenState.Idle(
             MainUiState(
                 userData = userData,
                 fanboxCookie = cookie,
                 isLoggedIn = isLoggedIn,
+                isAppLocked = if (userData.isAppLock) isAppLocked else false,
             ),
         )
     }.stateIn(
@@ -54,7 +64,7 @@ class MainViewModel @Inject constructor(
 
         viewModelScope.launch {
             fanboxRepository.logoutTrigger.collectLatest {
-                isLoggedInFlow.emit(false)
+                _isLoggedInFlow.emit(false)
             }
         }
 
@@ -76,9 +86,15 @@ class MainViewModel @Inject constructor(
                     fanboxRepository.updateCookie(it.orEmpty())
                     fanboxRepository.updateCsrfToken()
                 }.isSuccess.also {
-                    isLoggedInFlow.emit(it)
+                    _isLoggedInFlow.emit(it)
                 }
             }
+        }
+    }
+
+    fun setAppLock(isAppLock: Boolean) {
+        viewModelScope.launch {
+            _isAppLockedFlow.emit(isAppLock)
         }
     }
 }
@@ -88,4 +104,5 @@ data class MainUiState(
     val userData: UserData,
     val fanboxCookie: String,
     val isLoggedIn: Boolean,
+    val isAppLocked: Boolean,
 )

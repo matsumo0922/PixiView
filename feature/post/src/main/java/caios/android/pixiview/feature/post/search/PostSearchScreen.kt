@@ -15,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import caios.android.pixiview.core.model.FanboxTag
 import caios.android.pixiview.core.model.UserData
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorDetail
 import caios.android.pixiview.core.model.fanbox.FanboxPost
@@ -29,6 +30,7 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 internal fun PostSearchRoute(
     query: String,
+    navigateToPostSearch: (CreatorId?, String?, String?) -> Unit,
     navigateToPostDetail: (PostId) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
@@ -52,9 +54,9 @@ internal fun PostSearchRoute(
         initialQuery = query,
         userData = uiState.userData,
         bookmarkedPosts = uiState.bookmarkedPosts.toImmutableList(),
+        suggestTags = uiState.suggestTags.toImmutableList(),
         creatorPaging = creatorPaging,
         tagPaging = tagPaging,
-        onSearch = viewModel::search,
         onTerminate = terminate,
         onClickPost = navigateToPostDetail,
         onClickPostBookmark = viewModel::postBookmark,
@@ -62,6 +64,13 @@ internal fun PostSearchRoute(
         onClickCreatorPlans = navigateToCreatorPlans,
         onClickFollow = viewModel::follow,
         onClickUnfollow = viewModel::unfollow,
+        onSearch = {
+            if (uiState.query.isNotBlank()) {
+                navigateToPostSearch.invoke(it.creatorId, it.creatorQuery, it.tag)
+            } else {
+                viewModel.search(it)
+            }
+        },
     )
 }
 
@@ -72,6 +81,7 @@ private fun PostSearchScreen(
     initialQuery: String,
     userData: UserData,
     bookmarkedPosts: ImmutableList<PostId>,
+    suggestTags: ImmutableList<FanboxTag>,
     creatorPaging: LazyPagingItems<FanboxCreatorDetail>,
     tagPaging: LazyPagingItems<FanboxPost>,
     onSearch: (PostSearchQuery) -> Unit,
@@ -106,11 +116,14 @@ private fun PostSearchScreen(
                         .padding(padding)
                         .fillMaxSize(),
                     pagingAdapter = creatorPaging,
+                    suggestTags = suggestTags,
                     onClickCreator = onClickCreatorPosts,
                     onClickFollow = onClickFollow,
                     onClickUnfollow = onClickUnfollow,
+                    onClickTag = { onSearch.invoke(parseQuery(it)) },
                 )
             }
+
             PostSearchMode.Tag -> {
                 PostSearchTagScreen(
                     modifier = Modifier
@@ -125,6 +138,7 @@ private fun PostSearchScreen(
                     onClickPlanList = onClickCreatorPlans,
                 )
             }
+
             else -> {
                 // do nothing
             }
@@ -176,10 +190,12 @@ internal fun parseQuery(query: String): PostSearchQuery {
                 mode = PostSearchMode.Tag
                 creatorId = CreatorId(it.removePrefix("from:@"))
             }
+
             it.startsWith("#") -> {
                 mode = PostSearchMode.Tag
                 tag = it.removePrefix("#")
             }
+
             else -> {
                 mode = PostSearchMode.Creator
                 creatorQuery = it
