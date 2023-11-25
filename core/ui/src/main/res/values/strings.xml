@@ -141,6 +141,8 @@
     <string name="setting_top_theme_app_dark">ダークテーマ</string>
     <string name="setting_top_theme_app_system">システムのテーマ</string>
     <string name="setting_top_general">一般</string>
+    <string name="setting_top_general_app_lock">パスワードを要求する</string>
+    <string name="setting_top_general_app_lock_description">アプリを起動する際にパスワードを要求します。</string>
     <string name="setting_top_general_default_follow_tab">フォロー中をデフォルトにする</string>
     <string name="setting_top_general_default_follow_tab_description">ホーム画面のデフォルトタブをフォロー中にします。</string>
     <string name="setting_top_general_hide_adult_contents">成人向けコンテンツを隠す</string>

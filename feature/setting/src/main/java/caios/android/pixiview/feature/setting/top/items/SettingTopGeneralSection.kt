@@ -11,6 +11,7 @@ import caios.android.pixiview.feature.setting.SettingSwitchItem
 @Composable
 internal fun SettingTopGeneralSection(
     userData: UserData,
+    onClickAppLock: (Boolean) -> Unit,
     onClickFollowTabDefaultHome: (Boolean) -> Unit,
     onClickHideAdultContents: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -19,6 +20,14 @@ internal fun SettingTopGeneralSection(
         SettingTopTitleItem(
             modifier = Modifier.fillMaxWidth(),
             text = R.string.setting_top_general,
+        )
+
+        SettingSwitchItem(
+            modifier = Modifier.fillMaxWidth(),
+            title = R.string.setting_top_general_app_lock,
+            description = R.string.setting_top_general_app_lock_description,
+            value = userData.isAppLock,
+            onValueChanged = onClickAppLock,
         )
 
         SettingSwitchItem(

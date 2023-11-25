@@ -52,6 +52,12 @@ class SettingTopViewModel @Inject constructor(
         }
     }
 
+    fun setAppLock(isAppLock: Boolean) {
+        viewModelScope.launch {
+            userDataRepository.setAppLock(isAppLock)
+        }
+    }
+
     fun setFollowTabDefaultHome(isFollowTabDefaultHome: Boolean) {
         viewModelScope.launch {
             userDataRepository.setFollowTabDefaultHome(isFollowTabDefaultHome)

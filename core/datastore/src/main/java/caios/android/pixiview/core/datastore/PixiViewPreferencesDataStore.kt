@@ -33,6 +33,7 @@ class PixiViewPreferencesDataStore(
                 },
                 isDynamicColor = if (it.hasIsUseDynamicColor()) it.isUseDynamicColor else false,
                 isDeveloperMode = if (it.hasIsDeveloperMode()) it.isDeveloperMode else false,
+                isAppLock = if (it.hasIsAppLock()) it.isAppLock else false,
                 isFollowTabDefaultHome = if (it.hasIsFollowTabDefaultHome()) it.isFollowTabDefaultHome else false,
                 isHideAdultContents = if (it.hasIsHideAdultContents()) it.isHideAdultContents else false,
                 isPlusMode = if (it.hasIsPlusMode()) it.isPlusMode else false,
@@ -105,6 +106,14 @@ class PixiViewPreferencesDataStore(
         userPreference.updateData {
             it.copy {
                 this.isUseDynamicColor = useDynamicColor
+            }
+        }
+    }
+
+    suspend fun setAppLock(isAppLock: Boolean) = withContext(ioDispatcher) {
+        userPreference.updateData {
+            it.copy {
+                this.isAppLock = isAppLock
             }
         }
     }

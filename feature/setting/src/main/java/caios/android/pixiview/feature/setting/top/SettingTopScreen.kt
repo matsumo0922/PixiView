@@ -65,6 +65,7 @@ internal fun SettingTopRoute(
             config = uiState.config,
             onClickTheme = navigateToSettingTheme,
             onClickOpenSourceLicense = navigateToOpenSourceLicense,
+            onClickAppLock = viewModel::setAppLock,
             onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
             onClickHideAdultContents = viewModel::setHideAdultContents,
             onClickLogout = {
@@ -102,6 +103,7 @@ private fun SettingTopScreen(
     fanboxSessionId: String,
     config: PixiViewConfig,
     onClickTheme: () -> Unit,
+    onClickAppLock: (Boolean) -> Unit,
     onClickFollowTabDefaultHome: (Boolean) -> Unit,
     onClickHideAdultContents: (Boolean) -> Unit,
     onClickLogout: () -> Unit,
@@ -150,6 +152,7 @@ private fun SettingTopScreen(
                 SettingTopGeneralSection(
                     modifier = Modifier.fillMaxWidth(),
                     userData = userData,
+                    onClickAppLock = onClickAppLock,
                     onClickFollowTabDefaultHome = onClickFollowTabDefaultHome,
                     onClickHideAdultContents = onClickHideAdultContents,
                 )
