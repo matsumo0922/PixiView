@@ -1,5 +1,6 @@
 package caios.android.pixiview.feature.post.search.items
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -46,6 +47,7 @@ internal fun PostSearchCreatorScreen(
     onClickTag: (String) -> Unit,
     onClickFollow: suspend (String) -> Result<Unit>,
     onClickUnfollow: suspend (String) -> Result<Unit>,
+    onClickSupporting: (Uri) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -119,6 +121,7 @@ internal fun PostSearchCreatorScreen(
                                 isFollowed = !onClickUnfollow.invoke(it).isSuccess
                             }
                         },
+                        onClickSupporting = onClickSupporting,
                     )
                 }
             }

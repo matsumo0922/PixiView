@@ -41,39 +41,15 @@ class FollowingCreatorsViewModel @Inject constructor(
         }
     }
 
-    fun follow(creatorUserId: String) {
-        viewModelScope.launch {
-            (screenState.value as? ScreenState.Idle)?.also {
-                val followingCreators = it.data.followingCreators.toMutableList()
-                val index = followingCreators.indexOfFirst { creator -> creator.user.userId == creatorUserId }
-
-                followingCreators[index] = suspendRunCatching {
-                    fanboxRepository.followCreator(creatorUserId)
-                }.fold(
-                    onSuccess = { followingCreators[index].copy(isFollowed = true) },
-                    onFailure = { followingCreators[index].copy(isFollowed = false) },
-                )
-
-                _screenState.value = ScreenState.Idle(it.data.copy(followingCreators = followingCreators))
-            }
+    suspend fun follow(creatorUserId: String): Result<Unit> {
+        return suspendRunCatching {
+            fanboxRepository.unfollowCreator(creatorUserId)
         }
     }
 
-    fun unfollow(creatorUserId: String) {
-        viewModelScope.launch {
-            (screenState.value as? ScreenState.Idle)?.also {
-                val followingCreators = it.data.followingCreators.toMutableList()
-                val index = followingCreators.indexOfFirst { creator -> creator.user.userId == creatorUserId }
-
-                followingCreators[index] = suspendRunCatching {
-                    fanboxRepository.unfollowCreator(creatorUserId)
-                }.fold(
-                    onSuccess = { followingCreators[index].copy(isFollowed = false) },
-                    onFailure = { followingCreators[index].copy(isFollowed = true) },
-                )
-
-                _screenState.value = ScreenState.Idle(it.data.copy(followingCreators = followingCreators))
-            }
+    suspend fun unfollow(creatorUserId: String): Result<Unit> {
+        return suspendRunCatching {
+            fanboxRepository.unfollowCreator(creatorUserId)
         }
     }
 }

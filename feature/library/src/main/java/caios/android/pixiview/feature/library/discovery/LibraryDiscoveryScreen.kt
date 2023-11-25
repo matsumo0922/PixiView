@@ -1,5 +1,7 @@
 package caios.android.pixiview.feature.library.discovery
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -52,6 +55,7 @@ internal fun LibraryDiscoveryRoute(
     modifier: Modifier = Modifier,
     viewModel: LibraryDiscoveryViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val paging = uiState.paging.collectAsLazyPagingItems()
 
@@ -62,6 +66,7 @@ internal fun LibraryDiscoveryRoute(
         onClickCreator = navigateToCreatorPosts,
         onClickFollow = viewModel::follow,
         onClickUnfollow = viewModel::unfollow,
+        onClickSupporting = { context.startActivity(Intent(Intent.ACTION_VIEW, it)) },
         pagingAdapter = paging,
     )
 }
@@ -75,6 +80,7 @@ private fun LibraryDiscoveryScreen(
     onClickCreator: (CreatorId) -> Unit,
     onClickFollow: suspend (String) -> Result<Unit>,
     onClickUnfollow: suspend (String) -> Result<Unit>,
+    onClickSupporting: (Uri) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -136,6 +142,7 @@ private fun LibraryDiscoveryScreen(
                                     isFollowed = !onClickUnfollow.invoke(it).isSuccess
                                 }
                             },
+                            onClickSupporting = onClickSupporting,
                         )
                     }
                 }

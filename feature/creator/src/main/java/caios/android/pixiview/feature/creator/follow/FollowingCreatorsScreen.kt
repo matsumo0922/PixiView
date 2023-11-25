@@ -1,5 +1,7 @@
 package caios.android.pixiview.feature.creator.follow
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -18,10 +20,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,6 +39,7 @@ import caios.android.pixiview.core.ui.extensition.drawVerticalScrollbar
 import caios.android.pixiview.feature.creator.R
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun FollowingCreatorsRoute(
@@ -43,6 +48,7 @@ internal fun FollowingCreatorsRoute(
     modifier: Modifier = Modifier,
     viewModel: FollowingCreatorsViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     AsyncLoadContents(
@@ -56,6 +62,7 @@ internal fun FollowingCreatorsRoute(
             onClickCreator = navigateToCreatorPlans,
             onClickFollow = viewModel::follow,
             onClickUnfollow = viewModel::unfollow,
+            onClickSupporting = { context.startActivity(Intent(Intent.ACTION_VIEW, it)) },
             terminate = terminate,
         )
     }
@@ -66,12 +73,14 @@ internal fun FollowingCreatorsRoute(
 private fun FollowingCreatorsScreen(
     followingCreators: ImmutableList<FanboxCreatorDetail>,
     onClickCreator: (CreatorId) -> Unit,
-    onClickFollow: (String) -> Unit,
-    onClickUnfollow: (String) -> Unit,
+    onClickFollow: suspend (String) -> Result<Unit>,
+    onClickUnfollow: suspend (String) -> Result<Unit>,
+    onClickSupporting: (Uri) -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state = rememberLazyListState()
+    val scope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
@@ -106,13 +115,18 @@ private fun FollowingCreatorsScreen(
                     isFollowed = isFollowed,
                     onClickCreator = onClickCreator,
                     onClickFollow = {
-                        isFollowed = true
-                        onClickFollow.invoke(it)
+                        scope.launch {
+                            isFollowed = true
+                            isFollowed = onClickFollow.invoke(it).isSuccess
+                        }
                     },
                     onClickUnfollow = {
-                        isFollowed = false
-                        onClickUnfollow.invoke(it)
+                        scope.launch {
+                            isFollowed = false
+                            isFollowed = !onClickUnfollow.invoke(it).isSuccess
+                        }
                     },
+                    onClickSupporting = onClickSupporting,
                 )
             }
 

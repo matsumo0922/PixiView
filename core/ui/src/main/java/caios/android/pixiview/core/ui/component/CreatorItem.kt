@@ -1,5 +1,6 @@
 package caios.android.pixiview.core.ui.component
 
+import android.net.Uri
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -57,6 +58,7 @@ fun CreatorItem(
     onClickCreator: (CreatorId) -> Unit,
     onClickFollow: (String) -> Unit,
     onClickUnfollow: (String) -> Unit,
+    onClickSupporting: (Uri) -> Unit,
     modifier: Modifier = Modifier,
     isFollowed: Boolean = creatorDetail.isFollowed,
 ) {
@@ -121,6 +123,7 @@ fun CreatorItem(
                 isFollowed = isFollowed,
                 onClickFollow = onClickFollow,
                 onClickUnfollow = onClickUnfollow,
+                onClickSupporting = onClickSupporting,
             )
 
             if (creatorDetail.description.isNotBlank()) {
@@ -163,6 +166,7 @@ private fun UserSection(
     isFollowed: Boolean,
     onClickFollow: (String) -> Unit,
     onClickUnfollow: (String) -> Unit,
+    onClickSupporting: (Uri) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -200,13 +204,23 @@ private fun UserSection(
             )
         }
 
-        if (isFollowed) {
-            OutlinedButton(onClick = { onClickUnfollow.invoke(creatorDetail.user.userId) }) {
-                Text(stringResource(R.string.common_unfollow))
+        when {
+            creatorDetail.isSupported -> {
+                Button(onClick = { onClickSupporting.invoke(creatorDetail.supportingBrowserUri) }) {
+                    Text(stringResource(R.string.common_supporting))
+                }
             }
-        } else {
-            Button(onClick = { onClickFollow.invoke(creatorDetail.user.userId) }) {
-                Text(stringResource(R.string.common_follow))
+
+            isFollowed -> {
+                OutlinedButton(onClick = { onClickUnfollow.invoke(creatorDetail.user.userId) }) {
+                    Text(stringResource(R.string.common_unfollow))
+                }
+            }
+
+            else -> {
+                Button(onClick = { onClickFollow.invoke(creatorDetail.user.userId) }) {
+                    Text(stringResource(R.string.common_follow))
+                }
             }
         }
     }
@@ -220,5 +234,6 @@ private fun CreatorItemPreview() {
         onClickCreator = {},
         onClickFollow = {},
         onClickUnfollow = {},
+        onClickSupporting = {},
     )
 }

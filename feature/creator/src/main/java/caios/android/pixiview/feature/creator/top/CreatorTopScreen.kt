@@ -1,6 +1,7 @@
 package caios.android.pixiview.feature.creator.top
 
 import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -114,6 +115,7 @@ internal fun CreatorTopRoute(
             onClickLink = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
             onClickFollow = viewModel::follow,
             onClickUnfollow = viewModel::unfollow,
+            onClickSupporting = { context.startActivity(Intent(Intent.ACTION_VIEW, it)) },
             onClickPostBookmark = viewModel::postBookmark,
             onClickPostLike = viewModel::postLike,
         )
@@ -138,8 +140,9 @@ private fun CreatorTopScreen(
     onClickPlan: (FanboxCreatorPlan) -> Unit,
     onClickTag: (FanboxCreatorTag) -> Unit,
     onClickLink: (String) -> Unit,
-    onClickFollow: (String) -> Unit,
-    onClickUnfollow: (String) -> Unit,
+    onClickFollow: suspend (String) -> Result<Unit>,
+    onClickUnfollow: suspend (String) -> Result<Unit>,
+    onClickSupporting: (Uri) -> Unit,
     onTerminate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -188,6 +191,7 @@ private fun CreatorTopScreen(
                     onClickLink = onClickLink,
                     onClickFollow = onClickFollow,
                     onClickUnfollow = onClickUnfollow,
+                    onClickSupporting = onClickSupporting,
                     onClickDescription = { isShowDescriptionDialog = true },
                 )
             },

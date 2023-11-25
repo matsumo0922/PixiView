@@ -75,33 +75,15 @@ class CreatorTopViewModel @Inject constructor(
         }
     }
 
-    fun follow(creatorUserId: String) {
-        viewModelScope.launch {
-            (screenState.value as? ScreenState.Idle)?.also { data ->
-                val creatorDetail = suspendRunCatching {
-                    fanboxRepository.followCreator(creatorUserId)
-                }.fold(
-                    onSuccess = { data.data.creatorDetail.copy(isFollowed = true) },
-                    onFailure = { data.data.creatorDetail.copy(isFollowed = false) },
-                )
-
-                _screenState.value = ScreenState.Idle(data.data.copy(creatorDetail = creatorDetail))
-            }
+    suspend fun follow(creatorUserId: String): Result<Unit> {
+        return suspendRunCatching {
+            fanboxRepository.unfollowCreator(creatorUserId)
         }
     }
 
-    fun unfollow(creatorUserId: String) {
-        viewModelScope.launch {
-            (screenState.value as? ScreenState.Idle)?.also { data ->
-                val creatorDetail = suspendRunCatching {
-                    fanboxRepository.unfollowCreator(creatorUserId)
-                }.fold(
-                    onSuccess = { data.data.creatorDetail.copy(isFollowed = false) },
-                    onFailure = { data.data.creatorDetail.copy(isFollowed = true) },
-                )
-
-                _screenState.value = ScreenState.Idle(data.data.copy(creatorDetail = creatorDetail))
-            }
+    suspend fun unfollow(creatorUserId: String): Result<Unit> {
+        return suspendRunCatching {
+            fanboxRepository.unfollowCreator(creatorUserId)
         }
     }
 

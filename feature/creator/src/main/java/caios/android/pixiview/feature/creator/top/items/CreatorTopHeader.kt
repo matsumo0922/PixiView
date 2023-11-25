@@ -1,5 +1,6 @@
 package caios.android.pixiview.feature.creator.top.items
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,6 +61,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,10 +71,13 @@ internal fun CreatorTopHeader(
     onClickMenu: () -> Unit,
     onClickLink: (String) -> Unit,
     onClickDescription: (String) -> Unit,
-    onClickFollow: (String) -> Unit,
-    onClickUnfollow: (String) -> Unit,
+    onClickFollow: suspend (String) -> Result<Unit>,
+    onClickUnfollow: suspend (String) -> Result<Unit>,
+    onClickSupporting: (Uri) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
+
     var isFollowed by remember(creatorDetail.isFollowed) { mutableStateOf(creatorDetail.isFollowed) }
     val tagItems = createTags(creatorDetail)
 
@@ -198,35 +204,59 @@ internal fun CreatorTopHeader(
             )
         }
 
-        if (isFollowed) {
-            OutlinedButton(
-                modifier = Modifier.constrainAs(followButton) {
-                    top.linkTo(header.bottom, 8.dp)
-                    end.linkTo(parent.end, 16.dp)
+        when {
+            creatorDetail.isSupported -> {
+                Button(
+                    modifier = Modifier.constrainAs(followButton) {
+                        top.linkTo(header.bottom, 8.dp)
+                        end.linkTo(parent.end, 16.dp)
 
-                    width = Dimension.value(128.dp)
-                },
-                onClick = {
-                    isFollowed = false
-                    onClickUnfollow.invoke(creatorDetail.user.userId)
-                },
-            ) {
-                Text(text = stringResource(R.string.common_unfollow))
+                        width = Dimension.value(128.dp)
+                    },
+                    onClick = {
+                        onClickSupporting.invoke(creatorDetail.supportingBrowserUri)
+                    },
+                ) {
+                    Text(text = stringResource(R.string.common_supporting))
+                }
             }
-        } else {
-            Button(
-                modifier = Modifier.constrainAs(followButton) {
-                    top.linkTo(header.bottom, 8.dp)
-                    end.linkTo(parent.end, 16.dp)
 
-                    width = Dimension.value(128.dp)
-                },
-                onClick = {
-                    isFollowed = true
-                    onClickFollow.invoke(creatorDetail.user.userId)
-                },
-            ) {
-                Text(text = stringResource(R.string.common_follow))
+            isFollowed -> {
+                OutlinedButton(
+                    modifier = Modifier.constrainAs(followButton) {
+                        top.linkTo(header.bottom, 8.dp)
+                        end.linkTo(parent.end, 16.dp)
+
+                        width = Dimension.value(128.dp)
+                    },
+                    onClick = {
+                        scope.launch {
+                            isFollowed = false
+                            isFollowed = !onClickUnfollow.invoke(creatorDetail.user.userId).isSuccess
+                        }
+                    },
+                ) {
+                    Text(text = stringResource(R.string.common_unfollow))
+                }
+            }
+
+            else -> {
+                Button(
+                    modifier = Modifier.constrainAs(followButton) {
+                        top.linkTo(header.bottom, 8.dp)
+                        end.linkTo(parent.end, 16.dp)
+
+                        width = Dimension.value(128.dp)
+                    },
+                    onClick = {
+                        scope.launch {
+                            isFollowed = true
+                            isFollowed = onClickFollow.invoke(creatorDetail.user.userId).isSuccess
+                        }
+                    },
+                ) {
+                    Text(text = stringResource(R.string.common_follow))
+                }
             }
         }
 
@@ -358,8 +388,9 @@ private fun CreatorTopHeaderPreview() {
             onClickMenu = {},
             onClickLink = {},
             onClickDescription = {},
-            onClickFollow = {},
-            onClickUnfollow = {},
+            onClickFollow = { Result.success(Unit) },
+            onClickUnfollow = { Result.success(Unit) },
+            onClickSupporting = {},
         )
     }
 }

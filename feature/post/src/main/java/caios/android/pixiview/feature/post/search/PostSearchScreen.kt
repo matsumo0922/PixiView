@@ -1,5 +1,7 @@
 package caios.android.pixiview.feature.post.search
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
@@ -38,6 +41,7 @@ internal fun PostSearchRoute(
     modifier: Modifier = Modifier,
     viewModel: PostSearchViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val creatorPaging = uiState.creatorPaging.collectAsLazyPagingItems()
     val tagPaging = uiState.tagPaging.collectAsLazyPagingItems()
@@ -65,6 +69,7 @@ internal fun PostSearchRoute(
         onClickCreatorPlans = navigateToCreatorPlans,
         onClickFollow = viewModel::follow,
         onClickUnfollow = viewModel::unfollow,
+        onClickSupporting = { context.startActivity(Intent(Intent.ACTION_VIEW, it)) },
         onSearch = {
             if (uiState.query.isNotBlank()) {
                 navigateToPostSearch.invoke(it.creatorId, it.creatorQuery, it.tag)
@@ -94,6 +99,7 @@ private fun PostSearchScreen(
     onClickCreatorPlans: (CreatorId) -> Unit,
     onClickFollow: suspend (String) -> Result<Unit>,
     onClickUnfollow: suspend (String) -> Result<Unit>,
+    onClickSupporting: (Uri) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -123,6 +129,7 @@ private fun PostSearchScreen(
                     onClickFollow = onClickFollow,
                     onClickUnfollow = onClickUnfollow,
                     onClickTag = { onSearch.invoke(parseQuery(it)) },
+                    onClickSupporting = onClickSupporting,
                 )
             }
 
