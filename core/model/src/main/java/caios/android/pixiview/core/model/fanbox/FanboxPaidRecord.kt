@@ -5,7 +5,7 @@ import java.time.OffsetDateTime
 data class FanboxPaidRecord(
     val id: String,
     val paidAmount: Int,
-    val paymentDatetime: OffsetDateTime,
-    val paymentMethod: String,
+    val paymentDateTime: OffsetDateTime,
+    val paymentMethod: PaymentMethod,
     val creator: FanboxCreator,
 )

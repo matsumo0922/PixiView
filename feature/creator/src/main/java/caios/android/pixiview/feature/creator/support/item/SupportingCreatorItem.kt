@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
+import caios.android.pixiview.core.model.fanbox.PaymentMethod
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.ui.R
 import caios.android.pixiview.core.ui.extensition.SimmerPlaceHolder
@@ -191,10 +192,10 @@ private fun UserSection(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = when (plan.paymentMethod) {
-                        FanboxCreatorPlan.PaymentMethod.CARD -> stringResource(R.string.creator_supporting_payment_method_card)
-                        FanboxCreatorPlan.PaymentMethod.PAYPAL -> stringResource(R.string.creator_supporting_payment_method_paypal)
-                        FanboxCreatorPlan.PaymentMethod.CVS -> stringResource(R.string.creator_supporting_payment_method_cvs)
-                        FanboxCreatorPlan.PaymentMethod.UNKNOWN -> stringResource(R.string.creator_supporting_payment_method_unknown)
+                        PaymentMethod.CARD -> stringResource(R.string.creator_supporting_payment_method_card)
+                        PaymentMethod.PAYPAL -> stringResource(R.string.creator_supporting_payment_method_paypal)
+                        PaymentMethod.CVS -> stringResource(R.string.creator_supporting_payment_method_cvs)
+                        PaymentMethod.UNKNOWN -> stringResource(R.string.creator_supporting_payment_method_unknown)
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

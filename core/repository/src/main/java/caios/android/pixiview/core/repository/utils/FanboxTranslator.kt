@@ -20,6 +20,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxPaidRecord
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.FanboxUser
+import caios.android.pixiview.core.model.fanbox.PaymentMethod
 import caios.android.pixiview.core.model.fanbox.entity.FanboxBellItemsEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorEntity
 import caios.android.pixiview.core.model.fanbox.entity.FanboxCreatorItemsEntity
@@ -312,7 +313,7 @@ internal fun FanboxCreatorPlansEntity.translate(): List<FanboxCreatorPlan> {
             fee = it.fee,
             hasAdultContent = it.hasAdultContent,
             id = PlanId(it.id),
-            paymentMethod = FanboxCreatorPlan.PaymentMethod.fromString(it.paymentMethod),
+            paymentMethod = PaymentMethod.fromString(it.paymentMethod),
             title = it.title,
             user = FanboxUser(
                 userId = it.user.userId,
@@ -333,7 +334,7 @@ internal fun FanboxCreatorPlanEntity.translate(): FanboxCreatorPlanDetail {
             fee = body.plan.fee,
             coverImageUrl = body.plan.coverImageUrl,
             hasAdultContent = body.plan.hasAdultContent,
-            paymentMethod = FanboxCreatorPlan.PaymentMethod.fromString(body.plan.paymentMethod),
+            paymentMethod = PaymentMethod.fromString(body.plan.paymentMethod),
             user = FanboxUser(
                 userId = body.plan.user.userId,
                 creatorId = CreatorId(body.plan.creatorId),
@@ -365,8 +366,8 @@ internal fun FanboxPaidRecordEntity.translate(): List<FanboxPaidRecord> {
         FanboxPaidRecord(
             id = it.id,
             paidAmount = it.paidAmount,
-            paymentDatetime = OffsetDateTime.parse(it.paymentDatetime),
-            paymentMethod = it.paymentMethod,
+            paymentDateTime = OffsetDateTime.parse(it.paymentDatetime),
+            paymentMethod = PaymentMethod.fromString(it.paymentMethod),
             creator = FanboxCreator(
                 creatorId = it.creator.creatorId?.let { id -> CreatorId(id) },
                 user = FanboxUser(

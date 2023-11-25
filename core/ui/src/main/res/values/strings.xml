@@ -63,6 +63,7 @@
     <string name="library_navigation_bookmark">ブックマーク</string>
     <string name="library_navigation_following">フォロー中</string>
     <string name="library_navigation_supporting">支援中</string>
+    <string name="library_navigation_payments">決済履歴</string>
     <string name="library_navigation_setting">設定</string>
     <string name="library_navigation_about">アプリについて</string>
     <string name="library_navigation_plus_description">コーヒー1杯程度の金額で、全ての機能にアクセスできるようになります！</string>

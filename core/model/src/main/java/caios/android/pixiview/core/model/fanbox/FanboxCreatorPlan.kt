@@ -16,23 +16,6 @@ data class FanboxCreatorPlan(
     val planBrowserUri get() = "https://www.fanbox.cc/@${user.creatorId}/plans/$id".toUri()
     val supportingBrowserUri get() = "https://www.fanbox.cc/creators/supporting/@${user.creatorId}".toUri()
 
-    enum class PaymentMethod {
-        CARD,
-        PAYPAL,
-        CVS,
-        UNKNOWN,
-        ;
-
-        companion object {
-            fun fromString(string: String?) = when (string) {
-                "gmo_card" -> CARD
-                "paypal" -> PAYPAL
-                "gmo_cvs" -> CVS
-                else -> UNKNOWN
-            }
-        }
-    }
-
     companion object {
         fun dummy() = FanboxCreatorPlan(
             id = PlanId("123"),
@@ -41,7 +24,7 @@ data class FanboxCreatorPlan(
             fee = 500,
             coverImageUrl = null,
             hasAdultContent = false,
-            paymentMethod = FanboxCreatorPlan.PaymentMethod.CARD,
+            paymentMethod = PaymentMethod.CARD,
             user = FanboxUser.dummy(),
         )
     }

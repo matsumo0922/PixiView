@@ -30,6 +30,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Payment
 import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Divider
@@ -65,6 +66,7 @@ internal fun LibraryDrawer(
     navigateToBookmarkedPosts: () -> Unit,
     navigateToFollowingCreators: () -> Unit,
     navigateToSupportingCreators: () -> Unit,
+    navigateToPayments: () -> Unit,
     navigateToSetting: () -> Unit,
     navigateToAbout: () -> Unit,
     navigateToBillingPlus: () -> Unit,
@@ -142,6 +144,13 @@ internal fun LibraryDrawer(
                 label = stringResource(R.string.library_navigation_supporting),
                 icon = Icons.Outlined.Group,
                 onClick = navigateToSupportingCreators,
+            )
+
+            NavigationDrawerItem(
+                state = state,
+                label = stringResource(R.string.library_navigation_payments),
+                icon = Icons.Outlined.Payment,
+                onClick = navigateToPayments,
             )
 
             Divider(

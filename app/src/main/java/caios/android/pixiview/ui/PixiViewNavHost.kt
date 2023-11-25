@@ -21,6 +21,8 @@ import caios.android.pixiview.feature.creator.fancard.fanCardScreen
 import caios.android.pixiview.feature.creator.fancard.navigateToFanCard
 import caios.android.pixiview.feature.creator.follow.followingCreatorsScreen
 import caios.android.pixiview.feature.creator.follow.navigateToFollowingCreators
+import caios.android.pixiview.feature.creator.payment.navigateToPayments
+import caios.android.pixiview.feature.creator.payment.paymentsScreen
 import caios.android.pixiview.feature.creator.support.navigateToSupportingCreators
 import caios.android.pixiview.feature.creator.support.supportingCreatorsScreen
 import caios.android.pixiview.feature.creator.top.creatorTopScreen
@@ -75,6 +77,7 @@ internal fun PixiViewNavHost(
                 navigateToBookmarkedPosts = { navController.navigateToBookmarkedPosts() },
                 navigateToFollowerCreators = { navController.navigateToFollowingCreators() },
                 navigateToSupportingCreators = { navController.navigateToSupportingCreators() },
+                navigateToPayments = { navController.navigateToPayments() },
                 navigateToSettingTop = { navController.navigateToSettingTop() },
                 navigateToAbout = { navController.navigateToAbout() },
                 navigateToBillingPlus = { navController.navigateToBillingPlus() },
@@ -126,6 +129,11 @@ internal fun PixiViewNavHost(
 
             followingCreatorsScreen(
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
+                terminate = { navController.popBackStack() },
+            )
+
+            paymentsScreen(
+                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 terminate = { navController.popBackStack() },
             )
 
