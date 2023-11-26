@@ -41,7 +41,6 @@ class SettingAccountViewModel @Inject constructor(
     }
 
     fun update() {
-
     }
 }
 

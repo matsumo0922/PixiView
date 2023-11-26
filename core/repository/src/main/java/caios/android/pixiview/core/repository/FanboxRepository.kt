@@ -46,7 +46,6 @@ import caios.android.pixiview.core.model.fanbox.entity.FanboxTagsEntity
 import caios.android.pixiview.core.model.fanbox.id.CommentId
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.model.fanbox.id.PostId
-import caios.android.pixiview.core.repository.utils.isSuccess
 import caios.android.pixiview.core.repository.utils.parse
 import caios.android.pixiview.core.repository.utils.requireSuccess
 import caios.android.pixiview.core.repository.utils.translate

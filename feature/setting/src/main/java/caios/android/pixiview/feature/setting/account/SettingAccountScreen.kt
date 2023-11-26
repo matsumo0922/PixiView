@@ -10,5 +10,4 @@ internal fun SettingAccountRoute(
     modifier: Modifier = Modifier,
     viewModel: SettingAccountViewModel = hiltViewModel(),
 ) {
-
 }

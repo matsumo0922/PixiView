@@ -73,8 +73,12 @@ internal fun SettingTopRoute(
             fanboxSessionId = uiState.fanboxSessionId,
             config = uiState.config,
             onClickThemeSetting = navigateToThemeSetting,
-            onClickAccountSetting = { context.startActivity(Intent(Intent.ACTION_VIEW, "https://www.fanbox.cc/user/settings".toUri())) },
-            onClickNotifySetting = { context.startActivity(Intent(Intent.ACTION_VIEW, "https://www.fanbox.cc/notifications/settings#email".toUri())) },
+            onClickAccountSetting = {
+                context.startActivity(Intent(Intent.ACTION_VIEW, "https://www.fanbox.cc/user/settings".toUri()))
+            },
+            onClickNotifySetting = {
+                context.startActivity(Intent(Intent.ACTION_VIEW, "https://www.fanbox.cc/notifications/settings#email".toUri()))
+            },
             onClickOpenSourceLicense = navigateToOpenSourceLicense,
             onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
             onClickHideAdultContents = viewModel::setHideAdultContents,

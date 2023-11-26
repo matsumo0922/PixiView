@@ -21,6 +21,5 @@ fun NavGraphBuilder.settingAccountScreen(
         popEnterTransition = { NavigateAnimation.Horizontal.popEnter },
         popExitTransition = { NavigateAnimation.Horizontal.popExit },
     ) {
-
     }
 }
