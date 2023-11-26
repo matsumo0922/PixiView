@@ -1,4 +1,4 @@
-package caios.android.pixiview.feature.setting.oss
+package caios.android.pixiview.feature.setting.account
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
@@ -7,23 +7,23 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import caios.android.pixiview.core.ui.animation.NavigateAnimation
 
-const val SettingLicenseRoute = "SettingLicense"
+const val SettingAccountRoute = "SettingAccount"
 
-fun NavController.navigateToSettingLicense() {
-    this.navigate(SettingLicenseRoute)
+fun NavController.navigateToSettingAccount() {
+    this.navigate(SettingAccountRoute)
 }
 
-fun NavGraphBuilder.settingLicenseScreen(
+fun NavGraphBuilder.settingAccountScreen(
     terminate: () -> Unit,
 ) {
     composable(
-        route = SettingLicenseRoute,
+        route = SettingAccountRoute,
         enterTransition = { NavigateAnimation.Horizontal.enter },
         exitTransition = { NavigateAnimation.Horizontal.exit },
         popEnterTransition = { NavigateAnimation.Horizontal.popEnter },
         popExitTransition = { NavigateAnimation.Horizontal.popExit },
     ) {
-        SettingLicenseScreen(
+        SettingAccountScreen(
             modifier = Modifier.fillMaxSize(),
             terminate = terminate,
         )
