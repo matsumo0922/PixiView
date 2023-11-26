@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.NoAdultContent
 import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -80,7 +81,7 @@ fun PostItem(
             .clip(RoundedCornerShape(8.dp))
             .clickable { onClickPost.invoke(post.id) },
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)),
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -314,7 +315,7 @@ private fun AdultContentThumbnail(
         SubcomposeAsyncImage(
             modifier = Modifier
                 .fillMaxSize()
-                .blur(16.dp),
+                .blur(20.dp),
             model = ImageRequest.Builder(LocalContext.current)
                 .fanboxHeader()
                 .data(coverImageUrl)
@@ -453,7 +454,7 @@ private fun CommentLikeButton(
             onClick = { onClickBookmark.invoke(!isBookmarked) },
         ) {
             Icon(
-                imageVector = if (isBookmarked) Icons.Default.Bookmark else Icons.Outlined.Bookmark,
+                imageVector = if (isBookmarked) Icons.Default.Bookmark else Icons.Outlined.BookmarkBorder,
                 tint = bookmarkColor,
                 contentDescription = null,
             )

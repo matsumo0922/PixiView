@@ -169,6 +169,11 @@
     <string name="setting_top_others_open_source_license_description">OSSライブラリのライセンスを表示します。</string>
     <string name="setting_top_others_developer_mode">開発モード</string>
     <string name="setting_top_others_developer_mode_description">[Warning] Do not enable this mode if you are not a developer.</string>
+    <string name="setting_account">アカウント</string>
+    <string name="setting_account_title">アカウント設定</string>
+    <string name="setting_account_description">アカウント名やアイコン変更などを行います。</string>
+    <string name="setting_notify_title">通知設定</string>
+    <string name="setting_notify_description">プッシュ通知やメール通知の設定を行います。</string>
     <string name="setting_theme_title">テーマ</string>
     <string name="setting_theme_theme_dynamic_color">Dynamic Color</string>
     <string name="setting_theme_theme_dynamic_color_description">ホームに設定している壁紙などから色を自動抽出する Dynamic Color を使用します。Android 12 以降でのみ利用可能です。</string>

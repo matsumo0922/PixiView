@@ -55,7 +55,7 @@ internal fun SettingThemeRoute(
         SettingThemeDialog(
             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
             userData = it.userData,
-            onBillingPlus = navigateToBillingPlus,
+            onClickBillingPlus = navigateToBillingPlus,
             onSelectTheme = viewModel::setThemeConfig,
             onSelectThemeColor = viewModel::setThemeColorConfig,
             onClickDynamicColor = viewModel::setUseDynamicColor,
@@ -68,7 +68,7 @@ internal fun SettingThemeRoute(
 @Composable
 private fun SettingThemeDialog(
     userData: UserData,
-    onBillingPlus: () -> Unit,
+    onClickBillingPlus: () -> Unit,
     onSelectTheme: (ThemeConfig) -> Unit,
     onSelectThemeColor: (ThemeColorConfig) -> Unit,
     onClickDynamicColor: (Boolean) -> Unit,
@@ -132,7 +132,7 @@ private fun SettingThemeDialog(
                             onClickDynamicColor.invoke(it)
                         } else {
                             ToastUtil.show(context, R.string.billing_plus_toast_require_plus)
-                            onBillingPlus.invoke()
+                            onClickBillingPlus.invoke()
                         }
                     },
                 )

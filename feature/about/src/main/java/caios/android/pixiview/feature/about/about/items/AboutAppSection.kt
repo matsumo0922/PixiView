@@ -46,7 +46,7 @@ internal fun AboutAppSection(
                 .padding(24.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(6.dp),
-            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)),
         ) {
             ConstraintLayout(Modifier.fillMaxWidth()) {
                 val (icon, title, version, buttons) = createRefs()

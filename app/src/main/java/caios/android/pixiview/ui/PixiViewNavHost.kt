@@ -148,7 +148,10 @@ internal fun PixiViewNavHost(
             )
 
             settingTopScreen(
-                navigateToSettingTheme = { navController.navigateToSettingTheme() },
+                navigateToThemeSetting = { navController.navigateToSettingTheme() },
+                navigateToAccountSetting = {  },
+                navigateToNotifySetting = {  },
+                navigateToBillingPlus = { navController.navigateToBillingPlus() },
                 navigateToSettingDeveloper = { navController.navigateToSettingDeveloper() },
                 navigateToLogoutDialog = { contents, onResult -> navController.navigateToSimpleAlertDialog(contents, onResult) },
                 navigateToOpenSourceLicense = { navController.navigateToSettingLicense() },
@@ -156,7 +159,7 @@ internal fun PixiViewNavHost(
             )
 
             settingThemeScreen(
-                navigateToBillingPlus = { },
+                navigateToBillingPlus = { navController.navigateToBillingPlus() },
                 terminate = { navController.popBackStack() },
             )
 

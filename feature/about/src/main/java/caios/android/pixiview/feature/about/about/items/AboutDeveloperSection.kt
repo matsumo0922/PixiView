@@ -56,7 +56,7 @@ internal fun AboutDeveloperSection(
                     width = Dimension.fillToConstraints
                 },
                 shape = RoundedCornerShape(6.dp),
-                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)),
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),

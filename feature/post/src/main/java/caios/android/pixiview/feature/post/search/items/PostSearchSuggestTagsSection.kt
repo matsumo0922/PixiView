@@ -90,7 +90,7 @@ private fun TagItem(
             .clip(RoundedCornerShape(4.dp))
             .clickable { onClickTag.invoke("#${tag.name}") },
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -292,13 +293,15 @@ private fun ProfileLinkItem(
             alignment = Alignment.End,
         ),
     ) {
-        for (profileLink in profileLinks) {
+        for (profileLink in profileLinks.take(3)) {
             IconButton(
                 modifier = Modifier.size(32.dp),
                 onClick = { onClickLink.invoke(profileLink.url) },
             ) {
                 Icon(
-                    modifier = Modifier.padding(4.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(4.dp),
                     painter = painterResource(
                         when (profileLink.link) {
                             BOOTH -> R.drawable.vec_booth

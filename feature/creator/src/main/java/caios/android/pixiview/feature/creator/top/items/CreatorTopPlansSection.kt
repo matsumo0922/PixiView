@@ -46,7 +46,7 @@ internal fun CreatorTopPlansSection(
                     .clip(RoundedCornerShape(8.dp))
                     .clickable { onClickPlan.invoke(plan) },
                 shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)),
             ) {
                 if (plan.coverImageUrl != null) {
                     SubcomposeAsyncImage(

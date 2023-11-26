@@ -57,7 +57,7 @@ internal fun SupportingCreatorItem(
             .clip(RoundedCornerShape(8.dp))
             .clickable { onClickCreatorPosts.invoke(supportingPlan.user.creatorId) },
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)),
     ) {
         if (supportingPlan.coverImageUrl != null) {
             SubcomposeAsyncImage(
@@ -75,27 +75,6 @@ internal fun SupportingCreatorItem(
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
             )
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16 / 9f)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(Color.DarkGray)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(
-                    space = 16.dp,
-                    alignment = Alignment.CenterVertically,
-                ),
-            ) {
-                Icon(
-                    modifier = Modifier.size(48.dp),
-                    imageVector = Icons.Default.BrokenImage,
-                    tint = Color.White,
-                    contentDescription = null,
-                )
-            }
         }
 
         Column(

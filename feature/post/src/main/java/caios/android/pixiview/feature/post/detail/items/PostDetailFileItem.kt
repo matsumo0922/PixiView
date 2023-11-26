@@ -31,7 +31,7 @@ internal fun PostDetailFileItem(
     Card(
         modifier = modifier.padding(16.dp),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp)),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)),
     ) {
         Column(
             modifier = Modifier

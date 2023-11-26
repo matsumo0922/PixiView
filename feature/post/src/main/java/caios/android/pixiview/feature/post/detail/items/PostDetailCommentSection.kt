@@ -183,8 +183,6 @@ private fun CommentItem(
 ) {
     var isShowReplyEditor by rememberSaveable(comment) { mutableStateOf(false) }
     var isLiked by rememberSaveable { mutableStateOf(comment.isLiked) }
-    val createdDateBefore =
-        rememberSaveable { (Duration.between(comment.createdDatetime, OffsetDateTime.now()).toDays()) }
     val likeColor = if (isLiked) Color(0xffe0405e) else MaterialTheme.colorScheme.onSurfaceVariant
 
     Row(
@@ -228,7 +226,7 @@ private fun CommentItem(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(R.string.unit_day_before, createdDateBefore),
+                    text = comment.createdDatetime.toRelativeTimeString(),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -390,6 +388,19 @@ private fun CommentEditor(
                 Text(text = stringResource(R.string.post_detail_comment_reply))
             }
         }
+    }
+}
+
+@Composable
+private fun OffsetDateTime.toRelativeTimeString(): String {
+    val now = OffsetDateTime.now()
+    val duration = Duration.between(this, now)
+
+    return when {
+        duration.toDays() > 0 -> stringResource(R.string.unit_day_before, duration.toDays())
+        duration.toHours() > 0 -> stringResource(R.string.unit_hour_before, duration.toHours())
+        duration.toMinutes() > 0 -> stringResource(R.string.unit_minute_before, duration.toMinutes())
+        else -> stringResource(R.string.unit_second_before, duration.seconds)
     }
 }
 

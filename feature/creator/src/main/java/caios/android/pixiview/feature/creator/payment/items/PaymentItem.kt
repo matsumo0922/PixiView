@@ -44,7 +44,7 @@ internal fun PaymentItem(
     Card(
         modifier = modifier.clip(RoundedCornerShape(8.dp)),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)),
     ) {
         Column(
             modifier = Modifier

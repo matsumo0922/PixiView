@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +35,7 @@ import caios.android.pixiview.core.ui.view.BiometricDialog
 import caios.android.pixiview.core.ui.view.SimpleAlertContents
 import caios.android.pixiview.feature.setting.R
 import caios.android.pixiview.feature.setting.SettingTheme
+import caios.android.pixiview.feature.setting.top.items.SettingTopAccountSection
 import caios.android.pixiview.feature.setting.top.items.SettingTopGeneralSection
 import caios.android.pixiview.feature.setting.top.items.SettingTopInformationSection
 import caios.android.pixiview.feature.setting.top.items.SettingTopOthersSection
@@ -44,7 +44,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun SettingTopRoute(
-    navigateToSettingTheme: () -> Unit,
+    navigateToThemeSetting: () -> Unit,
+    navigateToAccountSetting: () -> Unit,
+    navigateToNotifySetting: () -> Unit,
+    navigateToBillingPlus: () -> Unit,
     navigateToLogoutDialog: (SimpleAlertContents, () -> Unit) -> Unit,
     navigateToOpenSourceLicense: () -> Unit,
     navigateToSettingDeveloper: () -> Unit,
@@ -67,16 +70,23 @@ internal fun SettingTopRoute(
             metaData = uiState.metaData,
             fanboxSessionId = uiState.fanboxSessionId,
             config = uiState.config,
-            onClickTheme = navigateToSettingTheme,
+            onClickThemeSetting = navigateToThemeSetting,
+            onClickAccountSetting = navigateToAccountSetting,
+            onClickNotifySetting = navigateToNotifySetting,
             onClickOpenSourceLicense = navigateToOpenSourceLicense,
             onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
             onClickHideAdultContents = viewModel::setHideAdultContents,
             onClickAppLock = {
                 if (it) {
-                    scope.launch {
-                        if (biometricDialog.auth()) {
-                            viewModel.setAppLock(true)
+                    if (uiState.userData.hasPrivilege) {
+                        scope.launch {
+                            if (biometricDialog.auth()) {
+                                viewModel.setAppLock(true)
+                            }
                         }
+                    } else {
+                        ToastUtil.show(context, R.string.billing_plus_toast_require_plus)
+                        navigateToBillingPlus.invoke()
                     }
                 } else {
                     viewModel.setAppLock(false)
@@ -116,7 +126,9 @@ private fun SettingTopScreen(
     metaData: FanboxMetaData,
     fanboxSessionId: String,
     config: PixiViewConfig,
-    onClickTheme: () -> Unit,
+    onClickThemeSetting: () -> Unit,
+    onClickAccountSetting: () -> Unit,
+    onClickNotifySetting: () -> Unit,
     onClickAppLock: (Boolean) -> Unit,
     onClickFollowTabDefaultHome: (Boolean) -> Unit,
     onClickHideAdultContents: (Boolean) -> Unit,
@@ -158,9 +170,15 @@ private fun SettingTopScreen(
             contentPadding = paddingValues,
         ) {
             item {
+                SettingTopAccountSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClickAccountSetting = onClickAccountSetting,
+                    onClickNotifySetting = onClickNotifySetting,
+                )
+
                 SettingTopThemeSection(
                     modifier = Modifier.fillMaxWidth(),
-                    onClickAppTheme = onClickTheme,
+                    onClickAppTheme = onClickThemeSetting,
                 )
 
                 SettingTopGeneralSection(

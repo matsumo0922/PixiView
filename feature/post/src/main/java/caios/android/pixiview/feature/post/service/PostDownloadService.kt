@@ -61,7 +61,7 @@ class PostDownloadService : Service() {
 
                     suspendRunCatching {
                         fanboxRepository.downloadImage(
-                            url = item.originalUrl,
+                            url = if (item.extension.lowercase() == "gif") item.originalUrl else item.thumbnailUrl,
                             name = name,
                             extension = item.extension,
                         )
@@ -116,7 +116,7 @@ class PostDownloadService : Service() {
 
                         suspendRunCatching {
                             fanboxRepository.downloadImage(
-                                url = item.originalUrl,
+                                url = if (item.extension.lowercase() == "gif") item.originalUrl else item.thumbnailUrl,
                                 name = name,
                                 extension = item.extension,
                                 dir = post.user.creatorId.value,
@@ -141,7 +141,7 @@ class PostDownloadService : Service() {
                         }
                     }
 
-                    delay(1000)
+                    delay(100)
                 }
 
                 _downloadedEvent.send(PostId("-1"))
