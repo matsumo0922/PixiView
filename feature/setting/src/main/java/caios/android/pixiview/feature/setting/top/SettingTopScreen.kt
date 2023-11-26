@@ -1,5 +1,6 @@
 package caios.android.pixiview.feature.setting.top
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -71,8 +73,8 @@ internal fun SettingTopRoute(
             fanboxSessionId = uiState.fanboxSessionId,
             config = uiState.config,
             onClickThemeSetting = navigateToThemeSetting,
-            onClickAccountSetting = navigateToAccountSetting,
-            onClickNotifySetting = navigateToNotifySetting,
+            onClickAccountSetting = { context.startActivity(Intent(Intent.ACTION_VIEW, "https://www.fanbox.cc/user/settings".toUri())) },
+            onClickNotifySetting = { context.startActivity(Intent(Intent.ACTION_VIEW, "https://www.fanbox.cc/notifications/settings#email".toUri())) },
             onClickOpenSourceLicense = navigateToOpenSourceLicense,
             onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
             onClickHideAdultContents = viewModel::setHideAdultContents,

@@ -19,12 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import caios.android.pixiview.core.model.fanbox.FanboxCreatorPlan
 import caios.android.pixiview.core.ui.extensition.SimmerPlaceHolder
 import caios.android.pixiview.core.ui.extensition.fanboxHeader
 import caios.android.pixiview.core.ui.theme.bold
+import caios.android.pixiview.feature.creator.R
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.ImmutableList
@@ -92,7 +94,7 @@ internal fun CreatorTopPlansSection(
                         ) {
                             Text(
                                 modifier = Modifier.padding(6.dp, 4.dp),
-                                text = "￥${plan.fee}",
+                                text = stringResource(R.string.unit_jpy, plan.fee),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )

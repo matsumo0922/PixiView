@@ -19,5 +19,12 @@
     "date": "2023/11/24",
     "logJp": "・正式版の公開を開始",
     "logEn": "・Official version released in Google Play Store"
+  },
+  {
+    "versionName": "1.0.1",
+    "versionCode": 5,
+    "date": "2023/11/27",
+    "logJp": "・英語に対応\n・投稿のいいね機能を搭載\n・アプリのロック機能を搭載\n・決済履歴の確認機能を搭載",
+    "logEn": "・Supports English\n・Equipped with post like function\n・Equipped with app lock function\n・Equipped with payment history confirmation function"
   }
 ]

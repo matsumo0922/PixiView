@@ -265,7 +265,7 @@ private fun NavigationDrawerPlusItem(
     if (isPlusMode) {
         title = buildAnnotatedString {
             withStyle(titleStyle.copy(color = MaterialTheme.colorScheme.primary).toSpanStyle()) {
-                append("Plus+")
+                append("FANBOX Viewer+")
             }
         }
         description = stringResource(R.string.library_navigation_plus_purchased_description)

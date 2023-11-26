@@ -28,6 +28,7 @@ import caios.android.pixiview.core.model.fanbox.FanboxPaidRecord
 import caios.android.pixiview.core.model.fanbox.PaymentMethod
 import caios.android.pixiview.core.model.fanbox.id.CreatorId
 import caios.android.pixiview.core.ui.theme.bold
+import caios.android.pixiview.feature.creator.R
 import caios.android.pixiview.feature.creator.payment.Payment
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -115,7 +116,7 @@ private fun TitleItem(
         }
 
         Text(
-            text = "￥$totalPaidAmount",
+            text = stringResource(R.string.unit_jpy, totalPaidAmount),
             style = MaterialTheme.typography.titleMedium.bold(),
             color = MaterialTheme.colorScheme.onSurface,
         )
@@ -180,7 +181,7 @@ private fun PaidItem(
 
         Text(
             modifier = Modifier.padding(6.dp, 4.dp),
-            text = "￥${paidRecord.paidAmount}",
+            text = stringResource(R.string.unit_jpy, paidRecord.paidAmount),
             style = MaterialTheme.typography.bodyMedium.bold(),
             color = MaterialTheme.colorScheme.onSurface,
         )

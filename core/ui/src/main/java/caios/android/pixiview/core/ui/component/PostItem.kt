@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.NoAdultContent
-import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -266,7 +265,7 @@ private fun UserSection(
         ) {
             Text(
                 modifier = Modifier.padding(6.dp, 4.dp),
-                text = if (post.feeRequired == 0) stringResource(R.string.fanbox_free_fee) else "￥${post.feeRequired}",
+                text = if (post.feeRequired == 0) stringResource(R.string.fanbox_free_fee) else stringResource(R.string.unit_jpy, post.feeRequired),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -427,7 +426,9 @@ private fun CommentLikeButton(
             modifier = Modifier
                 .clip(CircleShape)
                 .clickable {
-                    if (!isLiked) { onClickLike.invoke() }
+                    if (!isLiked) {
+                        onClickLike.invoke()
+                    }
                     onClickBookmark.invoke(true)
                 }
                 .padding(4.dp),

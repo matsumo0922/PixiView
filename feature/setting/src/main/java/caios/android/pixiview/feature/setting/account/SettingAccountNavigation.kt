@@ -1,7 +1,5 @@
 package caios.android.pixiview.feature.setting.account
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -23,9 +21,6 @@ fun NavGraphBuilder.settingAccountScreen(
         popEnterTransition = { NavigateAnimation.Horizontal.popEnter },
         popExitTransition = { NavigateAnimation.Horizontal.popExit },
     ) {
-        SettingAccountScreen(
-            modifier = Modifier.fillMaxSize(),
-            terminate = terminate,
-        )
+
     }
 }
