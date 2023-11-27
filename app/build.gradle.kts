@@ -10,6 +10,7 @@ plugins {
     id("pixiview.application.compose")
     id("pixiview.hilt")
     id("pixiview.detekt")
+    id("pixiview.firebase")
 }
 
 android {
@@ -118,11 +119,7 @@ dependencies {
     implementation(project(":feature:about"))
     implementation(project(":feature:setting"))
 
-    implementation(platform(libs.firebase.bom))
-    implementation(platform(libs.androidx.compose.bom))
-
     implementation(libs.bundles.ui.implementation)
-    implementation(libs.bundles.firebase)
     implementation(libs.bundles.ktor)
 
     implementation(libs.androidx.core.splashscreen)
@@ -135,8 +132,6 @@ dependencies {
     debugImplementation(libs.facebook.soloader)
     // debugImplementation(libs.leakcanary)
 }
-
-plugins.apply("com.google.gms.google-services")
 
 fun MapProperty<String, BuildConfigField<out Serializable>>.putBuildConfig(
     localProperties: Properties,

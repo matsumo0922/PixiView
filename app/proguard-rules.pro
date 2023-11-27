@@ -20,6 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keepattributes SourceFile,LineNumberTable        # Keep file names and line numbers.
+-keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.
+
 # See https://github.com/protocolbuffers/protobuf/issues/6463
 -keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
 -dontwarn org.slf4j.impl.StaticLoggerBinder

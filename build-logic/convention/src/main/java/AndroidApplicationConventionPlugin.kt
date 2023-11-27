@@ -19,7 +19,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("project-report")
                 apply("com.mikepenz.aboutlibraries.plugin")
                 apply("com.google.devtools.ksp")
-                apply("com.google.firebase.crashlytics")
+                apply("com.google.gms.google-services")
                 apply("com.google.android.gms.oss-licenses-plugin")
                 apply("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
             }

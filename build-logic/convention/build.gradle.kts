@@ -12,7 +12,6 @@ dependencies {
     implementation(libs.kotlin.gradlePlugin)
     implementation(libs.secret.gradlePlugin)
     implementation(libs.detekt.gradlePlugin)
-    implementation(libs.firebase.crashlytics)
     implementation(libs.gms.services)
     implementation(libs.gms.oss)
 }
@@ -50,6 +49,10 @@ gradlePlugin {
         register("androidDetekt") {
             id = "pixiview.detekt"
             implementationClass = "AndroidDetektConventionPlugin"
+        }
+        register("androidFirebase") {
+            id = "pixiview.firebase"
+            implementationClass = "AndroidFirebaseConventionPlugin"
         }
     }
 }

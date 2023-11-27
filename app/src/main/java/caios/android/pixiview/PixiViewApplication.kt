@@ -13,6 +13,8 @@ import coil.decode.ImageDecoderDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import com.google.android.material.color.DynamicColors
+import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject
@@ -30,11 +32,13 @@ class PixiViewApplication : Application() {
 
         DynamicColors.applyToActivitiesIfAvailable(this)
 
-        setupCoil()
-
         Thread.setDefaultUncaughtExceptionHandler { _, e ->
             startCrushReportActivity(e)
         }
+
+        setupCoil()
+
+        setupFirebase()
     }
 
     private fun startCrushReportActivity(e: Throwable) {
@@ -82,5 +86,16 @@ class PixiViewApplication : Application() {
             .build()
 
         Coil.setImageLoader(imageLoader)
+    }
+
+    private fun setupFirebase() {
+        val builder = FirebaseOptions.Builder()
+            .setProjectId("pixiview-b5dc7")
+            .setApplicationId("1:561281916572:android:0952e4cd0fe2fe01ab1759")
+            .setApiKey("AIzaSyC6SxUp9ipDpVjQMSHmcgy7SZMnPUwqAmA")
+            .setDatabaseUrl("https://pixiview-b5dc7.firebaseio.com")
+            .setStorageBucket("pixiview-b5dc7.appspot.com")
+
+        FirebaseApp.initializeApp(this, builder.build())
     }
 }

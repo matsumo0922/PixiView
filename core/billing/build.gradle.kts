@@ -2,6 +2,7 @@ plugins {
     id("pixiview.library")
     id("pixiview.hilt")
     id("pixiview.detekt")
+    id("pixiview.firebase")
 }
 
 android {

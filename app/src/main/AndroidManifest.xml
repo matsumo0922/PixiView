@@ -63,6 +63,12 @@
             android:name=".feature.post.service.PostDownloadService"
             android:foregroundServiceType="dataSync" />
 
+        <provider
+            android:name="com.google.firebase.provider.FirebaseInitProvider"
+            android:authorities="${applicationId}.firebaseinitprovider"
+            tools:node="remove"
+            />
+
     </application>
 
 </manifest>

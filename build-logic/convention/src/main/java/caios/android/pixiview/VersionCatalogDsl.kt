@@ -5,6 +5,7 @@ import org.gradle.api.artifacts.ExternalModuleDependencyBundle
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.plugin.use.PluginDependency
 
@@ -23,6 +24,6 @@ internal fun VersionCatalog.plugin(name: String): PluginDependency {
     return findPlugin(name).get().get()
 }
 
-internal fun VersionCatalog.bundle(name: String): ExternalModuleDependencyBundle {
-    return findBundle(name).get().get()
+internal fun VersionCatalog.bundle(name: String): Provider<ExternalModuleDependencyBundle> {
+    return findBundle(name).get()
 }

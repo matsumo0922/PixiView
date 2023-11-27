@@ -56,6 +56,7 @@ material = "1.10.0"
 exoPlayer = "2.19.1"
 accompanist = "0.33.2-alpha"
 ksp = "1.9.10-1.0.13"
+gms = "4.4.0"
 
 # Protobuf
 protobuf = "3.23.0"
@@ -79,7 +80,7 @@ ffmpeg = "5.1"
 twitterComposeRule = "0.0.26"
 
 # Debugs
-firebase = "32.4.0"
+firebase = "32.6.0"
 leakCanary = "2.12"
 flipper = "0.201.0"
 timber = "5.0.1"
@@ -98,7 +99,9 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+gms = { id = "com.google.gms.google-services", version.ref = "gms" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.9" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "libraries" }
 chaquopy = { id = "com.chaquo.python", version.ref = "chaquopy" }
@@ -110,7 +113,6 @@ android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", ver
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 gms-services = { group = "com.google.gms", name = "google-services", version = "4.4.0" }
 gms-oss = { group = "com.google.android.gms", name = "oss-licenses-plugin", version = "0.10.6" }
-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "2.9.9" }
 secret-gradlePlugin = { group = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", name = "secrets-gradle-plugin", version = "2.0.1" }
 detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
@@ -202,6 +204,7 @@ accompanist-placeholder-material = { module = "com.google.accompanist:accompanis
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
+firebase-crushlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
 firebase-appindexing = { module = "com.google.firebase:firebase-appindexing" }
 firebase-config = { module = "com.google.firebase:firebase-config-ktx" }
@@ -315,6 +318,7 @@ billing = [
 
 firebase = [
     "firebase-analytics",
+    "firebase-crushlytics",
     "firebase-messaging",
     "firebase-config",
     "firebase-dynamiclinks",
