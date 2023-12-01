@@ -26,5 +26,12 @@
     "date": "2023/11/27",
     "logJp": "・英語に対応\n・投稿のいいね機能を搭載\n・アプリのロック機能を搭載\n・決済履歴の確認機能を搭載",
     "logEn": "・Supports English\n・Equipped with post like function\n・Equipped with app lock function\n・Equipped with payment history confirmation function"
+  },
+  {
+    "versionName": "1.0.2",
+    "versionCode": 6,
+    "date": "2023/12/01",
+    "logJp": "・GooglePlayにリジェクトされ、ポリシー違反を修正してパッケージ名を変えて再提出せよと指示があったため、パッケージ名を caios.android.fanbox に変更",
+    "logEn": "・The package name was changed to caios.android.fanbox because it was rejected by Google Play and instructed to correct the policy violation, change the package name, and resubmit."
   }
 ]
