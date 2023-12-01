@@ -50,7 +50,7 @@ class WelcomeLoginViewModel @Inject constructor(
             fanboxRepository.getSupportedPosts()
         }.fold(
             onSuccess = { it.contents.isEmpty() },
-            onFailure = { true }
+            onFailure = { true },
         ).also {
             userDataRepository.setFollowTabDefaultHome(it)
         }

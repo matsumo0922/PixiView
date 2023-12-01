@@ -37,7 +37,7 @@ internal fun PostDetailImageHeader(
                         .fillMaxWidth()
                         .aspectRatio(item.aspectRatio),
                     coverImageUrl = item.thumbnailUrl,
-                    isTestUser = isTestUser
+                    isTestUser = isTestUser,
                 )
             } else {
                 PostDetailImageItem(

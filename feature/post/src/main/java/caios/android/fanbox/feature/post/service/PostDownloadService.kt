@@ -92,7 +92,6 @@ class PostDownloadService : Service() {
         }
     }
 
-
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onCreate() {
@@ -198,7 +197,7 @@ class PostDownloadService : Service() {
 
         data class Post(
             val postId: PostId,
-            val isIgnoreFile: Boolean
+            val isIgnoreFile: Boolean,
         ) : DownloadItem
     }
 

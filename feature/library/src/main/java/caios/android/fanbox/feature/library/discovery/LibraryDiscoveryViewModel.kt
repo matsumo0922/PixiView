@@ -31,7 +31,7 @@ class LibraryDiscoveryViewModel @Inject constructor(
         LibraryDiscoveryUiState(
             userData = UserData.dummy(),
             paging = emptyPaging(),
-        )
+        ),
     )
 
     val uiState = _uiState.asStateFlow()
