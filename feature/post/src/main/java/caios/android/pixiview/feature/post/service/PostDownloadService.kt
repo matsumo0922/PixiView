@@ -155,7 +155,7 @@ class PostDownloadService : Service() {
 
     private fun createNotify(context: Context, title: String, message: String, subMessage: String): Notification {
         return NotificationCompat.Builder(context, notifyConfig.channelId)
-            .setSmallIcon(R.drawable.vec_app_icon_translate)
+            .setSmallIcon(R.drawable.vec_app_icon_foreground)
             .setContentTitle(title)
             .setContentText(message)
             .setSubText(subMessage)
