@@ -82,6 +82,7 @@ internal fun SettingTopRoute(
             onClickOpenSourceLicense = navigateToOpenSourceLicense,
             onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
             onClickHideAdultContents = viewModel::setHideAdultContents,
+            onClickOverrideAdultContents = viewModel::setOverrideAdultContents,
             onClickAppLock = {
                 if (it) {
                     if (uiState.userData.hasPrivilege) {
@@ -138,6 +139,7 @@ private fun SettingTopScreen(
     onClickAppLock: (Boolean) -> Unit,
     onClickFollowTabDefaultHome: (Boolean) -> Unit,
     onClickHideAdultContents: (Boolean) -> Unit,
+    onClickOverrideAdultContents: (Boolean) -> Unit,
     onClickLogout: () -> Unit,
     onClickOpenSourceLicense: () -> Unit,
     onClickDeveloperMode: (Boolean) -> Unit,
@@ -193,6 +195,7 @@ private fun SettingTopScreen(
                     onClickAppLock = onClickAppLock,
                     onClickFollowTabDefaultHome = onClickFollowTabDefaultHome,
                     onClickHideAdultContents = onClickHideAdultContents,
+                    onClickOverrideAdultContents = onClickOverrideAdultContents,
                 )
 
                 SettingTopInformationSection(

@@ -37,7 +37,7 @@ internal fun SettingTopInformationSection(
                 userData.isPlusMode -> " [Premium]"
                 userData.isDeveloperMode -> " [Developer]"
                 else -> ""
-            },
+            } + if (userData.isTestUser) " [Test]" else "",
             onClick = { /* do nothing */ },
         )
 

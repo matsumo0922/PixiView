@@ -66,7 +66,7 @@ data class FanboxMetaDataEntity(
             @SerialName("showAdultContent")
             val showAdultContent: Boolean,
             @SerialName("userId")
-            val userId: String,
+            val userId: String?,
         )
     }
 

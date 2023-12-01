@@ -41,6 +41,7 @@
     <string name="error_billing">Failed to retrieve purchase information</string>
     <string name="error_restricted_post">Pledge %,d JPY per month or more to see this content</string>
     <string name="error_adult_content">Adult content</string>
+    <string name="error_adult_content_test_user">This content has been temporarily restricted</string>
     <string name="error_adult_content_description">Show</string>
 
     <!-- Common Unit -->
@@ -157,6 +158,8 @@
     <string name="setting_top_general_default_follow_tab_description">Set the default tab on the home screen to follow.</string>
     <string name="setting_top_general_hide_adult_contents">Hide adult content</string>
     <string name="setting_top_general_hide_adult_contents_description">A warning will be displayed for adult content on the post list screen, etc.</string>
+    <string name="setting_top_general_override_adult_contents_setting">Override browsing settings</string>
+    <string name="setting_top_general_override_adult_contents_setting_description">Overrides the setting for displaying adult content set in FANBOX.</string>
     <string name="setting_top_information">Information</string>
     <string name="setting_top_information_id">CAIOS ID</string>
     <string name="setting_top_information_version">App version</string>

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import caios.android.fanbox.core.common.util.suspendRunCatching
 import caios.android.fanbox.core.repository.FanboxRepository
+import caios.android.fanbox.core.repository.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -14,6 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeLoginViewModel @Inject constructor(
+    private val userDataRepository: UserDataRepository,
     private val fanboxRepository: FanboxRepository,
 ) : ViewModel() {
 
@@ -29,14 +31,28 @@ class WelcomeLoginViewModel @Inject constructor(
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/").also {
                 suspendRunCatching {
-                    fanboxRepository.updateCookie(it.orEmpty())
+                    fanboxRepository.updateCookie(it!!)
                     fanboxRepository.updateCsrfToken()
-                    fanboxRepository.getNewsLetters()
+
+                    Timber.d("fetchLoggedIn: $it")
+
+                    setDefaultHomeTab()
                 }.isSuccess.also {
-                    Timber.d("isLoggedIn: $it")
+                    Timber.d("fetchLoggedIn: $it")
                     _isLoggedInFlow.emit(it)
                 }
             }
+        }
+    }
+
+    private suspend fun setDefaultHomeTab() {
+        suspendRunCatching {
+            fanboxRepository.getSupportedPosts()
+        }.fold(
+            onSuccess = { it.contents.isEmpty() },
+            onFailure = { true }
+        ).also {
+            userDataRepository.setFollowTabDefaultHome(it)
         }
     }
 }

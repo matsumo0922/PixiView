@@ -3,12 +3,10 @@ package caios.android.fanbox.core.ui.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,9 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.NoAdultContent
 import androidx.compose.material.icons.outlined.BookmarkBorder
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -38,7 +34,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -69,6 +64,8 @@ fun PostItem(
     onClickLike: (PostId) -> Unit,
     onClickBookmark: (PostId, Boolean) -> Unit,
     isHideAdultContents: Boolean,
+    isOverrideAdultContents: Boolean,
+    isTestUser: Boolean,
     modifier: Modifier = Modifier,
 ) {
     var isPostBookmarked by remember(post.isBookmarked) { mutableStateOf(post.isBookmarked) }
@@ -104,12 +101,14 @@ fun PostItem(
                     )
                 }
 
-                post.hasAdultContent && isHideAdultContent -> {
+                post.hasAdultContent && (isHideAdultContent || !isOverrideAdultContents) -> {
                     AdultContentThumbnail(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(16f / 9),
                         coverImageUrl = post.cover?.url,
+                        isAllowedShow = isOverrideAdultContents,
+                        isTestUser = isTestUser,
                         onClickShowAdultContent = { isHideAdultContent = false },
                     )
                 }
@@ -305,65 +304,6 @@ private fun RestrictThumbnail(
 }
 
 @Composable
-private fun AdultContentThumbnail(
-    coverImageUrl: String?,
-    onClickShowAdultContent: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Box(modifier) {
-        SubcomposeAsyncImage(
-            modifier = Modifier
-                .fillMaxSize()
-                .blur(20.dp),
-            model = ImageRequest.Builder(LocalContext.current)
-                .fanboxHeader()
-                .data(coverImageUrl)
-                .build(),
-            loading = {
-                SimmerPlaceHolder()
-            },
-            contentScale = ContentScale.Crop,
-            contentDescription = null,
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f)),
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(
-                space = 16.dp,
-                alignment = Alignment.CenterVertically,
-            ),
-        ) {
-            Icon(
-                modifier = Modifier.size(48.dp),
-                imageVector = Icons.Default.NoAdultContent,
-                tint = Color.White,
-                contentDescription = null,
-            )
-
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.error_adult_content),
-                style = MaterialTheme.typography.bodySmall.center(),
-                color = Color.White,
-            )
-
-            Button(onClick = { onClickShowAdultContent.invoke() }) {
-                Text(text = stringResource(R.string.error_adult_content_description))
-            }
-        }
-    }
-}
-
-@Composable
 private fun FileThumbnail(
     modifier: Modifier = Modifier,
 ) {
@@ -474,6 +414,8 @@ private fun PostItemPreview1() {
         onClickLike = {},
         onClickBookmark = { _, _ -> },
         isHideAdultContents = false,
+        isOverrideAdultContents = false,
+        isTestUser = true,
     )
 }
 
@@ -488,6 +430,8 @@ private fun PostItemPreview2() {
         onClickLike = {},
         onClickBookmark = { _, _ -> },
         isHideAdultContents = false,
+        isOverrideAdultContents = false,
+        isTestUser = true,
     )
 }
 
@@ -502,5 +446,22 @@ private fun PostItemPreview3() {
         onClickLike = {},
         onClickBookmark = { _, _ -> },
         isHideAdultContents = true,
+        isOverrideAdultContents = false,
+        isTestUser = true,
+    )
+}
+@Preview
+@Composable
+private fun PostItemPreview4() {
+    PostItem(
+        post = FanboxPost.dummy().copy(hasAdultContent = true),
+        onClickPost = {},
+        onClickPlanList = {},
+        onClickCreator = {},
+        onClickLike = {},
+        onClickBookmark = { _, _ -> },
+        isHideAdultContents = true,
+        isOverrideAdultContents = true,
+        isTestUser = true,
     )
 }

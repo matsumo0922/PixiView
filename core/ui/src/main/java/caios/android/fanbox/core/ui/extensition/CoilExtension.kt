@@ -12,6 +12,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import caios.android.fanbox.core.model.fanbox.FanboxMetaData
 import coil.request.ImageRequest
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
@@ -24,6 +25,8 @@ data class FanboxCookie(
 )
 
 val LocalFanboxCookie = staticCompositionLocalOf { FanboxCookie() }
+
+val LocalFanboxMetadata = staticCompositionLocalOf { FanboxMetaData.dummy() }
 
 @Composable
 fun ImageRequest.Builder.fanboxHeader(): ImageRequest.Builder {

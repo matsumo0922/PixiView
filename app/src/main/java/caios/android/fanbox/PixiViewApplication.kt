@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Build
 import caios.android.fanbox.core.common.PixiViewConfig
 import caios.android.fanbox.core.common.PixiViewDebugTree
-import caios.android.fanbox.feature.report.CrushReportActivity
+import caios.android.fanbox.feature.report.CrashReportActivity
 import coil.Coil
 import coil.ImageLoader
 import coil.decode.GifDecoder
@@ -45,7 +45,7 @@ class PixiViewApplication : Application() {
         Timber.e(e)
 
         startActivity(
-            Intent(this, CrushReportActivity::class.java).apply {
+            Intent(this, CrashReportActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 putExtra("report", getVersionReport() + "\n" + e.stackTraceToString())
             },

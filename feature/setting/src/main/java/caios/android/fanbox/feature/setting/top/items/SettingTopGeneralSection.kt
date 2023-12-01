@@ -14,6 +14,7 @@ internal fun SettingTopGeneralSection(
     onClickAppLock: (Boolean) -> Unit,
     onClickFollowTabDefaultHome: (Boolean) -> Unit,
     onClickHideAdultContents: (Boolean) -> Unit,
+    onClickOverrideAdultContents: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -44,6 +45,14 @@ internal fun SettingTopGeneralSection(
             description = R.string.setting_top_general_hide_adult_contents_description,
             value = userData.isHideAdultContents,
             onValueChanged = onClickHideAdultContents,
+        )
+
+        SettingSwitchItem(
+            modifier = Modifier.fillMaxWidth(),
+            title = R.string.setting_top_general_override_adult_contents_setting,
+            description = R.string.setting_top_general_override_adult_contents_setting_description,
+            value = userData.isOverrideAdultContents,
+            onValueChanged = onClickOverrideAdultContents,
         )
     }
 }

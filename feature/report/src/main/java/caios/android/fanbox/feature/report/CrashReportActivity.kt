@@ -36,9 +36,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CrushReportActivity : ComponentActivity() {
+class CrashReportActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<CrushReportViewModel>()
+    private val viewModel by viewModels<CrashReportViewModel>()
     private val clipboardManager by lazy { getSystemService(CLIPBOARD_SERVICE) as ClipboardManager }
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
@@ -84,14 +84,14 @@ class CrushReportActivity : ComponentActivity() {
                     enableDynamicTheme = shouldUseDynamicColor(screenState),
                 ) {
                     PixiViewBackground {
-                        CrushReportScreen(
+                        CrashReportScreen(
                             modifier = Modifier.fillMaxSize(),
                             report = report,
                             onClickCopy = {
                                 clipboardManager.setPrimaryClip(ClipData.newPlainText("FANBOX Viewer Crush Report", it))
 
                                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                                    ToastUtil.show(this@CrushReportActivity, R.string.report_crush_copy)
+                                    ToastUtil.show(this@CrashReportActivity, R.string.report_crush_copy)
                                 }
                             },
                         )

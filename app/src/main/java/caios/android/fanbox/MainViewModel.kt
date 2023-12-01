@@ -8,6 +8,7 @@ import caios.android.fanbox.core.billing.BillingClient
 import caios.android.fanbox.core.common.util.suspendRunCatching
 import caios.android.fanbox.core.model.ScreenState
 import caios.android.fanbox.core.model.UserData
+import caios.android.fanbox.core.model.fanbox.FanboxMetaData
 import caios.android.fanbox.core.repository.FanboxRepository
 import caios.android.fanbox.core.repository.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Timer
@@ -40,13 +42,15 @@ class MainViewModel @Inject constructor(
     val screenState = combine(
         userDataRepository.userData,
         fanboxRepository.cookie,
+        fanboxRepository.metaData,
         _isLoggedInFlow,
         _isAppLockedFlow,
-    ) { userData, cookie, isLoggedIn, isAppLocked ->
+    ) { userData, cookie, metadata, isLoggedIn, isAppLocked ->
         ScreenState.Idle(
             MainUiState(
                 userData = userData,
                 fanboxCookie = cookie,
+                fanboxMetadata = metadata,
                 isLoggedIn = isLoggedIn,
                 isAppLocked = if (userData.isAppLock) isAppLocked else false,
             ),
@@ -81,8 +85,12 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/").also {
                 suspendRunCatching {
-                    fanboxRepository.updateCookie(it.orEmpty())
+                    fanboxRepository.updateCookie(it!!)
                     fanboxRepository.updateCsrfToken()
+
+                    fanboxRepository.metaData.firstOrNull()?.also {
+                        userDataRepository.setTestUser(it.context.user.userId == "100912340")
+                    }
                 }.isSuccess.also {
                     _isLoggedInFlow.emit(it)
                 }
@@ -101,6 +109,7 @@ class MainViewModel @Inject constructor(
 data class MainUiState(
     val userData: UserData,
     val fanboxCookie: String,
+    val fanboxMetadata: FanboxMetaData,
     val isLoggedIn: Boolean,
     val isAppLocked: Boolean,
 )

@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -416,6 +415,7 @@ private fun PostDetailContent(
                     modifier = Modifier.fillMaxWidth(),
                     content = content,
                     userData = userData,
+                    isAdultContents = post.hasAdultContent,
                     onClickPost = onClickPost,
                     onClickPostLike = onClickPostLike,
                     onClickPostBookmark = onClickPostBookmark,
@@ -430,6 +430,9 @@ private fun PostDetailContent(
                 PostDetailImageHeader(
                     modifier = Modifier.fillMaxWidth(),
                     content = content,
+                    isAdultContents = post.hasAdultContent,
+                    isOverrideAdultContents = userData.isAllowedShowAdultContents,
+                    isTestUser = userData.isTestUser,
                     onClickImage = onClickImage,
                     onClickDownload = onClickDownload,
                 )

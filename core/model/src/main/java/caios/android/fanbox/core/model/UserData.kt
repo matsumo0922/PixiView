@@ -12,11 +12,15 @@ data class UserData(
     val isAppLock: Boolean,
     val isFollowTabDefaultHome: Boolean,
     val isHideAdultContents: Boolean,
+    val isOverrideAdultContents: Boolean,
     val isDynamicColor: Boolean,
+    val isTestUser: Boolean,
     val isDeveloperMode: Boolean,
     val isPlusMode: Boolean,
 ) {
     val hasPrivilege get() = isPlusMode || isDeveloperMode
+
+    val isAllowedShowAdultContents get() = !isTestUser && isOverrideAdultContents
 
     companion object {
         fun dummy(): UserData {
@@ -29,7 +33,9 @@ data class UserData(
                 isAppLock = false,
                 isFollowTabDefaultHome = false,
                 isHideAdultContents = false,
+                isOverrideAdultContents = false,
                 isDynamicColor = true,
+                isTestUser = false,
                 isDeveloperMode = true,
                 isPlusMode = false,
             )

@@ -138,6 +138,8 @@ private fun BookmarkedPostsScreen(
                                     .fillMaxWidth(),
                                 post = likedPost,
                                 isHideAdultContents = userData.isHideAdultContents,
+                                isOverrideAdultContents = userData.isAllowedShowAdultContents,
+                                isTestUser = userData.isTestUser,
                                 onClickPost = { if (!likedPost.isRestricted) onClickPost.invoke(it) },
                                 onClickBookmark = { _, isBookmarked -> onClickPostBookmark.invoke(likedPost, isBookmarked) },
                                 onClickCreator = onClickCreatorPosts,

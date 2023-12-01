@@ -35,13 +35,13 @@ data class FanboxMetaData(
             val name: String,
             val planCount: Int,
             val showAdultContent: Boolean,
-            val userId: String,
+            val userId: String?,
         ) {
             companion object {
                 fun User.asFanboxUser() = FanboxUser(
                     iconUrl = iconUrl.orEmpty(),
                     name = name,
-                    userId = userId,
+                    userId = userId.orEmpty(),
                     creatorId = CreatorId(creatorId?.value.orEmpty()),
                 )
             }

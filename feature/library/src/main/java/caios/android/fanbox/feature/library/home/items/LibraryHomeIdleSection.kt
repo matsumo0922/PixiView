@@ -53,6 +53,8 @@ internal fun LibraryHomeIdleSection(
                     modifier = Modifier.fillMaxWidth(),
                     post = post.copy(isBookmarked = bookmarkedPosts.contains(post.id)),
                     isHideAdultContents = userData.isHideAdultContents,
+                    isOverrideAdultContents = userData.isAllowedShowAdultContents,
+                    isTestUser = userData.isTestUser,
                     onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
                     onClickCreator = onClickCreator,
                     onClickPlanList = onClickPlanList,

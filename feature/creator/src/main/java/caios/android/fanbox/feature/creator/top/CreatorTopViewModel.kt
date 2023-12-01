@@ -77,7 +77,7 @@ class CreatorTopViewModel @Inject constructor(
 
     suspend fun follow(creatorUserId: String): Result<Unit> {
         return suspendRunCatching {
-            fanboxRepository.unfollowCreator(creatorUserId)
+            fanboxRepository.followCreator(creatorUserId)
         }
     }
 

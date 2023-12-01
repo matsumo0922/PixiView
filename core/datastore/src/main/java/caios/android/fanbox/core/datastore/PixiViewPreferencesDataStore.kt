@@ -33,9 +33,11 @@ class PixiViewPreferencesDataStore(
                 },
                 isDynamicColor = if (it.hasIsUseDynamicColor()) it.isUseDynamicColor else false,
                 isDeveloperMode = if (it.hasIsDeveloperMode()) it.isDeveloperMode else false,
+                isTestUser = if (it.hasIsTestUser()) it.isTestUser else false,
                 isAppLock = if (it.hasIsAppLock()) it.isAppLock else false,
                 isFollowTabDefaultHome = if (it.hasIsFollowTabDefaultHome()) it.isFollowTabDefaultHome else false,
-                isHideAdultContents = if (it.hasIsHideAdultContents()) it.isHideAdultContents else false,
+                isHideAdultContents = if (it.hasIsHideAdultContents()) it.isHideAdultContents else true,
+                isOverrideAdultContents = if (it.hasIsOverrideAdultContents()) it.isOverrideAdultContents else false,
                 isPlusMode = if (it.hasIsPlusMode()) it.isPlusMode else false,
                 isAgreedPrivacyPolicy = if (it.hasIsAgreedPrivacyPolicy()) it.isAgreedPrivacyPolicy else false,
                 isAgreedTermsOfService = if (it.hasIsAgreedTermsOfService()) it.isAgreedTermsOfService else false,
@@ -130,6 +132,22 @@ class PixiViewPreferencesDataStore(
         userPreference.updateData {
             it.copy {
                 this.isHideAdultContents = isHideAdultContents
+            }
+        }
+    }
+
+    suspend fun setOverrideAdultContents(isOverrideAdultContents: Boolean) = withContext(ioDispatcher) {
+        userPreference.updateData {
+            it.copy {
+                this.isOverrideAdultContents = isOverrideAdultContents
+            }
+        }
+    }
+
+    suspend fun setTestUser(isTestUser: Boolean) = withContext(ioDispatcher) {
+        userPreference.updateData {
+            it.copy {
+                this.isTestUser = isTestUser
             }
         }
     }

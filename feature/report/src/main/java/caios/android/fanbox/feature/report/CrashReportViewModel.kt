@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
-class CrushReportViewModel @Inject constructor(
+class CrashReportViewModel @Inject constructor(
     userDataRepository: UserDataRepository,
 ) : ViewModel() {
 

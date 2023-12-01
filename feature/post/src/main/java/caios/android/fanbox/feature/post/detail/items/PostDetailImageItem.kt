@@ -29,6 +29,7 @@ internal fun PostDetailImageItem(
     var isShowMenu by remember { mutableStateOf(false) }
     val loadUrl = if (item.extension.lowercase() == "gif") item.originalUrl else item.thumbnailUrl
 
+
     SubcomposeAsyncImage(
         modifier = modifier
             .aspectRatio(item.aspectRatio)

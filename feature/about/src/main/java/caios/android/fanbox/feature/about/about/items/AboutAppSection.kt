@@ -86,11 +86,11 @@ internal fun AboutAppSection(
                         width = Dimension.fillToConstraints
                     },
                     text = "${config.versionName}:${config.versionCode}" + when {
-                        userData.isPlusMode && userData.isDeveloperMode -> "[P+D]"
-                        userData.isPlusMode -> "[Premium]"
-                        userData.isDeveloperMode -> "[Developer]"
+                        userData.isPlusMode && userData.isDeveloperMode -> " [P+D]"
+                        userData.isPlusMode -> " [Premium]"
+                        userData.isDeveloperMode -> " [Developer]"
                         else -> ""
-                    },
+                    } + if (userData.isTestUser) " [Test]" else "",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

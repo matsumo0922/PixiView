@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -46,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
@@ -54,7 +56,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import caios.android.fanbox.core.model.UserData
 import caios.android.fanbox.core.ui.R
+import caios.android.fanbox.core.ui.extensition.FadePlaceHolder
+import caios.android.fanbox.core.ui.extensition.LocalFanboxMetadata
 import caios.android.fanbox.core.ui.theme.bold
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 
 @Composable
@@ -82,6 +88,12 @@ internal fun LibraryDrawer(
                 .fillMaxHeight()
                 .verticalScroll(rememberScrollState()),
         ) {
+            NavigationDrawerHeader(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp),
+            )
+
             NavigationDrawerItem(
                 modifier = Modifier.statusBarsPadding(),
                 state = state,
@@ -186,6 +198,50 @@ internal fun LibraryDrawer(
                 isPlusMode = userData?.isPlusMode == true,
                 isDeveloperMode = userData?.isDeveloperMode == true,
                 onClick = navigateToBillingPlus,
+            )
+        }
+    }
+}
+
+@Composable
+private fun NavigationDrawerHeader(modifier: Modifier = Modifier) {
+    val metadata = LocalFanboxMetadata.current
+
+    Row(
+        modifier = modifier.padding(16.dp, 24.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        SubcomposeAsyncImage(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape),
+            model = ImageRequest.Builder(LocalContext.current)
+                .error(R.drawable.im_default_user)
+                .data(metadata.context.user.iconUrl)
+                .build(),
+            loading = {
+                FadePlaceHolder()
+            },
+            contentDescription = null,
+        )
+
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = metadata.context.user.name,
+                style = MaterialTheme.typography.titleMedium.bold(),
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "@${metadata.context.user.userId}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }

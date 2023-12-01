@@ -70,6 +70,12 @@ class SettingTopViewModel @Inject constructor(
         }
     }
 
+    fun setOverrideAdultContents(isOverrideAdultContents: Boolean) {
+        viewModelScope.launch {
+            userDataRepository.setOverrideAdultContents(isOverrideAdultContents)
+        }
+    }
+
     fun setDeveloperMode(isDeveloperMode: Boolean) {
         viewModelScope.launch {
             userDataRepository.setDeveloperMode(isDeveloperMode)

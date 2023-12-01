@@ -68,6 +68,8 @@ internal fun PostSearchTagScreen(
                         modifier = Modifier.fillMaxWidth(),
                         post = post.copy(isBookmarked = bookmarkedPosts.contains(post.id)),
                         isHideAdultContents = userData.isHideAdultContents,
+                        isOverrideAdultContents = userData.isAllowedShowAdultContents,
+                        isTestUser = userData.isTestUser,
                         onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
                         onClickLike = onClickPostLike,
                         onClickBookmark = { _, isLiked -> onClickPostBookmark.invoke(post, isLiked) },

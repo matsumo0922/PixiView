@@ -1,6 +1,7 @@
 package caios.android.fanbox.feature.post.detail.items
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -13,12 +14,15 @@ import caios.android.fanbox.core.model.fanbox.FanboxPost
 import caios.android.fanbox.core.model.fanbox.FanboxPostDetail
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
+import caios.android.fanbox.core.ui.component.AdultContentThumbnail
 import caios.android.fanbox.core.ui.component.PostItem
+import caios.android.fanbox.core.ui.extensition.LocalFanboxMetadata
 
 @Composable
 internal fun PostDetailArticleHeader(
     content: FanboxPostDetail.Body.Article,
     userData: UserData,
+    isAdultContents: Boolean,
     onClickPost: (PostId) -> Unit,
     onClickPostLike: (PostId) -> Unit,
     onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
@@ -28,6 +32,8 @@ internal fun PostDetailArticleHeader(
     onClickDownload: (List<FanboxPostDetail.ImageItem>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val metadata = LocalFanboxMetadata.current
+
     Column(modifier) {
         for (item in content.blocks) {
             when (item) {
@@ -39,15 +45,23 @@ internal fun PostDetailArticleHeader(
                 }
 
                 is FanboxPostDetail.Body.Article.Block.Image -> {
-                    PostDetailImageItem(
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                            .fillMaxWidth(),
-                        item = item.item,
-                        onClickImage = onClickImage,
-                        onClickDownload = { onClickDownload.invoke(listOf(item.item)) },
-                        onClickAllDownload = { onClickDownload.invoke(content.imageItems) },
-                    )
+                    if (!userData.isAllowedShowAdultContents && !metadata.context.user.showAdultContent && isAdultContents) {
+                        AdultContentThumbnail(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(item.item.aspectRatio),
+                            coverImageUrl = item.item.thumbnailUrl,
+                            isTestUser = userData.isTestUser,
+                        )
+                    } else {
+                        PostDetailImageItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            item = item.item,
+                            onClickImage = onClickImage,
+                            onClickDownload = { onClickDownload.invoke(listOf(item.item)) },
+                            onClickAllDownload = { onClickDownload.invoke(content.imageItems) },
+                        )
+                    }
                 }
 
                 is FanboxPostDetail.Body.Article.Block.File -> {
@@ -63,6 +77,8 @@ internal fun PostDetailArticleHeader(
                         modifier = Modifier.fillMaxWidth(),
                         item = item,
                         isHideAdultContents = userData.isHideAdultContents,
+                        isOverrideAdultContents = userData.isAllowedShowAdultContents,
+                        isTestUser = userData.isTestUser,
                         onClickPost = onClickPost,
                         onClickPostLike = onClickPostLike,
                         onClickPostBookmark = { _, isLiked -> item.post?.let { onClickPostBookmark.invoke(it, isLiked) } },
@@ -91,6 +107,8 @@ private fun ArticleTextItem(
 private fun ArticleLinkItem(
     item: FanboxPostDetail.Body.Article.Block.Link,
     isHideAdultContents: Boolean,
+    isOverrideAdultContents: Boolean,
+    isTestUser: Boolean,
     onClickPost: (PostId) -> Unit,
     onClickPostLike: (PostId) -> Unit,
     onClickPostBookmark: (PostId, Boolean) -> Unit,
@@ -102,6 +120,8 @@ private fun ArticleLinkItem(
             modifier = modifier.padding(16.dp),
             post = it,
             isHideAdultContents = isHideAdultContents,
+            isOverrideAdultContents = isOverrideAdultContents,
+            isTestUser = isTestUser,
             onClickPost = onClickPost,
             onClickCreator = onClickCreator,
             onClickPlanList = {},

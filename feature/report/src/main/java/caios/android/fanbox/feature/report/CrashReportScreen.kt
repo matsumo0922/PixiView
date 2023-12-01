@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import caios.android.fanbox.core.ui.theme.bold
 
 @Composable
-internal fun CrushReportScreen(
+internal fun CrashReportScreen(
     report: String,
     onClickCopy: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -108,7 +108,7 @@ internal fun CrushReportScreen(
 @Preview
 @Composable
 private fun CrushReportScreenPreview() {
-    CrushReportScreen(
+    CrashReportScreen(
         modifier = Modifier.fillMaxSize(),
         onClickCopy = { },
         report = """
