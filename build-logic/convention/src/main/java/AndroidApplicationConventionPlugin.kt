@@ -1,8 +1,8 @@
 
-import caios.android.pixiview.configureApplication
-import caios.android.pixiview.configureKotlinAndroid
-import caios.android.pixiview.libs
-import caios.android.pixiview.version
+import caios.android.fanbox.configureApplication
+import caios.android.fanbox.configureKotlinAndroid
+import caios.android.fanbox.libs
+import caios.android.fanbox.version
 import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project

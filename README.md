@@ -33,7 +33,7 @@ Now available on Google Play! Please download from the link below.
 Or, if you're an Android developer, you can build the app and install it yourself.
 Contributions are always welcome. Try building your app by following the section below.
 
-#### [Download](https://play.google.com/store/apps/details?id=caios.android.pixiview) from GooglePlay
+#### [Download](https://play.google.com/store/apps/details?id=caios.android.fanbox) from GooglePlay
 #### [Download](https://github.com/matsumo0922/PixiView/releases) from GitHub
 
 ## Why?

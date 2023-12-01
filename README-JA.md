@@ -31,7 +31,7 @@ Google Play にて公開中です！下記のリンクからダウンロード�
 また、Android 開発者の方はアプリをビルドして、自分でインストールすることもできます。
 コントリビュートはいつでも歓迎です。下のセクションに従ってアプリをビルドしてみてください。
 
-#### [Download](https://play.google.com/store/apps/details?id=caios.android.pixiview) from GooglePlay
+#### [Download](https://play.google.com/store/apps/details?id=caios.android.fanbox) from GooglePlay
 #### [Download](https://github.com/matsumo0922/PixiView/releases) from GitHub
 
 ## Why?

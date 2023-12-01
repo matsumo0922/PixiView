@@ -1,7 +1,7 @@
 
-import caios.android.pixiview.configureDetekt
-import caios.android.pixiview.library
-import caios.android.pixiview.libs
+import caios.android.fanbox.configureDetekt
+import caios.android.fanbox.library
+import caios.android.fanbox.libs
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project

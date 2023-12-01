@@ -1,10 +1,10 @@
 
-import caios.android.pixiview.androidTestImplementation
-import caios.android.pixiview.debugImplementation
-import caios.android.pixiview.implementation
-import caios.android.pixiview.library
-import caios.android.pixiview.libs
-import caios.android.pixiview.version
+import caios.android.fanbox.androidTestImplementation
+import caios.android.fanbox.debugImplementation
+import caios.android.fanbox.implementation
+import caios.android.fanbox.library
+import caios.android.fanbox.libs
+import caios.android.fanbox.version
 import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project

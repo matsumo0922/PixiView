@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "caios.android.pixiview.feature.report"
+    namespace = "caios.android.fanbox.feature.report"
 }
 
 dependencies {

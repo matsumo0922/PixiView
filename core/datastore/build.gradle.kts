@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "caios.android.pixiview.core.datastore"
+    namespace = "caios.android.fanbox.core.datastore"
 }
 
 protobuf {

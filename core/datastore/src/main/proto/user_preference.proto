@@ -4,7 +4,7 @@ syntax = "proto3";
 import "items/theme_config.proto";
 import "items/theme_color_config.proto";
 
-option java_package = "caios.android.pixiview.core.datastore";
+option java_package = "caios.android.fanbox.core.datastore";
 option java_multiple_files = true;
 
 message UserPreference {

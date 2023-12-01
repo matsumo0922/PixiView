@@ -14,7 +14,7 @@ plugins {
 }
 
 android {
-    namespace = "caios.android.pixiview"
+    namespace = "caios.android.fanbox"
 
     splits {
         abi {

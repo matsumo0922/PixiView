@@ -1,6 +1,6 @@
 
-import caios.android.pixiview.configureKotlinAndroid
-import caios.android.pixiview.libs
+import caios.android.fanbox.configureKotlinAndroid
+import caios.android.fanbox.libs
 import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project

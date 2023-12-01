@@ -1,8 +1,8 @@
 
-import caios.android.pixiview.bundle
-import caios.android.pixiview.implementation
-import caios.android.pixiview.library
-import caios.android.pixiview.libs
+import caios.android.fanbox.bundle
+import caios.android.fanbox.implementation
+import caios.android.fanbox.library
+import caios.android.fanbox.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "caios.android.pixiview.core.common"
+    namespace = "caios.android.fanbox.core.common"
 }
 
 dependencies {

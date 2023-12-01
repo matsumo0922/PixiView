@@ -1,6 +1,6 @@
 
-import caios.android.pixiview.libs
-import caios.android.pixiview.version
+import caios.android.fanbox.libs
+import caios.android.fanbox.version
 import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
