@@ -21,7 +21,7 @@ PixiView is an unofficial Android client app for PIXIV FANBOX.
 <hr>
 
 <p align="center">
-    <img src="media/screenshot/screenshots.png" width="100%" alt="screenshots">
+    <img src="media/google_play/screenshots.png" width="2048" alt="screenshots">
 </p>
 
 <p align="center">Do you speak Japanese? Japanese <a href="./README-JA.md">READEME</a> is Here!</p>

@@ -55,6 +55,8 @@
     <!-- Notify -->
     <string name="notify_download_channel_name">ダウンロード</string>
     <string name="notify_download_channel_description">ダウンロードの進捗状況を通知します</string>
+    <string name="notify_download_title">ダウンロード中…</string>
+    <string name="notify_download_message">イラストのダウンロードを実行中です（残り%1$d枚）</string>
 
     <!-- Library -->
     <string name="library_navigation_home">ホーム</string>

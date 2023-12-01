@@ -55,6 +55,8 @@
     <!-- Notify -->
     <string name="notify_download_channel_name">Download</string>
     <string name="notify_download_channel_description">Notify download progress</string>
+    <string name="notify_download_title">Downloading…</string>
+    <string name="notify_download_message">Download of illustrations is in progress (%1$d remaining)</string>
 
     <!-- Library -->
     <string name="library_navigation_home">Home</string>

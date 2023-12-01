@@ -9,23 +9,23 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import caios.android.pixiview.core.common.util.suspendRunCatching
 import caios.android.pixiview.core.model.NotificationConfigs
 import caios.android.pixiview.core.model.fanbox.FanboxPost
 import caios.android.pixiview.core.model.fanbox.FanboxPostDetail
 import caios.android.pixiview.core.model.fanbox.id.PostId
 import caios.android.pixiview.core.repository.FanboxRepository
+import caios.android.pixiview.feature.post.BuildConfig
 import caios.android.pixiview.feature.post.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,119 +36,102 @@ class PostDownloadService : Service() {
 
     private val manager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
     private val notifyConfig = NotificationConfigs.download
+
+    private var downloadedItemCount = 0
     private var isForeground = false
 
     private val binder = PostDownloadBinder()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private val mutex = Mutex()
+    private val downloadStack = mutableListOf<DownloadItem>()
+    private val downloadLooper = scope.launch(start = CoroutineStart.LAZY) {
+        createNotifyChannel()
 
-    private val _downloadedEvent = Channel<PostId>()
+        while (isActive) {
+            try {
+                val item = downloadStack.firstOrNull()
 
-    val downloadedEvent = _downloadedEvent.receiveAsFlow()
+                if (item != null) {
+                    downloadedItemCount++
 
-    override fun onBind(intent: Intent?): IBinder = binder
-
-    fun downloadImages(imageItems: List<FanboxPostDetail.ImageItem>) {
-        scope.launch {
-            mutex.withLock {
-                createNotifyChannel()
-
-                for (item in imageItems) {
-                    val name = "illust-${item.postId}-${item.id}"
-
-                    setForegroundService(true, "$name.${item.extension}")
-
-                    suspendRunCatching {
-                        fanboxRepository.downloadImage(
-                            url = if (item.extension.lowercase() == "gif") item.originalUrl else item.thumbnailUrl,
-                            name = name,
-                            extension = item.extension,
-                        )
-                    }
-                }
-
-                _downloadedEvent.send(imageItems.last().postId)
-                setForegroundService(false)
-            }
-        }
-    }
-
-    fun downloadFile(fileItem: FanboxPostDetail.FileItem) {
-        scope.launch {
-            mutex.withLock {
-                createNotifyChannel()
-
-                val name = "file-${fileItem.postId}-${fileItem.id}"
-
-                setForegroundService(true, "$name.${fileItem.extension}")
-
-                suspendRunCatching {
-                    fanboxRepository.downloadFile(
-                        url = fileItem.url,
-                        name = name,
-                        extension = fileItem.extension,
+                    setForegroundService(
+                        isForeground = true,
+                        title = getString(R.string.notify_download_title),
+                        message = getString(R.string.notify_download_message, downloadStack.size),
+                        subMessage = "%.2f%%".format((downloadedItemCount.toFloat() / downloadStack.size) * 100),
                     )
-                }
 
-                _downloadedEvent.send(fileItem.postId)
-                setForegroundService(false)
-            }
-        }
-    }
+                    when (item) {
+                        is DownloadItem.Image -> fanboxRepository.downloadImage(item.url, item.name, item.extension)
+                        is DownloadItem.File -> fanboxRepository.downloadFile(item.url, item.name, item.extension)
+                        is DownloadItem.Post -> {
+                            val post = fanboxRepository.getPost(item.postId)
 
-    fun downloadPosts(posts: List<FanboxPost>, isIgnoreFree: Boolean, isIgnoreFile: Boolean) {
-        scope.launch {
-            mutex.withLock {
-                createNotifyChannel()
+                            for (image in post.body.imageItems) {
+                                fanboxRepository.downloadImage(image.originalUrl, "illust-${image.postId}-${image.id}", image.extension, post.user.name)
+                            }
 
-                for ((index, post) in posts.withIndex()) {
-                    if (isIgnoreFree && post.feeRequired == 0) continue
-
-                    val postDetail = fanboxRepository.getPost(post.id)
-                    val title = getString(R.string.creator_posts_download_notify_title, post.user.name)
-                    val subMessage = "%.2f %%".format((index + 1).toFloat() / posts.size * 100)
-
-                    for (item in postDetail.body.imageItems) {
-                        val name = "illust-${item.postId}-${item.id}"
-
-                        setForegroundService(true, title, "$name.${item.extension}", subMessage)
-
-                        suspendRunCatching {
-                            fanboxRepository.downloadImage(
-                                url = if (item.extension.lowercase() == "gif") item.originalUrl else item.thumbnailUrl,
-                                name = name,
-                                extension = item.extension,
-                                dir = post.user.creatorId.value,
-                            )
-                        }
-                    }
-
-                    if (!isIgnoreFile) {
-                        for (item in postDetail.body.fileItems) {
-                            val name = "file-${item.postId}-${item.id}"
-
-                            setForegroundService(true, title, "$name.${item.extension}", subMessage)
-
-                            suspendRunCatching {
-                                fanboxRepository.downloadFile(
-                                    url = item.url,
-                                    name = name,
-                                    extension = item.extension,
-                                    dir = post.user.creatorId.value,
-                                )
+                            if (!item.isIgnoreFile) {
+                                for (file in post.body.fileItems) {
+                                    fanboxRepository.downloadFile(file.url, "file-${file.postId}-${file.id}", file.extension, post.user.name)
+                                }
                             }
                         }
                     }
 
-                    delay(100)
+                    downloadStack.removeFirstOrNull()
+                } else {
+                    downloadedItemCount = 0
+                    setForegroundService(false)
                 }
 
-                _downloadedEvent.send(PostId("-1"))
-
-                setForegroundService(false)
+                delay(if (BuildConfig.DEBUG) 10 else 500)
+            } catch (e: Throwable) {
+                Timber.w(e, "Cannot download item: ${downloadStack.firstOrNull()}")
             }
         }
+    }
+
+
+    override fun onBind(intent: Intent?): IBinder = binder
+
+    override fun onCreate() {
+        super.onCreate()
+        downloadLooper.start()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+    }
+
+    fun downloadImages(imageItems: List<FanboxPostDetail.ImageItem>) {
+        downloadStack += imageItems.map {
+            DownloadItem.Image(
+                name = "illust-${it.postId}-${it.id}",
+                extension = it.extension,
+                url = if (it.extension.lowercase() == "gif") it.originalUrl else it.thumbnailUrl,
+            )
+        }
+    }
+
+    fun downloadFile(fileItem: FanboxPostDetail.FileItem) {
+        downloadStack += DownloadItem.File(
+            name = "file-${fileItem.postId}-${fileItem.id}",
+            extension = fileItem.extension,
+            url = fileItem.url,
+        )
+    }
+
+    fun downloadPosts(posts: List<FanboxPost>, isIgnoreFree: Boolean, isIgnoreFile: Boolean) {
+        downloadStack += posts
+            .filter { if (isIgnoreFree) it.feeRequired != 0 else true }
+            .map {
+                DownloadItem.Post(
+                    postId = it.id,
+                    isIgnoreFile = isIgnoreFile,
+                )
+            }
     }
 
     private fun setForegroundService(
@@ -198,6 +181,25 @@ class PostDownloadService : Service() {
         }
 
         manager.createNotificationChannel(channel)
+    }
+
+    private interface DownloadItem {
+        data class Image(
+            val name: String,
+            val extension: String,
+            val url: String,
+        ) : DownloadItem
+
+        data class File(
+            val name: String,
+            val extension: String,
+            val url: String,
+        ) : DownloadItem
+
+        data class Post(
+            val postId: PostId,
+            val isIgnoreFile: Boolean
+        ) : DownloadItem
     }
 
     inner class PostDownloadBinder : Binder() {

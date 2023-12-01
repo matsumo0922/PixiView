@@ -29,10 +29,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import caios.android.pixiview.core.common.util.ToastUtil
 import caios.android.pixiview.core.model.ScreenState
 import caios.android.pixiview.core.model.ThemeConfig
@@ -49,7 +46,6 @@ import caios.android.pixiview.feature.post.service.PostDownloadService
 import caios.android.pixiview.ui.PixiViewApp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity(), PostDownloader {
@@ -64,14 +60,6 @@ class MainActivity : FragmentActivity(), PostDownloader {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             postDownloadService = (service as PostDownloadService.PostDownloadBinder).getService()
             isPostDownloadServiceBound = true
-
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    postDownloadService.downloadedEvent.collect { _ ->
-                        ToastUtil.show(this@MainActivity, R.string.common_downloaded)
-                    }
-                }
-            }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {

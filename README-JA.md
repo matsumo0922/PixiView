@@ -20,7 +20,7 @@ PixiView は PIXIV FANBOX の非公式 Android クライアントアプリです
 <hr>
 
 <p align="center">
-    <img src="media/screenshot/screenshots.png" width="100%" alt="screenshots">
+    <img src="media/google_play/screenshots.png" width="2048" alt="screenshots">
 </p>
 
 
