@@ -85,8 +85,9 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             CookieManager.getInstance().getCookie("https://www.fanbox.cc/").also {
                 suspendRunCatching {
-                    fanboxRepository.updateCookie(it!!)
+                    fanboxRepository.updateCookie(it.orEmpty())
                     fanboxRepository.updateCsrfToken()
+                    fanboxRepository.getNewsLetters()
 
                     fanboxRepository.metaData.firstOrNull()?.also {
                         userDataRepository.setTestUser(it.context.user.userId == "100912340")

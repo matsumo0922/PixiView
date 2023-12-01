@@ -67,9 +67,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -85,7 +86,7 @@ import javax.inject.Inject
 
 interface FanboxRepository {
     val cookie: SharedFlow<String>
-    val metaData: SharedFlow<FanboxMetaData>
+    val metaData: StateFlow<FanboxMetaData>
     val bookmarkedPosts: SharedFlow<List<PostId>>
     val logoutTrigger: Flow<OffsetDateTime>
 
@@ -155,11 +156,11 @@ class FanboxRepositoryImpl(
     private val creatorCache = mutableMapOf<CreatorId, FanboxCreatorDetail>()
     private val postCache = mutableMapOf<PostId, FanboxPostDetail>()
 
-    private val _metaData = MutableSharedFlow<FanboxMetaData>(replay = 1)
+    private val _metaData = MutableStateFlow(FanboxMetaData.dummy())
     private val _logoutTrigger = Channel<OffsetDateTime>()
 
     override val cookie: SharedFlow<String> = fanboxCookiePreference.data
-    override val metaData: SharedFlow<FanboxMetaData> = _metaData.asSharedFlow()
+    override val metaData: StateFlow<FanboxMetaData> = _metaData.asStateFlow()
     override val logoutTrigger: Flow<OffsetDateTime> = _logoutTrigger.receiveAsFlow()
 
     override val bookmarkedPosts: SharedFlow<List<PostId>> = bookmarkedPostsPreference.data
