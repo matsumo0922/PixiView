@@ -40,5 +40,12 @@
     "date": "2023/12/01",
     "logJp": "・FANBOXでのコンテンツ表示設定をオーバーライドする設定を追加\n・ドロワーメニューにユーザー名とユーザーアイコンを表示",
     "logEn": "・Added settings to override content display settings in FANBOX\n・Display user name and user icon in drawer menu"
+  },
+  {
+    "versionName": "1.0.4",
+    "versionCode": 8,
+    "date": "2023/12/09",
+    "logJp": "・スラッシュが入った文字列を検索するとクラッシュする不具合を修正\n・表示する内容がなかった場合のメッセージを改善",
+    "logEn": "・Fixed a bug that caused a crash when searching for a string containing a slash.\n・Improved the message when there was no content to display."
   }
 ]
