@@ -110,6 +110,7 @@ private fun LibraryDiscoveryScreen(
                 .padding(padding)
                 .fillMaxSize(),
             lazyPagingItems = pagingAdapter,
+            emptyMessageRes = R.string.error_no_data_discovery,
         ) {
             LazyColumn(
                 modifier = Modifier.drawVerticalScrollbar(state),

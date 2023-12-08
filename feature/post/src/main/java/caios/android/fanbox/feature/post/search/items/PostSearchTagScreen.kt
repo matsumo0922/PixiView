@@ -25,6 +25,7 @@ import caios.android.fanbox.core.ui.LazyPagingItemsLoadContents
 import caios.android.fanbox.core.ui.component.PostItem
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
 import caios.android.fanbox.core.ui.view.PagingErrorSection
+import caios.android.fanbox.feature.post.R
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
@@ -51,6 +52,7 @@ internal fun PostSearchTagScreen(
     LazyPagingItemsLoadContents(
         modifier = modifier,
         lazyPagingItems = pagingAdapter,
+        emptyMessageRes = R.string.error_no_data_search
     ) {
         LazyColumn(
             modifier = Modifier.drawVerticalScrollbar(state),

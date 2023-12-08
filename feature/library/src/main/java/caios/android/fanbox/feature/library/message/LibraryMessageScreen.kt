@@ -27,6 +27,7 @@ import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.ui.AsyncLoadContents
 import caios.android.fanbox.core.ui.component.PixiViewTopBar
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
+import caios.android.fanbox.core.ui.view.EmptyView
 import caios.android.fanbox.core.ui.view.ErrorView
 import caios.android.fanbox.feature.library.R
 import caios.android.fanbox.feature.library.message.items.LibraryMessageItem
@@ -109,10 +110,10 @@ private fun LibraryMessageScreen(
                     }
                 }
             } else {
-                ErrorView(
+                EmptyView(
                     modifier = Modifier.fillMaxSize(),
-                    errorState = ScreenState.Error(R.string.error_no_data),
-                    retryAction = onClickRetry,
+                    titleRes = R.string.error_no_data,
+                    messageRes = R.string.error_no_data_message,
                 )
             }
         }

@@ -35,6 +35,15 @@
     <string name="error_executed">An error occurred</string>
     <string name="error_unknown">An unknown error has occurred</string>
     <string name="error_no_data">No data</string>
+    <string name="error_no_data_search">Please change the keyword and try again.</string>
+    <string name="error_no_data_discovery">There are no recommended creators.</string>
+    <string name="error_no_data_following">There are no creators you are following.</string>
+    <string name="error_no_data_supported">There are no creators being supported.</string>
+    <string name="error_no_data_creator">There are no posts.</string>
+    <string name="error_no_data_bookmark">There are no bookmarked posts.</string>
+    <string name="error_no_data_message">Message hasn\'t arrived yet.</string>
+    <string name="error_no_data_notify">Notification hasn\'t arrived yet.</string>
+    <string name="error_no_data_payments">There is no payment history.</string>
     <string name="error_network">A communication error occurred</string>
     <string name="error_paging">Unable to continue pagination</string>
     <string name="error_developing_feature">Feature under development</string>
@@ -221,8 +230,10 @@
     <string name="billing_plus_item_hide_ads_description">Hide all ads in the app and enjoy posting more comfortably!</string>
     <string name="billing_plus_item_download">Bulk download</string>
     <string name="billing_plus_item_download_description">Download creators\' posts in bulk and enjoy them on other media!</string>
+    <string name="billing_plus_item_lock">Lock app</string>
+    <string name="billing_plus_item_lock_description">Require a password when starting the app to increase security!</string>
     <string name="billing_plus_item_widget">Home widget</string>
-    <string name="billing_plus_item_widget_description">Add a widget to your home screen and check posts from home!</string>
+    <string name="billing_plus_item_widget_description">Add a widget to your home screen and check posts from home! (Scheduled to be provided in an update)</string>
     <string name="billing_plus_item_material_you">Material You</string>
     <string name="billing_plus_item_material_you_description">Customize all versions to your liking with custom themes by Material You!</string>
     <string name="billing_plus_item_accent_color">Accent color</string>

@@ -1,5 +1,6 @@
 package caios.android.fanbox.core.ui.view
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +20,11 @@ import caios.android.fanbox.core.ui.theme.bold
 import caios.android.fanbox.core.ui.theme.center
 
 @Composable
-fun EmptyView(modifier: Modifier = Modifier) {
+fun EmptyView(
+    @StringRes titleRes: Int,
+    @StringRes messageRes: Int,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surface)
@@ -32,14 +37,14 @@ fun EmptyView(modifier: Modifier = Modifier) {
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.error_executed),
+            text = stringResource(titleRes),
             style = MaterialTheme.typography.titleMedium.bold().center(),
             color = MaterialTheme.colorScheme.onSurface,
         )
 
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.error_no_data),
+            text = stringResource(messageRes),
             style = MaterialTheme.typography.bodyMedium.center(),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -51,5 +56,7 @@ fun EmptyView(modifier: Modifier = Modifier) {
 private fun EmptyViewPreview() {
     EmptyView(
         modifier = Modifier.fillMaxSize(),
+        titleRes = R.string.error_executed,
+        messageRes = R.string.error_no_data,
     )
 }

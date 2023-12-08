@@ -31,6 +31,7 @@ import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.ui.AsyncLoadContents
 import caios.android.fanbox.core.ui.component.PixiViewTopBar
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
+import caios.android.fanbox.core.ui.view.EmptyView
 import caios.android.fanbox.feature.creator.R
 import caios.android.fanbox.feature.creator.support.item.SupportingCreatorItem
 import kotlinx.collections.immutable.ImmutableList
@@ -94,28 +95,36 @@ private fun SupportingCreatorsScreen(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .drawVerticalScrollbar(state),
-            state = state,
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            items(supportedCreators.toList()) { supportingPlan ->
-                SupportingCreatorItem(
-                    modifier = Modifier.fillMaxWidth(),
-                    supportingPlan = supportingPlan,
-                    onClickPlanDetail = onClickPlanDetail,
-                    onClickFanCard = onClickFanCard,
-                    onClickCreatorPlans = onClickCreatorPlans,
-                    onClickCreatorPosts = onClickCreatorPosts,
-                )
-            }
+        if (supportedCreators.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(padding)
+                    .drawVerticalScrollbar(state),
+                state = state,
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                items(supportedCreators.toList()) { supportingPlan ->
+                    SupportingCreatorItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        supportingPlan = supportingPlan,
+                        onClickPlanDetail = onClickPlanDetail,
+                        onClickFanCard = onClickFanCard,
+                        onClickCreatorPlans = onClickCreatorPlans,
+                        onClickCreatorPosts = onClickCreatorPosts,
+                    )
+                }
 
-            item {
-                Spacer(modifier = Modifier.navigationBarsPadding())
+                item {
+                    Spacer(modifier = Modifier.navigationBarsPadding())
+                }
             }
+        } else {
+            EmptyView(
+                modifier = Modifier.fillMaxSize(),
+                titleRes = R.string.error_no_data,
+                messageRes = R.string.error_no_data_supported,
+            )
         }
     }
 }

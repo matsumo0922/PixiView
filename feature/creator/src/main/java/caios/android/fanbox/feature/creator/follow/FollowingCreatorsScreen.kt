@@ -36,6 +36,7 @@ import caios.android.fanbox.core.ui.AsyncLoadContents
 import caios.android.fanbox.core.ui.component.CreatorItem
 import caios.android.fanbox.core.ui.component.PixiViewTopBar
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
+import caios.android.fanbox.core.ui.view.EmptyView
 import caios.android.fanbox.feature.creator.R
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -98,41 +99,49 @@ private fun FollowingCreatorsScreen(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .drawVerticalScrollbar(state),
-            state = state,
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            items(followingCreators.toList()) { followingCreator ->
-                var isFollowed by rememberSaveable(followingCreator.isFollowed) { mutableStateOf(followingCreator.isFollowed) }
+        if (followingCreators.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(padding)
+                    .drawVerticalScrollbar(state),
+                state = state,
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                items(followingCreators.toList()) { followingCreator ->
+                    var isFollowed by rememberSaveable(followingCreator.isFollowed) { mutableStateOf(followingCreator.isFollowed) }
 
-                CreatorItem(
-                    modifier = Modifier.fillMaxWidth(),
-                    creatorDetail = followingCreator,
-                    isFollowed = isFollowed,
-                    onClickCreator = onClickCreator,
-                    onClickFollow = {
-                        scope.launch {
-                            isFollowed = true
-                            isFollowed = onClickFollow.invoke(it).isSuccess
-                        }
-                    },
-                    onClickUnfollow = {
-                        scope.launch {
-                            isFollowed = false
-                            isFollowed = !onClickUnfollow.invoke(it).isSuccess
-                        }
-                    },
-                    onClickSupporting = onClickSupporting,
-                )
-            }
+                    CreatorItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        creatorDetail = followingCreator,
+                        isFollowed = isFollowed,
+                        onClickCreator = onClickCreator,
+                        onClickFollow = {
+                            scope.launch {
+                                isFollowed = true
+                                isFollowed = onClickFollow.invoke(it).isSuccess
+                            }
+                        },
+                        onClickUnfollow = {
+                            scope.launch {
+                                isFollowed = false
+                                isFollowed = !onClickUnfollow.invoke(it).isSuccess
+                            }
+                        },
+                        onClickSupporting = onClickSupporting,
+                    )
+                }
 
-            item {
-                Spacer(modifier = Modifier.navigationBarsPadding())
+                item {
+                    Spacer(modifier = Modifier.navigationBarsPadding())
+                }
             }
+        } else {
+            EmptyView(
+                modifier = Modifier.fillMaxSize(),
+                titleRes = R.string.error_no_data,
+                messageRes = R.string.error_no_data_following,
+            )
         }
     }
 }

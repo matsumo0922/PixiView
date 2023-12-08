@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.DesignServices
 import androidx.compose.material.icons.filled.DoNotDisturb
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material.icons.outlined.HelpOutline
@@ -181,6 +182,13 @@ private fun BillingPlusDialog(
                     title = R.string.billing_plus_item_download,
                     description = R.string.billing_plus_item_download_description,
                     icon = Icons.Default.Download,
+                )
+
+                PlusItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = R.string.billing_plus_item_lock,
+                    description = R.string.billing_plus_item_lock_description,
+                    icon = Icons.Default.Lock,
                 )
 
                 PlusItem(

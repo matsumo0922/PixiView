@@ -20,6 +20,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import caios.android.fanbox.core.model.ScreenState
+import caios.android.fanbox.core.ui.view.EmptyView
 import caios.android.fanbox.core.ui.view.ErrorView
 import caios.android.fanbox.core.ui.view.LoadingView
 
@@ -29,19 +30,16 @@ fun <T : Any> LazyPagingItemsLoadContents(
     lazyPagingItems: LazyPagingItems<T>,
     modifier: Modifier = Modifier,
     isSwipeEnabled: Boolean = true,
-    emptyComponent: @Composable (() -> Unit)? = null,
+    emptyTitleRes: Int = R.string.error_no_data,
+    emptyMessageRes: Int = R.string.error_executed,
     content: @Composable (CombinedLoadStates) -> Unit,
 ) {
     Surface(modifier) {
         if (lazyPagingItems.isEmpty()) {
-            if (emptyComponent != null) {
-                emptyComponent.invoke()
-            } else {
-                ErrorView(
-                    errorState = ScreenState.Error(R.string.error_no_data),
-                    retryAction = { lazyPagingItems.refresh() },
-                )
-            }
+            EmptyView(
+                titleRes = emptyTitleRes,
+                messageRes = emptyMessageRes,
+            )
         } else {
             lazyPagingItems.apply {
                 AnimatedContent(

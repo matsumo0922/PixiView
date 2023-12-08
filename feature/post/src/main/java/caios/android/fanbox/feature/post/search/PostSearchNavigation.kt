@@ -8,13 +8,17 @@ import androidx.navigation.navArgument
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import java.net.URL
+import java.net.URLDecoder
+import java.net.URLEncoder
 
 const val PostSearchQueryStr = "postSearchQuery"
 const val PostSearchRoute = "postSearch/{$PostSearchQueryStr}"
 
 fun NavController.navigateToPostSearch(creatorId: CreatorId? = null, creatorQuery: String? = null, tag: String? = null) {
-    val query = buildQuery(creatorId, creatorQuery, tag)
-    val route = if (parseQuery(query).mode != PostSearchMode.Unknown) "postSearch/$query" else "postSearch/pixiViewUnknown"
+    val query = URLEncoder.encode(buildQuery(creatorId, creatorQuery, tag), Charsets.UTF_8.name())
+    val encodedQuery = URLEncoder.encode(query, Charsets.UTF_8.name())
+    val route = if (parseQuery(query).mode != PostSearchMode.Unknown) "postSearch/$encodedQuery" else "postSearch/pixiViewUnknown"
 
     this.navigate(route)
 }
@@ -39,7 +43,7 @@ fun NavGraphBuilder.postSearchScreen(
         popEnterTransition = { NavigateAnimation.Horizontal.popEnter },
         popExitTransition = { NavigateAnimation.Horizontal.popExit },
     ) {
-        var query = it.arguments?.getString(PostSearchQueryStr) ?: ""
+        var query = URLDecoder.decode(it.arguments?.getString(PostSearchQueryStr) ?: "", Charsets.UTF_8.name())
 
         if (query == "pixiViewUnknown") {
             query = ""

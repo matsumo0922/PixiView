@@ -63,6 +63,7 @@ internal fun PostSearchCreatorScreen(
     LazyPagingItemsLoadContents(
         modifier = modifier,
         lazyPagingItems = pagingAdapter,
+        emptyMessageRes = R.string.error_no_data_search
     ) {
         LazyColumn(
             modifier = Modifier.drawVerticalScrollbar(state),
