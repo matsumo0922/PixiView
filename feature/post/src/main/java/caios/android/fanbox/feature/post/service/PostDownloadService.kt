@@ -38,6 +38,7 @@ class PostDownloadService : Service() {
     private val notifyConfig = NotificationConfigs.download
 
     private var downloadedItemCount = 0
+    private var downloadedItemSize = 0
     private var isForeground = false
 
     private val binder = PostDownloadBinder()
@@ -53,12 +54,13 @@ class PostDownloadService : Service() {
 
                 if (item != null) {
                     downloadedItemCount++
+                    downloadedItemSize = if (downloadedItemSize == 0) downloadStack.size else downloadedItemSize
 
                     setForegroundService(
                         isForeground = true,
                         title = getString(R.string.notify_download_title),
                         message = getString(R.string.notify_download_message, downloadStack.size),
-                        subMessage = "%.2f%%".format((downloadedItemCount.toFloat() / downloadStack.size) * 100),
+                        subMessage = "%.2f%%".format((downloadedItemCount.toFloat() / downloadedItemSize) * 100),
                     )
 
                     when (item) {
@@ -82,6 +84,8 @@ class PostDownloadService : Service() {
                     downloadStack.removeFirstOrNull()
                 } else {
                     downloadedItemCount = 0
+                    downloadedItemSize = 0
+
                     setForegroundService(false)
                 }
 
