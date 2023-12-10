@@ -171,6 +171,10 @@
     <string name="setting_top_general_hide_adult_contents_description">投稿一覧画面などでは成人向けコンテンツに警告が表示されます。</string>
     <string name="setting_top_general_override_adult_contents_setting">閲覧設定をオーバーライドする</string>
     <string name="setting_top_general_override_adult_contents_setting_description">FANBOXで設定した、成人向けコンテンツを表示するかどうかの設定をオーバーライドします。</string>
+    <string name="setting_top_general_hide_restricted_contents">表示制限コンテンツを無視する</string>
+    <string name="setting_top_general_hide_restricted_contents_description">支援者のみが閲覧できる投稿を無視します。</string>
+    <string name="setting_top_general_grid_mode">グリッドモード</string>
+    <string name="setting_top_general_grid_mode_description">投稿一覧画面の閲覧方法を切り替えます。</string>
     <string name="setting_top_information">情報</string>
     <string name="setting_top_information_id">CAIOS ID</string>
     <string name="setting_top_information_version">アプリバージョン</string>

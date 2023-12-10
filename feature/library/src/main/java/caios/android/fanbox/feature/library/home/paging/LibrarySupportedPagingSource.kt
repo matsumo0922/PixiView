@@ -9,16 +9,17 @@ import caios.android.fanbox.core.repository.FanboxRepository
 
 class LibrarySupportedPagingSource(
     private val fanboxRepository: FanboxRepository,
+    private val isHideRestricted: Boolean,
 ) : PagingSource<FanboxCursor, FanboxPost>() {
 
     override suspend fun load(params: LoadParams<FanboxCursor>): LoadResult<FanboxCursor, FanboxPost> {
         return suspendRunCatching {
             fanboxRepository.getSupportedPosts(params.key)
         }.fold(
-            onSuccess = {
+            onSuccess = { page ->
                 LoadResult.Page(
-                    data = it.contents,
-                    nextKey = it.cursor,
+                    data = if (isHideRestricted) page.contents.filter { !it.isRestricted } else page.contents,
+                    nextKey = page.cursor,
                     prevKey = null,
                 )
             },

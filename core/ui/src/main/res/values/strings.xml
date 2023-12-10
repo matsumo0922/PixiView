@@ -171,6 +171,10 @@
     <string name="setting_top_general_hide_adult_contents_description">A warning will be displayed for adult content on the post list screen, etc.</string>
     <string name="setting_top_general_override_adult_contents_setting">Override browsing settings</string>
     <string name="setting_top_general_override_adult_contents_setting_description">Overrides the setting for displaying adult content set in FANBOX.</string>
+    <string name="setting_top_general_hide_restricted_contents">Hide restricted contents</string>
+    <string name="setting_top_general_hide_restricted_contents_description">Hide content that can only be viewed by supporters.</string>
+    <string name="setting_top_general_grid_mode">Grid Mode</string>
+    <string name="setting_top_general_grid_mode_description">Change the display mode of the post list.</string>
     <string name="setting_top_information">Information</string>
     <string name="setting_top_information_id">CAIOS ID</string>
     <string name="setting_top_information_version">App version</string>

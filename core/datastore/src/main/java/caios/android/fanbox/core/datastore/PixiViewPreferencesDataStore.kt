@@ -35,6 +35,8 @@ class PixiViewPreferencesDataStore(
                 isDeveloperMode = if (it.hasIsDeveloperMode()) it.isDeveloperMode else false,
                 isTestUser = if (it.hasIsTestUser()) it.isTestUser else false,
                 isAppLock = if (it.hasIsAppLock()) it.isAppLock else false,
+                isHideRestricted = if (it.hasIsHideRestricted()) it.isHideRestricted else false,
+                isGridMode = if (it.hasIsGridMode()) it.isGridMode else false,
                 isFollowTabDefaultHome = if (it.hasIsFollowTabDefaultHome()) it.isFollowTabDefaultHome else false,
                 isHideAdultContents = if (it.hasIsHideAdultContents()) it.isHideAdultContents else true,
                 isOverrideAdultContents = if (it.hasIsOverrideAdultContents()) it.isOverrideAdultContents else false,
@@ -148,6 +150,22 @@ class PixiViewPreferencesDataStore(
         userPreference.updateData {
             it.copy {
                 this.isTestUser = isTestUser
+            }
+        }
+    }
+
+    suspend fun setHideRestricted(isHideRestricted: Boolean) = withContext(ioDispatcher) {
+        userPreference.updateData {
+            it.copy {
+                this.isHideRestricted = isHideRestricted
+            }
+        }
+    }
+
+    suspend fun setGridMode(isGridMode: Boolean) = withContext(ioDispatcher) {
+        userPreference.updateData {
+            it.copy {
+                this.isGridMode = isGridMode
             }
         }
     }

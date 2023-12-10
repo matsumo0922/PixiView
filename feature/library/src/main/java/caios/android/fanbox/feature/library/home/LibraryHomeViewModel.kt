@@ -42,29 +42,29 @@ class LibraryHomeViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        Pager(
-            config = PagingConfig(pageSize = 10),
-            initialKey = null,
-            pagingSourceFactory = {
-                LibraryHomePagingSource(fanboxRepository)
-            },
-        ).flow.cachedIn(viewModelScope).also {
-            _uiState.value = uiState.value.copy(homePaging = it)
-        }
-
-        Pager(
-            config = PagingConfig(pageSize = 10),
-            initialKey = null,
-            pagingSourceFactory = {
-                LibrarySupportedPagingSource(fanboxRepository)
-            },
-        ).flow.cachedIn(viewModelScope).also {
-            _uiState.value = uiState.value.copy(supportedPaging = it)
-        }
-
         viewModelScope.launch {
             userDataRepository.userData.collectLatest {
                 _uiState.value = uiState.value.copy(userData = it)
+
+                Pager(
+                    config = PagingConfig(pageSize = 10),
+                    initialKey = null,
+                    pagingSourceFactory = {
+                        LibraryHomePagingSource(fanboxRepository, it.isHideRestricted)
+                    },
+                ).flow.cachedIn(viewModelScope).also {
+                    _uiState.value = uiState.value.copy(homePaging = it)
+                }
+
+                Pager(
+                    config = PagingConfig(pageSize = 10),
+                    initialKey = null,
+                    pagingSourceFactory = {
+                        LibrarySupportedPagingSource(fanboxRepository, it.isHideRestricted)
+                    },
+                ).flow.cachedIn(viewModelScope).also {
+                    _uiState.value = uiState.value.copy(supportedPaging = it)
+                }
             }
         }
 

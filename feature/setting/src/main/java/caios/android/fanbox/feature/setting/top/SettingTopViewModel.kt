@@ -76,6 +76,18 @@ class SettingTopViewModel @Inject constructor(
         }
     }
 
+    fun setHideRestricted(isHideRestricted: Boolean) {
+        viewModelScope.launch {
+            userDataRepository.setHideRestricted(isHideRestricted)
+        }
+    }
+
+    fun setGridMode(isGridMode: Boolean) {
+        viewModelScope.launch {
+            userDataRepository.setGridMode(isGridMode)
+        }
+    }
+
     fun setDeveloperMode(isDeveloperMode: Boolean) {
         viewModelScope.launch {
             userDataRepository.setDeveloperMode(isDeveloperMode)

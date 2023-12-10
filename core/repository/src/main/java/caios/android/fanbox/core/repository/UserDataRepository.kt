@@ -21,6 +21,8 @@ interface UserDataRepository {
     suspend fun setHideAdultContents(isHideAdultContents: Boolean)
     suspend fun setOverrideAdultContents(isOverrideAdultContents: Boolean)
     suspend fun setTestUser(isTestUser: Boolean)
+    suspend fun setHideRestricted(isHideRestricted: Boolean)
+    suspend fun setGridMode(isGridMode: Boolean)
     suspend fun setDeveloperMode(isDeveloperMode: Boolean)
     suspend fun setPlusMode(isPlusMode: Boolean)
     suspend fun setUseDynamicColor(useDynamicColor: Boolean)
@@ -70,6 +72,14 @@ class UserDataRepositoryImpl @Inject constructor(
 
     override suspend fun setTestUser(isTestUser: Boolean) {
         pixiViewPreferencesDataStore.setTestUser(isTestUser)
+    }
+
+    override suspend fun setHideRestricted(isHideRestricted: Boolean) {
+        pixiViewPreferencesDataStore.setHideRestricted(isHideRestricted)
+    }
+
+    override suspend fun setGridMode(isGridMode: Boolean) {
+        pixiViewPreferencesDataStore.setGridMode(isGridMode)
     }
 
     override suspend fun setDeveloperMode(isDeveloperMode: Boolean) {
