@@ -50,7 +50,6 @@ internal fun LibraryMessageRoute(
             modifier = Modifier.fillMaxSize(),
             messages = uiState.messages.toImmutableList(),
             openDrawer = openDrawer,
-            onClickRetry = viewModel::fetch,
             onClickCreator = navigateToCreatorPosts,
         )
     }
