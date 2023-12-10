@@ -57,9 +57,6 @@ style:
   # プロパティ、メソッド、companion object の順番を強制する
   ClassOrdering:
     active: true
-  # 複数行の if 文は中括弧を強制する
-  MandatoryBracesIfStatements:
-    active: true
   # 複数行の for, while... は中括弧を強制する
   MandatoryBracesLoops:
     active: true

@@ -9,10 +9,11 @@ import org.gradle.kotlin.dsl.withType
 
 internal fun Project.configureDetekt(extension: DetektExtension) {
     extension.apply {
+        toolVersion = libs.findVersion("detekt").get().toString()
         // 並列処理
         parallel = true
         // Detektの設定ファイル
-        config = files("${project.rootDir}/config/detekt/detekt.yml")
+        config.setFrom(files("${project.rootDir}/config/detekt/detekt.yml"))
         // baseline 設定ファイル
         baseline = file("${project.rootDir}/config/detekt/baseline.xml")
         // デフォルト設定の上に自分の設定ファイルを適用する
