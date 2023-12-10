@@ -11,15 +11,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,18 +36,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import caios.android.fanbox.core.model.ScreenState
+import caios.android.fanbox.core.model.UserData
 import caios.android.fanbox.core.model.fanbox.FanboxCreatorDetail
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
-import caios.android.fanbox.core.ui.LazyPagingItemsLoadContents
+import caios.android.fanbox.core.ui.AsyncLoadContents
 import caios.android.fanbox.core.ui.component.CreatorItem
 import caios.android.fanbox.core.ui.component.PixiViewTopBar
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
-import caios.android.fanbox.core.ui.view.PagingErrorSection
+import caios.android.fanbox.core.ui.theme.bold
 import caios.android.fanbox.feature.library.R
 import kotlinx.coroutines.launch
 
@@ -56,25 +59,38 @@ internal fun LibraryDiscoveryRoute(
     viewModel: LibraryDiscoveryViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val paging = uiState.paging.collectAsLazyPagingItems()
+    val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
-    LibraryDiscoveryScreen(
+    LaunchedEffect(true) {
+        if (screenState !is ScreenState.Idle) {
+            viewModel.fetch()
+        }
+    }
+
+    AsyncLoadContents(
         modifier = modifier,
-        openDrawer = openDrawer,
-        onClickSearch = navigateToPostSearch,
-        onClickCreator = navigateToCreatorPosts,
-        onClickFollow = viewModel::follow,
-        onClickUnfollow = viewModel::unfollow,
-        onClickSupporting = { context.startActivity(Intent(Intent.ACTION_VIEW, it)) },
-        pagingAdapter = paging,
-    )
+        screenState = screenState,
+        retryAction = viewModel::fetch,
+    ) { uiState ->
+        LibraryDiscoveryScreen(
+            modifier = Modifier.fillMaxSize(),
+            recommendedCreators = uiState.recommendedCreators,
+            followingPixivCreators = uiState.followingPixivCreators,
+            openDrawer = openDrawer,
+            onClickSearch = navigateToPostSearch,
+            onClickCreator = navigateToCreatorPosts,
+            onClickFollow = viewModel::follow,
+            onClickUnfollow = viewModel::unfollow,
+            onClickSupporting = { context.startActivity(Intent(Intent.ACTION_VIEW, it)) },
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LibraryDiscoveryScreen(
-    pagingAdapter: LazyPagingItems<FanboxCreatorDetail>,
+    recommendedCreators: List<FanboxCreatorDetail>,
+    followingPixivCreators: List<FanboxCreatorDetail>,
     openDrawer: () -> Unit,
     onClickSearch: () -> Unit,
     onClickCreator: (CreatorId) -> Unit,
@@ -105,62 +121,102 @@ private fun LibraryDiscoveryScreen(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->
-        LazyPagingItemsLoadContents(
+        LazyColumn(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxSize(),
-            lazyPagingItems = pagingAdapter,
-            emptyMessageRes = R.string.error_no_data_discovery,
+                .drawVerticalScrollbar(state),
+            state = state,
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            LazyColumn(
-                modifier = Modifier.drawVerticalScrollbar(state),
-                state = state,
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                items(
-                    count = pagingAdapter.itemCount,
-                    key = pagingAdapter.itemKey(),
-                    contentType = pagingAdapter.itemContentType(),
-                ) { index ->
-                    pagingAdapter[index]?.let { creatorDetail ->
-                        var isFollowed by rememberSaveable { mutableStateOf(creatorDetail.isFollowed) }
-
-                        CreatorItem(
-                            modifier = Modifier.fillMaxWidth(),
-                            creatorDetail = creatorDetail,
-                            isFollowed = isFollowed,
-                            onClickCreator = onClickCreator,
-                            onClickFollow = {
-                                scope.launch {
-                                    isFollowed = true
-                                    isFollowed = onClickFollow.invoke(it).isSuccess
-                                }
-                            },
-                            onClickUnfollow = {
-                                scope.launch {
-                                    isFollowed = false
-                                    isFollowed = !onClickUnfollow.invoke(it).isSuccess
-                                }
-                            },
-                            onClickSupporting = onClickSupporting,
-                        )
-                    }
-                }
-
-                if (pagingAdapter.loadState.append is LoadState.Error) {
-                    item {
-                        PagingErrorSection(
-                            modifier = Modifier.fillMaxWidth(),
-                            onRetry = { pagingAdapter.retry() },
-                        )
-                    }
-                }
-
+            if (recommendedCreators.isNotEmpty()) {
                 item {
-                    Spacer(modifier = Modifier.navigationBarsPadding())
+                    TitleItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        title = stringResource(R.string.creator_recommended),
+                    )
                 }
+
+                items(
+                    items = recommendedCreators,
+                    key = { item -> "recommended-${item.creatorId.value}" },
+                ) {
+                    var isFollowed by rememberSaveable { mutableStateOf(it.isFollowed) }
+
+                    CreatorItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        creatorDetail = it,
+                        isFollowed = isFollowed,
+                        onClickCreator = onClickCreator,
+                        onClickFollow = {
+                            scope.launch {
+                                isFollowed = true
+                                isFollowed = onClickFollow.invoke(it).isSuccess
+                            }
+                        },
+                        onClickUnfollow = {
+                            scope.launch {
+                                isFollowed = false
+                                isFollowed = !onClickUnfollow.invoke(it).isSuccess
+                            }
+                        },
+                        onClickSupporting = onClickSupporting,
+                    )
+                }
+            }
+
+            if (followingPixivCreators.isNotEmpty()) {
+                item {
+                    TitleItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        title = stringResource(R.string.creator_following_pixiv),
+                    )
+                }
+
+                items(
+                    items = followingPixivCreators,
+                    key = { item -> "pixiv-${item.creatorId.value}" },
+                ) {
+                    var isFollowed by rememberSaveable { mutableStateOf(it.isFollowed) }
+
+                    CreatorItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        creatorDetail = it,
+                        isFollowed = isFollowed,
+                        onClickCreator = onClickCreator,
+                        onClickFollow = {
+                            scope.launch {
+                                isFollowed = true
+                                isFollowed = onClickFollow.invoke(it).isSuccess
+                            }
+                        },
+                        onClickUnfollow = {
+                            scope.launch {
+                                isFollowed = false
+                                isFollowed = !onClickUnfollow.invoke(it).isSuccess
+                            }
+                        },
+                        onClickSupporting = onClickSupporting,
+                    )
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
     }
+}
+
+@Composable
+private fun TitleItem(
+    title: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        modifier = modifier,
+        text = title.uppercase(),
+        style = MaterialTheme.typography.bodyMedium.bold(),
+        color = MaterialTheme.colorScheme.primary,
+    )
 }

@@ -123,6 +123,8 @@
     <string name="creator_posts_download_ignore_file">ファイルを省く</string>
     <string name="creator_posts_download_start">一括ダウンロードを開始しました</string>
     <string name="creator_posts_download_notify_title">%1$sの投稿を一括ダウンロードしています</string>
+    <string name="creator_recommended">おすすめのクリエイター</string>
+    <string name="creator_following_pixiv">Pixivでフォロー中のクリエイター</string>
 
     <!-- Bookmark -->
     <string name="bookmark_search_placeholder">ブックマークを検索</string>

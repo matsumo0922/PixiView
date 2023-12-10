@@ -123,6 +123,8 @@
     <string name="creator_posts_download_ignore_file">Omit file</string>
     <string name="creator_posts_download_start">Bulk download started</string>
     <string name="creator_posts_download_notify_title">Downloading %1$s posts in bulk</string>
+    <string name="creator_recommended">Recommended creators</string>
+    <string name="creator_following_pixiv">Following on pixiv</string>
 
     <!-- Bookmark -->
     <string name="bookmark_search_placeholder">Search bookmark</string>

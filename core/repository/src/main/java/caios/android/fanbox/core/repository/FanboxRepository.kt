@@ -106,6 +106,7 @@ interface FanboxRepository {
     suspend fun getPostComment(postId: PostId, offset: Int = 0): PageOffsetInfo<FanboxPostDetail.Comment.CommentItem>
 
     suspend fun getFollowingCreators(): List<FanboxCreatorDetail>
+    suspend fun getFollowingPixivCreators(): List<FanboxCreatorDetail>
     suspend fun getRecommendedCreators(): List<FanboxCreatorDetail>
 
     suspend fun getCreator(creatorId: CreatorId): FanboxCreatorDetail
@@ -291,6 +292,10 @@ class FanboxRepositoryImpl(
 
     override suspend fun getFollowingCreators(): List<FanboxCreatorDetail> = withContext(ioDispatcher) {
         get("creator.listFollowing").parse<FanboxCreatorItemsEntity>()!!.translate()
+    }
+
+    override suspend fun getFollowingPixivCreators(): List<FanboxCreatorDetail> = withContext(ioDispatcher) {
+        get("creator.listPixiv").parse<FanboxCreatorItemsEntity>()!!.translate()
     }
 
     override suspend fun getRecommendedCreators(): List<FanboxCreatorDetail> = withContext(ioDispatcher) {
