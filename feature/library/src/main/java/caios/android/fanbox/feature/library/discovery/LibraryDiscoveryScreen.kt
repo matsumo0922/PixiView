@@ -36,10 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.compose.itemContentType
-import androidx.paging.compose.itemKey
 import caios.android.fanbox.core.model.ScreenState
-import caios.android.fanbox.core.model.UserData
 import caios.android.fanbox.core.model.fanbox.FanboxCreatorDetail
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.ui.AsyncLoadContents
@@ -48,6 +45,8 @@ import caios.android.fanbox.core.ui.component.PixiViewTopBar
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
 import caios.android.fanbox.core.ui.theme.bold
 import caios.android.fanbox.feature.library.R
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 
 @Composable
@@ -74,8 +73,8 @@ internal fun LibraryDiscoveryRoute(
     ) { uiState ->
         LibraryDiscoveryScreen(
             modifier = Modifier.fillMaxSize(),
-            recommendedCreators = uiState.recommendedCreators,
-            followingPixivCreators = uiState.followingPixivCreators,
+            recommendedCreators = uiState.recommendedCreators.toImmutableList(),
+            followingPixivCreators = uiState.followingPixivCreators.toImmutableList(),
             openDrawer = openDrawer,
             onClickSearch = navigateToPostSearch,
             onClickCreator = navigateToCreatorPosts,
@@ -89,8 +88,8 @@ internal fun LibraryDiscoveryRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LibraryDiscoveryScreen(
-    recommendedCreators: List<FanboxCreatorDetail>,
-    followingPixivCreators: List<FanboxCreatorDetail>,
+    recommendedCreators: ImmutableList<FanboxCreatorDetail>,
+    followingPixivCreators: ImmutableList<FanboxCreatorDetail>,
     openDrawer: () -> Unit,
     onClickSearch: () -> Unit,
     onClickCreator: (CreatorId) -> Unit,

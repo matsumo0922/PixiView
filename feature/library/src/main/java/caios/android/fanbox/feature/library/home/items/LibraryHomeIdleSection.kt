@@ -8,12 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -28,8 +26,6 @@ import caios.android.fanbox.core.ui.component.PostGridItem
 import caios.android.fanbox.core.ui.component.PostItem
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
 import caios.android.fanbox.core.ui.view.PagingErrorSection
-import com.dokar.pinchzoomgrid.PinchZoomGridLayout
-import com.dokar.pinchzoomgrid.rememberPinchZoomGridState
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable

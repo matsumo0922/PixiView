@@ -68,7 +68,6 @@ import caios.android.fanbox.feature.creator.top.items.CreatorTopDescriptionDialo
 import caios.android.fanbox.feature.creator.top.items.CreatorTopHeader
 import caios.android.fanbox.feature.creator.top.items.CreatorTopPlansScreen
 import caios.android.fanbox.feature.creator.top.items.CreatorTopPostsScreen
-import com.dokar.pinchzoomgrid.rememberPinchZoomGridState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch

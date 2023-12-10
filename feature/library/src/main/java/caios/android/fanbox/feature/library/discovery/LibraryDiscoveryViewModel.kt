@@ -33,7 +33,7 @@ class LibraryDiscoveryViewModel @Inject constructor(
                 )
             }.fold(
                 onSuccess = { ScreenState.Idle(it) },
-                onFailure = { ScreenState.Error(R.string.error_no_data_discovery) }
+                onFailure = { ScreenState.Error(R.string.error_no_data_discovery) },
             )
         }
     }

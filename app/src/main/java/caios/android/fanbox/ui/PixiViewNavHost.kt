@@ -151,8 +151,6 @@ internal fun PixiViewNavHost(
 
             settingTopScreen(
                 navigateToThemeSetting = { navController.navigateToSettingTheme() },
-                navigateToAccountSetting = { },
-                navigateToNotifySetting = { },
                 navigateToBillingPlus = { navController.navigateToBillingPlus() },
                 navigateToSettingDeveloper = { navController.navigateToSettingDeveloper() },
                 navigateToLogoutDialog = { contents, onResult -> navController.navigateToSimpleAlertDialog(contents, onResult) },

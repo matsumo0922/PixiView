@@ -65,7 +65,9 @@ class CreatorTopViewModel @Inject constructor(
                     creatorDetail = fanboxRepository.getCreator(creatorId),
                     creatorPlans = fanboxRepository.getCreatorPlans(creatorId),
                     creatorTags = fanboxRepository.getCreatorTags(creatorId),
-                    creatorPostsPaging = postsPagingCache ?: fanboxRepository.getCreatorPostsPager(creatorId, loadSize).also { postsPagingCache = it },
+                    creatorPostsPaging = postsPagingCache ?: fanboxRepository.getCreatorPostsPager(creatorId, loadSize).also {
+                        postsPagingCache = it
+                    },
                 )
             }.fold(
                 onSuccess = { ScreenState.Idle(it) },

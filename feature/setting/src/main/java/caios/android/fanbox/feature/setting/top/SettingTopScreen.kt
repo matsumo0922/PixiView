@@ -47,8 +47,6 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun SettingTopRoute(
     navigateToThemeSetting: () -> Unit,
-    navigateToAccountSetting: () -> Unit,
-    navigateToNotifySetting: () -> Unit,
     navigateToBillingPlus: () -> Unit,
     navigateToLogoutDialog: (SimpleAlertContents, () -> Unit) -> Unit,
     navigateToOpenSourceLicense: () -> Unit,

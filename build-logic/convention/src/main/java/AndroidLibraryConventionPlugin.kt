@@ -15,7 +15,6 @@ class AndroidLibraryConventionPlugin: Plugin<Project> {
                 apply("kotlin-parcelize")
                 apply("kotlinx-serialization")
                 apply("project-report")
-                apply("com.google.gms.google-services")
                 apply("com.google.devtools.ksp")
             }
 

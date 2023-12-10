@@ -8,7 +8,6 @@ import androidx.navigation.navArgument
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
-import java.net.URL
 import java.net.URLDecoder
 import java.net.URLEncoder
 

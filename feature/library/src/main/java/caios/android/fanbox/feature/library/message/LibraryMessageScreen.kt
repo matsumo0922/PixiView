@@ -21,14 +21,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import caios.android.fanbox.core.model.ScreenState
 import caios.android.fanbox.core.model.fanbox.FanboxNewsLetter
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.ui.AsyncLoadContents
 import caios.android.fanbox.core.ui.component.PixiViewTopBar
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
 import caios.android.fanbox.core.ui.view.EmptyView
-import caios.android.fanbox.core.ui.view.ErrorView
 import caios.android.fanbox.feature.library.R
 import caios.android.fanbox.feature.library.message.items.LibraryMessageItem
 import kotlinx.collections.immutable.ImmutableList
@@ -63,7 +61,6 @@ internal fun LibraryMessageRoute(
 private fun LibraryMessageScreen(
     messages: ImmutableList<FanboxNewsLetter>,
     openDrawer: () -> Unit,
-    onClickRetry: () -> Unit,
     onClickCreator: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {

@@ -29,7 +29,7 @@ class PostDetailRootViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(
         PostDetailRootUiState(
             paging = null,
-        )
+        ),
     )
 
     val uiState = _uiState.asStateFlow()
@@ -47,7 +47,7 @@ class PostDetailRootViewModel @Inject constructor(
                     Creator -> fanboxRepository.getCreatorPostsPagerCache()
                     Search -> fanboxRepository.getPostsFromQueryPagerCache()
                     Unknown -> null
-                }
+                },
             )
         }
     }
@@ -55,5 +55,5 @@ class PostDetailRootViewModel @Inject constructor(
 
 @Stable
 data class PostDetailRootUiState(
-    val paging: Flow<PagingData<FanboxPost>>?
+    val paging: Flow<PagingData<FanboxPost>>?,
 )

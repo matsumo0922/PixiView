@@ -1,3 +1,5 @@
+@file:Suppress("MatchingDeclarationName")
+
 package caios.android.fanbox.feature.post.detail
 
 import androidx.compose.foundation.layout.fillMaxSize

@@ -311,7 +311,7 @@ class FanboxRepositoryImpl(
         withContext(ioDispatcher) {
             get(
                 "post.listComments",
-                mapOf("postId" to postId.value, "offset" to offset.toString(), "limit" to "10")
+                mapOf("postId" to postId.value, "offset" to offset.toString(), "limit" to "10"),
             ).parse<FanboxPostCommentItemsEntity>()!!.translate()
         }
 

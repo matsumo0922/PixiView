@@ -68,7 +68,7 @@ class PostSearchViewModel @Inject constructor(
             when (query.mode) {
                 PostSearchMode.Creator -> {
                     _uiState.value = uiState.value.copy(
-                        suggestTags =  fanboxRepository.getTagFromQuery(query.creatorQuery.orEmpty()),
+                        suggestTags = fanboxRepository.getTagFromQuery(query.creatorQuery.orEmpty()),
                         creatorPaging = fanboxRepository.getCreatorsFromQueryPager(query.creatorQuery.orEmpty()),
                     )
                 }
