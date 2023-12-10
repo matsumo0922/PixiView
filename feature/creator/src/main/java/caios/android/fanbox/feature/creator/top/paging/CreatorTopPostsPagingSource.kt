@@ -15,7 +15,7 @@ class CreatorTopPostsPagingSource(
 
     override suspend fun load(params: LoadParams<FanboxCursor>): LoadResult<FanboxCursor, FanboxPost> {
         return suspendRunCatching {
-            fanboxRepository.getCreatorPosts(creatorId, params.key)
+            fanboxRepository.getCreatorPosts(creatorId, params.key, params.loadSize)
         }.fold(
             onSuccess = {
                 LoadResult.Page(

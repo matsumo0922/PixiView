@@ -18,4 +18,5 @@ dependencies {
     implementation(project(":core:ui"))
 
     implementation(libs.bundles.ui.implementation)
+    implementation(libs.pinch.zoom.grid)
 }

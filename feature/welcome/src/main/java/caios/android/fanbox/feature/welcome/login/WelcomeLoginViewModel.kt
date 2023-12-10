@@ -48,7 +48,7 @@ class WelcomeLoginViewModel @Inject constructor(
 
     private suspend fun setDefaultHomeTab() {
         suspendRunCatching {
-            fanboxRepository.getSupportedPosts()
+            fanboxRepository.getSupportedPosts(null, 10)
         }.fold(
             onSuccess = { it.contents.isEmpty() },
             onFailure = { true },

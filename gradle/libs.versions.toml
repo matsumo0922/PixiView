@@ -73,6 +73,7 @@ jsoup = "1.16.1"
 detekt = "1.23.1"
 balloon = "1.5.3"
 zoomable = "1.5.2"
+pinchZoomGrid = "0.0.4"
 orbital = "0.2.4"
 chaquopy = "15.0.0"
 libraries = "10.9.1"
@@ -235,6 +236,7 @@ spell-checker = { module = "org.apache.lucene:lucene-spellchecker", version = "3
 reorderble-compose = { module = "org.burnoutcrew.composereorderable:reorderable", version = "0.9.6" }
 collapsing-toolbar-compose = { module = "me.onebone:toolbar-compose", version = "2.3.5" }
 zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
+pinch-zoom-grid = { module = "io.github.dokar3:pinchzoomgrid", version.ref = "pinchZoomGrid" }
 unifile = { module = "com.github.tachiyomiorg:unifile", version = "17bec43" }
 ffmpeg = { module = "com.arthenica:ffmpeg-kit-audio", version.ref = "ffmpeg" }
 libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "libraries" }

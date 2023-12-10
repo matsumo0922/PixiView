@@ -31,7 +31,7 @@ class CreatorPostsDownloadViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = suspendRunCatching {
                 val paginate = fanboxRepository.getCreatorPostsPaginate(creatorId)
-                val posts = paginate.map { async(dispatcher) { fanboxRepository.getCreatorPosts(creatorId, it) } }
+                val posts = paginate.map { async(dispatcher) { fanboxRepository.getCreatorPosts(creatorId, it, 10) } }
 
                 posts.map { it.await().contents }.flatten()
             }.fold(

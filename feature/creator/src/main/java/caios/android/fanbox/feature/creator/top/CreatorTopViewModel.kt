@@ -60,13 +60,15 @@ class CreatorTopViewModel @Inject constructor(
         viewModelScope.launch {
             _screenState.value = ScreenState.Loading
             _screenState.value = suspendRunCatching {
+                val userData = userDataRepository.userData.first()
+
                 CreatorTopUiState(
-                    userData = userDataRepository.userData.first(),
+                    userData = userData,
                     bookmarkedPosts = fanboxRepository.bookmarkedPosts.first(),
                     creatorDetail = fanboxRepository.getCreator(creatorId),
                     creatorPlans = fanboxRepository.getCreatorPlans(creatorId),
                     creatorTags = fanboxRepository.getCreatorTags(creatorId),
-                    creatorPostsPaging = postsPagingCache ?: buildPaging(creatorId).also { postsPagingCache = it },
+                    creatorPostsPaging = postsPagingCache ?: buildPaging(creatorId, userData).also { postsPagingCache = it },
                 )
             }.fold(
                 onSuccess = { ScreenState.Idle(it) },
@@ -107,9 +109,9 @@ class CreatorTopViewModel @Inject constructor(
         }
     }
 
-    private fun buildPaging(creatorId: CreatorId): Flow<PagingData<FanboxPost>> {
+    private fun buildPaging(creatorId: CreatorId, userData: UserData): Flow<PagingData<FanboxPost>> {
         return Pager(
-            config = PagingConfig(pageSize = 10),
+            config = PagingConfig(pageSize = if (userData.isHideRestricted || userData.isGridMode) 20 else 10),
             initialKey = null,
             pagingSourceFactory = {
                 CreatorTopPostsPagingSource(

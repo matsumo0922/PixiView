@@ -21,4 +21,5 @@ dependencies {
     implementation(libs.androidx.palette)
     implementation(libs.collapsing.toolbar.compose)
     implementation(libs.zoomable)
+    implementation(libs.pinch.zoom.grid)
 }

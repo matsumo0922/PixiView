@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -67,6 +68,7 @@ import caios.android.fanbox.feature.creator.top.items.CreatorTopDescriptionDialo
 import caios.android.fanbox.feature.creator.top.items.CreatorTopHeader
 import caios.android.fanbox.feature.creator.top.items.CreatorTopPlansScreen
 import caios.android.fanbox.feature.creator.top.items.CreatorTopPostsScreen
+import com.dokar.pinchzoomgrid.rememberPinchZoomGridState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
@@ -152,6 +154,7 @@ private fun CreatorTopScreen(
     val scope = rememberCoroutineScope()
 
     val postsListState = rememberLazyListState()
+    val postsGridState = rememberLazyGridState()
     val plansListState = rememberLazyListState()
 
     var isShowDescriptionDialog by remember { mutableStateOf(false) }
@@ -212,8 +215,13 @@ private fun CreatorTopScreen(
                                         pagerState.animateScrollToPage(index)
                                     } else {
                                         when (tabs[index]) {
-                                            CreatorTab.POSTS -> postsListState.animateScrollToItem(0)
-                                            CreatorTab.PLANS -> plansListState.animateScrollToItem(0)
+                                            CreatorTab.POSTS -> {
+                                                postsListState.animateScrollToItem(0)
+                                                postsGridState.animateScrollToItem(0)
+                                            }
+                                            CreatorTab.PLANS -> {
+                                                plansListState.animateScrollToItem(0)
+                                            }
                                         }
                                     }
                                 }
@@ -235,7 +243,8 @@ private fun CreatorTopScreen(
                             ) {
                                 CreatorTopPostsScreen(
                                     modifier = Modifier.fillMaxSize(),
-                                    state = postsListState,
+                                    listState = postsListState,
+                                    gridState = postsGridState,
                                     userData = userData,
                                     bookmarkedPosts = bookmarkedPosts.toImmutableList(),
                                     pagingAdapter = creatorPostsPaging,

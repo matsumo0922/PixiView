@@ -11,10 +11,16 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,6 +48,7 @@ import caios.android.fanbox.core.model.fanbox.FanboxCreatorTag
 import caios.android.fanbox.core.model.fanbox.FanboxPost
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
+import caios.android.fanbox.core.ui.component.PostGridItem
 import caios.android.fanbox.core.ui.component.PostItem
 import caios.android.fanbox.core.ui.extensition.FadePlaceHolder
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
@@ -54,6 +61,51 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun CreatorTopPostsScreen(
+    listState: LazyListState,
+    gridState: LazyGridState,
+    userData: UserData,
+    bookmarkedPosts: ImmutableList<PostId>,
+    pagingAdapter: LazyPagingItems<FanboxPost>,
+    creatorTags: ImmutableList<FanboxCreatorTag>,
+    onClickPost: (PostId) -> Unit,
+    onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
+    onClickCreator: (CreatorId) -> Unit,
+    onClickTag: (FanboxCreatorTag) -> Unit,
+    onClickPostLike: (PostId) -> Unit,
+    onClickPlanList: (CreatorId) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (userData.isGridMode) {
+        GridSection(
+            modifier = modifier,
+            state = gridState,
+            userData = userData,
+            bookmarkedPosts = bookmarkedPosts,
+            pagingAdapter = pagingAdapter,
+            creatorTags = creatorTags,
+            onClickPost = onClickPost,
+            onClickTag = onClickTag,
+        )
+    } else {
+        ColumnSection(
+            modifier = modifier,
+            state = listState,
+            userData = userData,
+            bookmarkedPosts = bookmarkedPosts,
+            pagingAdapter = pagingAdapter,
+            creatorTags = creatorTags,
+            onClickPost = onClickPost,
+            onClickPostBookmark = onClickPostBookmark,
+            onClickCreator = onClickCreator,
+            onClickTag = onClickTag,
+            onClickPostLike = onClickPostLike,
+            onClickPlanList = onClickPlanList,
+        )
+    }
+}
+
+@Composable
+private fun ColumnSection(
     state: LazyListState,
     userData: UserData,
     bookmarkedPosts: ImmutableList<PostId>,
@@ -122,8 +174,72 @@ internal fun CreatorTopPostsScreen(
         }
 
         item {
-            Spacer(modifier = Modifier.height(128.dp))
+            Spacer(modifier = Modifier.navigationBarsPadding())
         }
+    }
+}
+
+@Composable
+private fun GridSection(
+    state: LazyGridState,
+    userData: UserData,
+    bookmarkedPosts: ImmutableList<PostId>,
+    pagingAdapter: LazyPagingItems<FanboxPost>,
+    creatorTags: ImmutableList<FanboxCreatorTag>,
+    onClickPost: (PostId) -> Unit,
+    onClickTag: (FanboxCreatorTag) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (pagingAdapter.loadState.append !is LoadState.Error) {
+        LazyVerticalGrid(
+            modifier = modifier
+                .drawVerticalScrollbar(state, spanCount = 2)
+                .fillMaxSize(),
+            columns = GridCells.Fixed(2),
+            state = state,
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            if (creatorTags.isNotEmpty()) {
+                item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+                    LazyRow(
+                        modifier = Modifier
+                            .height(112.dp)
+                            .fillMaxWidth(),
+                        contentPadding = PaddingValues(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        items(creatorTags) {
+                            TagItem(
+                                tag = it,
+                                onClickTag = onClickTag,
+                            )
+                        }
+                    }
+                }
+            }
+
+            items(
+                count = pagingAdapter.itemCount,
+                key = pagingAdapter.itemKey { it.id.value },
+                contentType = pagingAdapter.itemContentType(),
+            ) { index ->
+                pagingAdapter[index]?.let { post ->
+                    PostGridItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        post = post.copy(isBookmarked = bookmarkedPosts.contains(post.id)),
+                        isHideAdultContents = userData.isHideAdultContents,
+                        isOverrideAdultContents = userData.isAllowedShowAdultContents,
+                        onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
+                    )
+                }
+            }
+        }
+    } else {
+        PagingErrorSection(
+            modifier = Modifier.fillMaxSize(),
+            onRetry = { pagingAdapter.retry() },
+        )
     }
 }
 

@@ -97,9 +97,9 @@ interface FanboxRepository {
     suspend fun updateCookie(cookie: String)
     suspend fun updateCsrfToken()
 
-    suspend fun getHomePosts(cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
-    suspend fun getSupportedPosts(cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
-    suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor? = null): PageCursorInfo<FanboxPost>
+    suspend fun getHomePosts(cursor: FanboxCursor?, loadSize: Int): PageCursorInfo<FanboxPost>
+    suspend fun getSupportedPosts(cursor: FanboxCursor?, loadSize: Int): PageCursorInfo<FanboxPost>
+    suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor?, loadSize: Int): PageCursorInfo<FanboxPost>
     suspend fun getCreatorPostsPaginate(creatorId: CreatorId): List<FanboxCursor>
     suspend fun getPost(postId: PostId): FanboxPostDetail
     suspend fun getPostCached(postId: PostId): FanboxPostDetail
@@ -211,9 +211,9 @@ class FanboxRepositoryImpl(
         _metaData.emit(formatter.decodeFromString(FanboxMetaDataEntity.serializer(), meta!!).translate())
     }
 
-    override suspend fun getHomePosts(cursor: FanboxCursor?): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
+    override suspend fun getHomePosts(cursor: FanboxCursor?, loadSize: Int): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
         buildMap {
-            put("limit", PAGE_LIMIT)
+            put("limit", loadSize.toString())
 
             if (cursor != null) {
                 put("maxPublishedDatetime", cursor.maxPublishedDatetime)
@@ -224,9 +224,9 @@ class FanboxRepositoryImpl(
         }
     }
 
-    override suspend fun getSupportedPosts(cursor: FanboxCursor?): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
+    override suspend fun getSupportedPosts(cursor: FanboxCursor?, loadSize: Int): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
         buildMap {
-            put("limit", PAGE_LIMIT)
+            put("limit", loadSize.toString())
 
             if (cursor != null) {
                 put("maxPublishedDatetime", cursor.maxPublishedDatetime)
@@ -237,10 +237,10 @@ class FanboxRepositoryImpl(
         }
     }
 
-    override suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor?): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
+    override suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor?, loadSize: Int): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
         buildMap {
             put("creatorId", creatorId.value)
-            put("limit", PAGE_LIMIT)
+            put("limit", loadSize.toString())
 
             if (cursor != null) {
                 put("maxPublishedDatetime", cursor.maxPublishedDatetime)

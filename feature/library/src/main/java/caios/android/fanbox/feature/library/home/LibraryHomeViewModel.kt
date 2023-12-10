@@ -43,24 +43,24 @@ class LibraryHomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            userDataRepository.userData.collectLatest {
-                _uiState.value = uiState.value.copy(userData = it)
+            userDataRepository.userData.collectLatest { userData ->
+                _uiState.value = uiState.value.copy(userData = userData)
 
                 Pager(
-                    config = PagingConfig(pageSize = 10),
+                    config = PagingConfig(pageSize = if (userData.isHideRestricted || userData.isGridMode) 20 else 10),
                     initialKey = null,
                     pagingSourceFactory = {
-                        LibraryHomePagingSource(fanboxRepository, it.isHideRestricted)
+                        LibraryHomePagingSource(fanboxRepository, userData.isHideRestricted)
                     },
                 ).flow.cachedIn(viewModelScope).also {
                     _uiState.value = uiState.value.copy(homePaging = it)
                 }
 
                 Pager(
-                    config = PagingConfig(pageSize = 10),
+                    config = PagingConfig(pageSize =  if (userData.isHideRestricted || userData.isGridMode) 20 else 10),
                     initialKey = null,
                     pagingSourceFactory = {
-                        LibrarySupportedPagingSource(fanboxRepository, it.isHideRestricted)
+                        LibrarySupportedPagingSource(fanboxRepository, userData.isHideRestricted)
                     },
                 ).flow.cachedIn(viewModelScope).also {
                     _uiState.value = uiState.value.copy(supportedPaging = it)

@@ -14,7 +14,7 @@ class LibrarySupportedPagingSource(
 
     override suspend fun load(params: LoadParams<FanboxCursor>): LoadResult<FanboxCursor, FanboxPost> {
         return suspendRunCatching {
-            fanboxRepository.getSupportedPosts(params.key)
+            fanboxRepository.getSupportedPosts(params.key, params.loadSize)
         }.fold(
             onSuccess = { page ->
                 LoadResult.Page(
