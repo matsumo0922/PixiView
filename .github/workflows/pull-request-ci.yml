@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  pull_request_target:
+    types: [ opened, reopened, synchronize, ready_for_review, converted_to_draft ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}
+  cancel-in-progress: true
+
+permissions:
+  pull-requests: write
+  statuses: write
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  Lint:
+    uses: ./.github/workflows/call-lint.yml
+
+  Build:
+    uses: ./.github/workflows/call-build.yml
