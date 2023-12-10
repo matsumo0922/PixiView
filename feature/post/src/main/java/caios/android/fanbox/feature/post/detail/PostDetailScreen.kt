@@ -2,6 +2,7 @@ package caios.android.fanbox.feature.post.detail
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.Bookmark
@@ -40,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import caios.android.fanbox.core.common.util.ToastUtil
 import caios.android.fanbox.core.model.ScreenState
 import caios.android.fanbox.core.model.UserData
@@ -52,6 +56,7 @@ import caios.android.fanbox.core.model.fanbox.id.CommentId
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.AsyncLoadContents
+import caios.android.fanbox.core.ui.LazyPagingItemsLoadContents
 import caios.android.fanbox.core.ui.component.CoordinatorScaffold
 import caios.android.fanbox.core.ui.component.RestrictCardItem
 import caios.android.fanbox.core.ui.component.TagItems
@@ -74,8 +79,74 @@ import coil.request.ImageRequest
 import kotlinx.collections.immutable.toImmutableList
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun PostDetailRoute(
+    postId: PostId,
+    type: PostDetailPagingType,
+    navigateToPostSearch: (String, CreatorId) -> Unit,
+    navigateToPostDetail: (PostId) -> Unit,
+    navigateToPostImage: (PostId, Int) -> Unit,
+    navigateToCreatorPlans: (CreatorId) -> Unit,
+    navigateToCreatorPosts: (CreatorId) -> Unit,
+    navigateToCommentDeleteDialog: (SimpleAlertContents, () -> Unit) -> Unit,
+    terminate: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: PostDetailRootViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val paging = uiState.paging?.collectAsLazyPagingItems()
+
+    LaunchedEffect(true) {
+        if (paging == null) {
+            viewModel.fetch(type)
+        }
+    }
+
+    if (paging != null) {
+        LazyPagingItemsLoadContents(
+            modifier = modifier,
+            lazyPagingItems = paging,
+        ) {
+            val initIndex = remember { paging.itemSnapshotList.indexOfFirst { it?.id == postId } }
+            val pagerState = rememberPagerState(if (initIndex != -1) initIndex else 0) { paging.itemCount }
+
+            HorizontalPager(
+                modifier = Modifier.fillMaxSize(),
+                state = pagerState,
+            ) {
+                paging[it]?.let { post ->
+                    PostDetailView(
+                        modifier = Modifier.fillMaxSize(),
+                        postId = post.id,
+                        navigateToPostSearch = navigateToPostSearch,
+                        navigateToPostDetail = navigateToPostDetail,
+                        navigateToPostImage = navigateToPostImage,
+                        navigateToCreatorPlans = navigateToCreatorPlans,
+                        navigateToCreatorPosts = navigateToCreatorPosts,
+                        navigateToCommentDeleteDialog = navigateToCommentDeleteDialog,
+                        terminate = terminate,
+                    )
+                }
+            }
+        }
+    } else {
+        PostDetailView(
+            modifier = modifier,
+            postId = postId,
+            navigateToPostSearch = navigateToPostSearch,
+            navigateToPostDetail = navigateToPostDetail,
+            navigateToPostImage = navigateToPostImage,
+            navigateToCreatorPlans = navigateToCreatorPlans,
+            navigateToCreatorPosts = navigateToCreatorPosts,
+            navigateToCommentDeleteDialog = navigateToCommentDeleteDialog,
+            terminate = terminate,
+        )
+    }
+}
+
+@Composable
+private fun PostDetailView(
     postId: PostId,
     navigateToPostSearch: (String, CreatorId) -> Unit,
     navigateToPostDetail: (PostId) -> Unit,
@@ -85,7 +156,7 @@ internal fun PostDetailRoute(
     navigateToCommentDeleteDialog: (SimpleAlertContents, () -> Unit) -> Unit,
     terminate: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: PostDetailViewModel = hiltViewModel(),
+    viewModel: PostDetailViewModel = hiltViewModel(key = postId.value),
 ) {
     val context = LocalContext.current
     val postDownloader = context as PostDownloader

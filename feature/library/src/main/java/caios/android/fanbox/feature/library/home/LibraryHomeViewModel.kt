@@ -3,10 +3,7 @@ package caios.android.fanbox.feature.library.home
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import caios.android.fanbox.core.common.util.suspendRunCatching
 import caios.android.fanbox.core.model.UserData
 import caios.android.fanbox.core.model.fanbox.FanboxPost
@@ -14,8 +11,6 @@ import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.repository.FanboxRepository
 import caios.android.fanbox.core.repository.UserDataRepository
 import caios.android.fanbox.core.ui.extensition.emptyPaging
-import caios.android.fanbox.feature.library.home.paging.LibraryHomePagingSource
-import caios.android.fanbox.feature.library.home.paging.LibrarySupportedPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,27 +39,14 @@ class LibraryHomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             userDataRepository.userData.collectLatest { userData ->
-                _uiState.value = uiState.value.copy(userData = userData)
+                val loadSize = if (userData.isHideRestricted || userData.isGridMode) 20 else 10
+                val isHideRestricted = userData.isHideRestricted
 
-                Pager(
-                    config = PagingConfig(pageSize = if (userData.isHideRestricted || userData.isGridMode) 20 else 10),
-                    initialKey = null,
-                    pagingSourceFactory = {
-                        LibraryHomePagingSource(fanboxRepository, userData.isHideRestricted)
-                    },
-                ).flow.cachedIn(viewModelScope).also {
-                    _uiState.value = uiState.value.copy(homePaging = it)
-                }
-
-                Pager(
-                    config = PagingConfig(pageSize =  if (userData.isHideRestricted || userData.isGridMode) 20 else 10),
-                    initialKey = null,
-                    pagingSourceFactory = {
-                        LibrarySupportedPagingSource(fanboxRepository, userData.isHideRestricted)
-                    },
-                ).flow.cachedIn(viewModelScope).also {
-                    _uiState.value = uiState.value.copy(supportedPaging = it)
-                }
+                _uiState.value = uiState.value.copy(
+                    userData = userData,
+                    homePaging = fanboxRepository.getHomePostsPager(loadSize, isHideRestricted),
+                    supportedPaging = fanboxRepository.getSupportedPostsPager(loadSize, isHideRestricted),
+                )
             }
         }
 

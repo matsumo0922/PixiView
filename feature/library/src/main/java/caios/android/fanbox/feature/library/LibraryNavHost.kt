@@ -20,7 +20,8 @@ import caios.android.fanbox.feature.library.notify.libraryNotifyScreen
 fun LibraryNavHost(
     openDrawer: () -> Unit,
     navigateToPostSearch: () -> Unit,
-    navigateToPostDetail: (postId: PostId) -> Unit,
+    navigateToPostDetailFromHome: (postId: PostId) -> Unit,
+    navigateToPostDetailFromSupported: (postId: PostId) -> Unit,
     navigateToCreatorPosts: (creatorId: CreatorId) -> Unit,
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
     modifier: Modifier = Modifier,
@@ -34,7 +35,8 @@ fun LibraryNavHost(
     ) {
         libraryHomeScreen(
             openDrawer = openDrawer,
-            navigateToPostDetail = navigateToPostDetail,
+            navigateToPostDetailFromHome = navigateToPostDetailFromHome,
+            navigateToPostDetailFromSupported = navigateToPostDetailFromSupported,
             navigateToCreatorPosts = navigateToCreatorPosts,
             navigateToCreatorPlans = navigateToCreatorPlans,
         )
@@ -47,7 +49,7 @@ fun LibraryNavHost(
 
         libraryNotifyScreen(
             openDrawer = openDrawer,
-            navigateToPostDetail = navigateToPostDetail,
+            navigateToPostDetail = navigateToPostDetailFromHome,
         )
 
         libraryMessageScreen(

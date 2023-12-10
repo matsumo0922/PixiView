@@ -17,7 +17,8 @@ fun NavController.navigateToLibrary() {
 
 fun NavGraphBuilder.libraryScreen(
     navigateToPostSearch: () -> Unit,
-    navigateToPostDetail: (postId: PostId) -> Unit,
+    navigateToPostDetailFromHome: (postId: PostId) -> Unit,
+    navigateToPostDetailFromSupported: (postId: PostId) -> Unit,
     navigateToCreatorPosts: (creatorId: CreatorId) -> Unit,
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
     navigateToBookmarkedPosts: () -> Unit,
@@ -58,7 +59,8 @@ fun NavGraphBuilder.libraryScreen(
         LibraryScreen(
             modifier = Modifier.fillMaxSize(),
             navigateToPostSearch = navigateToPostSearch,
-            navigateToPostDetail = navigateToPostDetail,
+            navigateToPostDetailFromHome = navigateToPostDetailFromHome,
+            navigateToPostDetailFromSupported = navigateToPostDetailFromSupported,
             navigateToCreatorPosts = navigateToCreatorPosts,
             navigateToCreatorPlans = navigateToCreatorPlans,
             navigateToFollowerCreators = navigateToFollowerCreators,

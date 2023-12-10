@@ -18,7 +18,8 @@ fun NavController.navigateToLibraryHome(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.libraryHomeScreen(
     openDrawer: () -> Unit,
-    navigateToPostDetail: (PostId) -> Unit,
+    navigateToPostDetailFromHome: (PostId) -> Unit,
+    navigateToPostDetailFromSupported: (PostId) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
 ) {
@@ -30,7 +31,8 @@ fun NavGraphBuilder.libraryHomeScreen(
         LibraryHomeScreen(
             modifier = Modifier.fillMaxSize(),
             openDrawer = openDrawer,
-            navigateToPostDetail = navigateToPostDetail,
+            navigateToPostDetailFromHome = navigateToPostDetailFromHome,
+            navigateToPostDetailFromSupported = navigateToPostDetailFromSupported,
             navigateToCreatorPosts = navigateToCreatorPosts,
             navigateToCreatorPlans = navigateToCreatorPlans,
         )

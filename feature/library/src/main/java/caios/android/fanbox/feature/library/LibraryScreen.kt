@@ -34,7 +34,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun LibraryScreen(
     navigateToPostSearch: () -> Unit,
-    navigateToPostDetail: (postId: PostId) -> Unit,
+    navigateToPostDetailFromHome: (postId: PostId) -> Unit,
+    navigateToPostDetailFromSupported: (postId: PostId) -> Unit,
     navigateToCreatorPosts: (creatorId: CreatorId) -> Unit,
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
     navigateToBookmarkedPosts: () -> Unit,
@@ -94,7 +95,8 @@ fun LibraryScreen(
                         }
                     },
                     navigateToPostSearch = navigateToPostSearch,
-                    navigateToPostDetail = navigateToPostDetail,
+                    navigateToPostDetailFromHome = navigateToPostDetailFromHome,
+                    navigateToPostDetailFromSupported = navigateToPostDetailFromSupported,
                     navigateToCreatorPosts = navigateToCreatorPosts,
                     navigateToCreatorPlans = navigateToCreatorPlans,
                 )

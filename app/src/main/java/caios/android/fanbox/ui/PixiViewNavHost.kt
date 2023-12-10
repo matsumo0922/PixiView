@@ -31,6 +31,7 @@ import caios.android.fanbox.feature.library.LibraryRoute
 import caios.android.fanbox.feature.library.libraryScreen
 import caios.android.fanbox.feature.post.bookmark.bookmarkedPostsScreen
 import caios.android.fanbox.feature.post.bookmark.navigateToBookmarkedPosts
+import caios.android.fanbox.feature.post.detail.PostDetailPagingType
 import caios.android.fanbox.feature.post.detail.navigateToPostDetail
 import caios.android.fanbox.feature.post.detail.postDetailScreen
 import caios.android.fanbox.feature.post.image.navigateToPostImage
@@ -71,7 +72,8 @@ internal fun PixiViewNavHost(
 
             libraryScreen(
                 navigateToPostSearch = { navController.navigateToPostSearch() },
-                navigateToPostDetail = { navController.navigateToPostDetail(it) },
+                navigateToPostDetailFromHome = { navController.navigateToPostDetail(it, PostDetailPagingType.Home) },
+                navigateToPostDetailFromSupported = { navController.navigateToPostDetail(it, PostDetailPagingType.Supported) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
                 navigateToBookmarkedPosts = { navController.navigateToBookmarkedPosts() },
@@ -85,7 +87,7 @@ internal fun PixiViewNavHost(
 
             postDetailScreen(
                 navigateToPostSearch = { query, creatorId -> navController.navigateToPostSearch(tag = query, creatorId = creatorId) },
-                navigateToPostDetail = { navController.navigateToPostDetail(it) },
+                navigateToPostDetail = { navController.navigateToPostDetail(it, PostDetailPagingType.Unknown) },
                 navigateToPostImage = { postId, index -> navController.navigateToPostImage(postId, index) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
@@ -99,21 +101,21 @@ internal fun PixiViewNavHost(
 
             postSearchScreen(
                 navigateToPostSearch = { creatorId, creatorQuery, tag -> navController.navigateToPostSearch(creatorId, creatorQuery, tag) },
-                navigateToPostDetail = { navController.navigateToPostDetail(it) },
+                navigateToPostDetail = { navController.navigateToPostDetail(it, PostDetailPagingType.Search) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
                 terminate = { navController.popBackStack() },
             )
 
             bookmarkedPostsScreen(
-                navigateToPostDetail = { navController.navigateToPostDetail(it) },
+                navigateToPostDetail = { navController.navigateToPostDetail(it, PostDetailPagingType.Unknown) },
                 navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
                 terminate = { navController.popBackStack() },
             )
 
             creatorTopScreen(
-                navigateToPostDetail = { navController.navigateToPostDetail(it) },
+                navigateToPostDetail = { navController.navigateToPostDetail(it, PostDetailPagingType.Creator) },
                 navigateToPostSearch = { query, creatorId -> navController.navigateToPostSearch(tag = query, creatorId = creatorId) },
                 navigateToBillingPlus = { navController.navigateToBillingPlus() },
                 navigateToDownloadAll = { navController.navigateToCreatorPostsDownload(it) },

@@ -3,10 +3,7 @@ package caios.android.fanbox.feature.creator.top
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import caios.android.fanbox.core.common.util.suspendRunCatching
 import caios.android.fanbox.core.model.ScreenState
 import caios.android.fanbox.core.model.UserData
@@ -20,7 +17,6 @@ import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.repository.FanboxRepository
 import caios.android.fanbox.core.repository.UserDataRepository
 import caios.android.fanbox.feature.creator.R
-import caios.android.fanbox.feature.creator.top.paging.CreatorTopPostsPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,6 +57,7 @@ class CreatorTopViewModel @Inject constructor(
             _screenState.value = ScreenState.Loading
             _screenState.value = suspendRunCatching {
                 val userData = userDataRepository.userData.first()
+                val loadSize = if (userData.isHideRestricted || userData.isGridMode) 20 else 10
 
                 CreatorTopUiState(
                     userData = userData,
@@ -68,7 +65,7 @@ class CreatorTopViewModel @Inject constructor(
                     creatorDetail = fanboxRepository.getCreator(creatorId),
                     creatorPlans = fanboxRepository.getCreatorPlans(creatorId),
                     creatorTags = fanboxRepository.getCreatorTags(creatorId),
-                    creatorPostsPaging = postsPagingCache ?: buildPaging(creatorId, userData).also { postsPagingCache = it },
+                    creatorPostsPaging = postsPagingCache ?: fanboxRepository.getCreatorPostsPager(creatorId, loadSize).also { postsPagingCache = it },
                 )
             }.fold(
                 onSuccess = { ScreenState.Idle(it) },
@@ -107,19 +104,6 @@ class CreatorTopViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun buildPaging(creatorId: CreatorId, userData: UserData): Flow<PagingData<FanboxPost>> {
-        return Pager(
-            config = PagingConfig(pageSize = if (userData.isHideRestricted || userData.isGridMode) 20 else 10),
-            initialKey = null,
-            pagingSourceFactory = {
-                CreatorTopPostsPagingSource(
-                    creatorId = creatorId,
-                    fanboxRepository = fanboxRepository,
-                )
-            },
-        ).flow.cachedIn(viewModelScope)
     }
 }
 

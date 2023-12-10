@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":core:datastore"))
 
     implementation(libs.bundles.ktor)
+    implementation(libs.androidx.paging)
     implementation(libs.jsoup)
     implementation(libs.unifile)
 }

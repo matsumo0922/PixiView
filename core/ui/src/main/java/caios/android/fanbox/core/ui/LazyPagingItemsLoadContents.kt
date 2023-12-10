@@ -20,6 +20,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import caios.android.fanbox.core.model.ScreenState
+import caios.android.fanbox.core.ui.extensition.isEmpty
 import caios.android.fanbox.core.ui.view.EmptyView
 import caios.android.fanbox.core.ui.view.ErrorView
 import caios.android.fanbox.core.ui.view.LoadingView
@@ -84,12 +85,4 @@ fun <T : Any> LazyPagingItemsLoadContents(
             }
         }
     }
-}
-
-private fun <T : Any> LazyPagingItems<T>.isEmpty(): Boolean {
-    val isNotLoading = loadState.refresh is LoadState.NotLoading
-    val isReachedEnd = loadState.append.endOfPaginationReached
-    val isEmptyItems = itemCount == 0
-
-    return isNotLoading && isReachedEnd && isEmptyItems
 }

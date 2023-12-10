@@ -13,10 +13,11 @@ import caios.android.fanbox.core.ui.animation.NavigateAnimation
 import caios.android.fanbox.core.ui.view.SimpleAlertContents
 
 const val PostDetailId = "postDetailId"
-const val PostDetailRoute = "postDetail/{$PostDetailId}"
+const val PostDetailType = "postDetailPagingType"
+const val PostDetailRoute = "postDetail/{$PostDetailId}/{$PostDetailType}"
 
-fun NavController.navigateToPostDetail(postId: PostId) {
-    this.navigate("postDetail/$postId")
+fun NavController.navigateToPostDetail(postId: PostId, pagingType: PostDetailPagingType) {
+    this.navigate("postDetail/$postId/${pagingType.name}")
 }
 
 fun NavGraphBuilder.postDetailScreen(
@@ -30,7 +31,10 @@ fun NavGraphBuilder.postDetailScreen(
 ) {
     composable(
         route = PostDetailRoute,
-        arguments = listOf(navArgument(PostDetailId) { type = NavType.StringType }),
+        arguments = listOf(
+            navArgument(PostDetailId) { type = NavType.StringType },
+            navArgument(PostDetailType) { type = NavType.StringType },
+        ),
         enterTransition = { NavigateAnimation.Horizontal.enter },
         exitTransition = { NavigateAnimation.Horizontal.exit },
         popEnterTransition = { NavigateAnimation.Horizontal.popEnter },
@@ -39,6 +43,7 @@ fun NavGraphBuilder.postDetailScreen(
         PostDetailRoute(
             modifier = Modifier.fillMaxSize(),
             postId = PostId(it.arguments?.getString(PostDetailId) ?: ""),
+            type = PostDetailPagingType.valueOf(it.arguments?.getString(PostDetailType) ?: PostDetailPagingType.Unknown.name),
             navigateToPostSearch = navigateToPostSearch,
             navigateToPostDetail = navigateToPostDetail,
             navigateToPostImage = navigateToPostImage,
@@ -48,4 +53,12 @@ fun NavGraphBuilder.postDetailScreen(
             terminate = terminate,
         )
     }
+}
+
+enum class PostDetailPagingType {
+    Home,
+    Supported,
+    Creator,
+    Search,
+    Unknown,
 }

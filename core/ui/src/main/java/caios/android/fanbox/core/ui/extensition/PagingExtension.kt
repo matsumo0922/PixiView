@@ -3,6 +3,7 @@ package caios.android.fanbox.core.ui.extensition
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
@@ -15,3 +16,21 @@ fun <T : Any> emptyPaging(): Flow<PagingData<T>> = flowOf(
         ),
     ),
 )
+
+fun <T : Any> LazyPagingItems<T>.isEmpty(): Boolean {
+    val isNotLoading = loadState.refresh is LoadState.NotLoading
+    val isReachedEnd = loadState.append.endOfPaginationReached
+    val isEmptyItems = itemCount == 0
+
+    return isNotLoading && isReachedEnd && isEmptyItems
+}
+
+fun <T : Any> LazyPagingItems<T>?.isNullOrEmpty(): Boolean {
+    this ?: return true
+
+    val isNotLoading = loadState.refresh is LoadState.NotLoading
+    val isReachedEnd = loadState.append.endOfPaginationReached
+    val isEmptyItems = itemCount == 0
+
+    return isNotLoading && isReachedEnd && isEmptyItems
+}

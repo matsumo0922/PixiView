@@ -43,7 +43,8 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun LibraryHomeScreen(
     openDrawer: () -> Unit,
-    navigateToPostDetail: (PostId) -> Unit,
+    navigateToPostDetailFromHome: (PostId) -> Unit,
+    navigateToPostDetailFromSupported: (PostId) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
@@ -119,7 +120,7 @@ internal fun LibraryHomeScreen(
                                 pagingAdapter = homePager,
                                 userData = uiState.userData,
                                 bookmarkedPosts = uiState.bookmarkedPosts.toImmutableList(),
-                                onClickPost = navigateToPostDetail,
+                                onClickPost = navigateToPostDetailFromHome,
                                 onClickPostLike = viewModel::postLike,
                                 onClickPostBookmark = viewModel::postBookmark,
                                 onClickCreator = navigateToCreatorPosts,
@@ -138,7 +139,7 @@ internal fun LibraryHomeScreen(
                                 pagingAdapter = supportedPager,
                                 userData = uiState.userData,
                                 bookmarkedPosts = uiState.bookmarkedPosts.toImmutableList(),
-                                onClickPost = navigateToPostDetail,
+                                onClickPost = navigateToPostDetailFromSupported,
                                 onClickPostLike = viewModel::postLike,
                                 onClickPostBookmark = viewModel::postBookmark,
                                 onClickCreator = navigateToCreatorPosts,

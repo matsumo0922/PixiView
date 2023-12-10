@@ -1,25 +1,26 @@
-package caios.android.fanbox.feature.library.home.paging
+package caios.android.fanbox.core.repository.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import caios.android.fanbox.core.common.util.suspendRunCatching
 import caios.android.fanbox.core.model.fanbox.FanboxCursor
 import caios.android.fanbox.core.model.fanbox.FanboxPost
+import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.repository.FanboxRepository
 
-class LibraryHomePagingSource(
+class CreatorPostsPagingSource(
+    private val creatorId: CreatorId,
     private val fanboxRepository: FanboxRepository,
-    private val isHideRestricted: Boolean,
 ) : PagingSource<FanboxCursor, FanboxPost>() {
 
     override suspend fun load(params: LoadParams<FanboxCursor>): LoadResult<FanboxCursor, FanboxPost> {
         return suspendRunCatching {
-            fanboxRepository.getHomePosts(params.key, params.loadSize)
+            fanboxRepository.getCreatorPosts(creatorId, params.key, params.loadSize)
         }.fold(
-            onSuccess = { page ->
+            onSuccess = {
                 LoadResult.Page(
-                    data = if (isHideRestricted) page.contents.filter { !it.isRestricted } else page.contents,
-                    nextKey = page.cursor,
+                    data = it.contents,
+                    nextKey = it.cursor,
                     prevKey = null,
                 )
             },

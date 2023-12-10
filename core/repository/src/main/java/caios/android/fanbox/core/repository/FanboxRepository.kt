@@ -10,6 +10,9 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.webkit.CookieManager
 import android.webkit.MimeTypeMap
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import caios.android.fanbox.core.datastore.PreferenceBookmarkedPosts
 import caios.android.fanbox.core.datastore.PreferenceFanboxCookie
 import caios.android.fanbox.core.model.FanboxTag
@@ -46,6 +49,10 @@ import caios.android.fanbox.core.model.fanbox.entity.FanboxTagsEntity
 import caios.android.fanbox.core.model.fanbox.id.CommentId
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
+import caios.android.fanbox.core.repository.paging.CreatorPostsPagingSource
+import caios.android.fanbox.core.repository.paging.HomePostsPagingSource
+import caios.android.fanbox.core.repository.paging.SearchCreatorsPagingSource
+import caios.android.fanbox.core.repository.paging.SearchPostsPagingSource
 import caios.android.fanbox.core.repository.utils.parse
 import caios.android.fanbox.core.repository.utils.requireSuccess
 import caios.android.fanbox.core.repository.utils.translate
@@ -104,6 +111,19 @@ interface FanboxRepository {
     suspend fun getPost(postId: PostId): FanboxPostDetail
     suspend fun getPostCached(postId: PostId): FanboxPostDetail
     suspend fun getPostComment(postId: PostId, offset: Int = 0): PageOffsetInfo<FanboxPostDetail.Comment.CommentItem>
+    suspend fun getPostFromQuery(query: String, creatorId: CreatorId? = null, page: Int = 0): PageNumberInfo<FanboxPost>
+    suspend fun getCreatorFromQuery(query: String, page: Int = 0): PageNumberInfo<FanboxCreatorDetail>
+    suspend fun getTagFromQuery(query: String): List<FanboxTag>
+
+    fun getHomePostsPager(loadSize: Int, isHideRestricted: Boolean): Flow<PagingData<FanboxPost>>
+    fun getHomePostsPagerCache(loadSize: Int, isHideRestricted: Boolean): Flow<PagingData<FanboxPost>>
+    fun getSupportedPostsPager(loadSize: Int, isHideRestricted: Boolean): Flow<PagingData<FanboxPost>>
+    fun getSupportedPostsPagerCache(loadSize: Int, isHideRestricted: Boolean): Flow<PagingData<FanboxPost>>
+    fun getCreatorPostsPager(creatorId: CreatorId, loadSize: Int): Flow<PagingData<FanboxPost>>
+    fun getCreatorPostsPagerCache(): Flow<PagingData<FanboxPost>>?
+    fun getPostsFromQueryPager(query: String, creatorId: CreatorId? = null): Flow<PagingData<FanboxPost>>
+    fun getPostsFromQueryPagerCache(): Flow<PagingData<FanboxPost>>?
+    fun getCreatorsFromQueryPager(query: String): Flow<PagingData<FanboxCreatorDetail>>
 
     suspend fun getFollowingCreators(): List<FanboxCreatorDetail>
     suspend fun getFollowingPixivCreators(): List<FanboxCreatorDetail>
@@ -112,10 +132,6 @@ interface FanboxRepository {
     suspend fun getCreator(creatorId: CreatorId): FanboxCreatorDetail
     suspend fun getCreatorCached(creatorId: CreatorId): FanboxCreatorDetail
     suspend fun getCreatorTags(creatorId: CreatorId): List<FanboxCreatorTag>
-
-    suspend fun getPostFromQuery(query: String, creatorId: CreatorId? = null, page: Int = 0): PageNumberInfo<FanboxPost>
-    suspend fun getCreatorFromQuery(query: String, page: Int = 0): PageNumberInfo<FanboxCreatorDetail>
-    suspend fun getTagFromQuery(query: String): List<FanboxTag>
 
     suspend fun getSupportedPlans(): List<FanboxCreatorPlan>
     suspend fun getCreatorPlans(creatorId: CreatorId): List<FanboxCreatorPlan>
@@ -156,6 +172,10 @@ class FanboxRepositoryImpl(
 
     private val creatorCache = mutableMapOf<CreatorId, FanboxCreatorDetail>()
     private val postCache = mutableMapOf<PostId, FanboxPostDetail>()
+    private var homePostsPager: Flow<PagingData<FanboxPost>>? = null
+    private var supportedPostsPager: Flow<PagingData<FanboxPost>>? = null
+    private var creatorPostsPager: Flow<PagingData<FanboxPost>>? = null
+    private var searchPostsPager: Flow<PagingData<FanboxPost>>? = null
 
     private val _metaData = MutableStateFlow(FanboxMetaData.dummy())
     private val _logoutTrigger = Channel<OffsetDateTime>()
@@ -237,19 +257,20 @@ class FanboxRepositoryImpl(
         }
     }
 
-    override suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor?, loadSize: Int): PageCursorInfo<FanboxPost> = withContext(ioDispatcher) {
-        buildMap {
-            put("creatorId", creatorId.value)
-            put("limit", loadSize.toString())
+    override suspend fun getCreatorPosts(creatorId: CreatorId, cursor: FanboxCursor?, loadSize: Int): PageCursorInfo<FanboxPost> =
+        withContext(ioDispatcher) {
+            buildMap {
+                put("creatorId", creatorId.value)
+                put("limit", loadSize.toString())
 
-            if (cursor != null) {
-                put("maxPublishedDatetime", cursor.maxPublishedDatetime)
-                put("maxId", cursor.maxId)
+                if (cursor != null) {
+                    put("maxPublishedDatetime", cursor.maxPublishedDatetime)
+                    put("maxId", cursor.maxId)
+                }
+            }.let {
+                get("post.listCreator", it).parse<FanboxPostItemsEntity>()!!.translate(bookmarkedPosts.first())
             }
-        }.let {
-            get("post.listCreator", it).parse<FanboxPostItemsEntity>()!!.translate(bookmarkedPosts.first())
         }
-    }
 
     override suspend fun getPostFromQuery(query: String, creatorId: CreatorId?, page: Int): PageNumberInfo<FanboxPost> = withContext(ioDispatcher) {
         buildMap {
@@ -286,8 +307,78 @@ class FanboxRepositoryImpl(
         postCache.getOrPut(postId) { getPost(postId) }
     }
 
-    override suspend fun getPostComment(postId: PostId, offset: Int): PageOffsetInfo<FanboxPostDetail.Comment.CommentItem> = withContext(ioDispatcher) {
-        get("post.listComments", mapOf("postId" to postId.value, "offset" to offset.toString(), "limit" to "10")).parse<FanboxPostCommentItemsEntity>()!!.translate()
+    override suspend fun getPostComment(postId: PostId, offset: Int): PageOffsetInfo<FanboxPostDetail.Comment.CommentItem> =
+        withContext(ioDispatcher) {
+            get(
+                "post.listComments",
+                mapOf("postId" to postId.value, "offset" to offset.toString(), "limit" to "10")
+            ).parse<FanboxPostCommentItemsEntity>()!!.translate()
+        }
+
+    override fun getHomePostsPager(loadSize: Int, isHideRestricted: Boolean): Flow<PagingData<FanboxPost>> {
+        return Pager(
+            config = PagingConfig(pageSize = loadSize),
+            initialKey = null,
+            pagingSourceFactory = {
+                HomePostsPagingSource(this, isHideRestricted)
+            },
+        ).flow.also { homePostsPager = it }
+    }
+
+    override fun getHomePostsPagerCache(loadSize: Int, isHideRestricted: Boolean): Flow<PagingData<FanboxPost>> {
+        return homePostsPager ?: getHomePostsPager(loadSize, isHideRestricted)
+    }
+
+    override fun getSupportedPostsPager(loadSize: Int, isHideRestricted: Boolean): Flow<PagingData<FanboxPost>> {
+        return Pager(
+            config = PagingConfig(pageSize = loadSize),
+            initialKey = null,
+            pagingSourceFactory = {
+                HomePostsPagingSource(this, isHideRestricted)
+            },
+        ).flow.also { supportedPostsPager = it }
+    }
+
+    override fun getSupportedPostsPagerCache(loadSize: Int, isHideRestricted: Boolean): Flow<PagingData<FanboxPost>> {
+        return supportedPostsPager ?: getSupportedPostsPager(loadSize, isHideRestricted)
+    }
+
+    override fun getCreatorPostsPager(creatorId: CreatorId, loadSize: Int): Flow<PagingData<FanboxPost>> {
+        return Pager(
+            config = PagingConfig(pageSize = loadSize),
+            initialKey = null,
+            pagingSourceFactory = {
+                CreatorPostsPagingSource(creatorId, this)
+            },
+        ).flow.also { creatorPostsPager = it }
+    }
+
+    override fun getCreatorPostsPagerCache(): Flow<PagingData<FanboxPost>>? {
+        return creatorPostsPager
+    }
+
+    override fun getPostsFromQueryPager(query: String, creatorId: CreatorId?): Flow<PagingData<FanboxPost>> {
+        return Pager(
+            config = PagingConfig(pageSize = 10),
+            initialKey = null,
+            pagingSourceFactory = {
+                SearchPostsPagingSource(this, creatorId, query)
+            },
+        ).flow.also { searchPostsPager = it }
+    }
+
+    override fun getPostsFromQueryPagerCache(): Flow<PagingData<FanboxPost>>? {
+        return searchPostsPager
+    }
+
+    override fun getCreatorsFromQueryPager(query: String): Flow<PagingData<FanboxCreatorDetail>> {
+        return Pager(
+            config = PagingConfig(pageSize = 10),
+            initialKey = null,
+            pagingSourceFactory = {
+                SearchCreatorsPagingSource(this, query)
+            },
+        ).flow
     }
 
     override suspend fun getFollowingCreators(): List<FanboxCreatorDetail> = withContext(ioDispatcher) {
@@ -358,17 +449,18 @@ class FanboxRepositoryImpl(
         post("post.likeComment", mapOf("commentId" to commentId.value)).requireSuccess()
     }
 
-    override suspend fun addComment(postId: PostId, comment: String, rootCommentId: CommentId?, parentCommentId: CommentId?): Unit = withContext(ioDispatcher) {
-        post(
-            dir = "post.addComment",
-            parameters = mapOf(
-                "postId" to postId.value,
-                "rootCommentId" to rootCommentId?.value.orEmpty(),
-                "parentCommentId" to parentCommentId?.value.orEmpty(),
-                "body" to comment,
-            ),
-        ).requireSuccess()
-    }
+    override suspend fun addComment(postId: PostId, comment: String, rootCommentId: CommentId?, parentCommentId: CommentId?): Unit =
+        withContext(ioDispatcher) {
+            post(
+                dir = "post.addComment",
+                parameters = mapOf(
+                    "postId" to postId.value,
+                    "rootCommentId" to rootCommentId?.value.orEmpty(),
+                    "parentCommentId" to parentCommentId?.value.orEmpty(),
+                    "body" to comment,
+                ),
+            ).requireSuccess()
+        }
 
     override suspend fun deleteComment(commentId: CommentId): Unit = withContext(ioDispatcher) {
         post("post.deleteComment", mapOf("commentId" to commentId.value)).requireSuccess()

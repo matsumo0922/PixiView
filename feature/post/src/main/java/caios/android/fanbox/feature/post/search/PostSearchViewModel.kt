@@ -3,10 +3,7 @@ package caios.android.fanbox.feature.post.search
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import caios.android.fanbox.core.common.util.suspendRunCatching
 import caios.android.fanbox.core.model.FanboxTag
 import caios.android.fanbox.core.model.UserData
@@ -17,8 +14,6 @@ import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.repository.FanboxRepository
 import caios.android.fanbox.core.repository.UserDataRepository
 import caios.android.fanbox.core.ui.extensition.emptyPaging
-import caios.android.fanbox.feature.post.search.paging.PostSearchCreatorPagingSource
-import caios.android.fanbox.feature.post.search.paging.PostSearchTagPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,29 +67,13 @@ class PostSearchViewModel @Inject constructor(
 
             when (query.mode) {
                 PostSearchMode.Creator -> {
-                    Pager(
-                        config = PagingConfig(pageSize = 10),
-                        initialKey = null,
-                        pagingSourceFactory = {
-                            PostSearchCreatorPagingSource(fanboxRepository, query.creatorQuery.orEmpty())
-                        },
-                    ).flow.cachedIn(viewModelScope).also {
-                        _uiState.value = uiState.value.copy(
-                            suggestTags = fanboxRepository.getTagFromQuery(query.creatorQuery.orEmpty()),
-                            creatorPaging = it,
-                        )
-                    }
+                    _uiState.value = uiState.value.copy(
+                        suggestTags =  fanboxRepository.getTagFromQuery(query.creatorQuery.orEmpty()),
+                        creatorPaging = fanboxRepository.getCreatorsFromQueryPager(query.creatorQuery.orEmpty()),
+                    )
                 }
                 PostSearchMode.Tag -> {
-                    Pager(
-                        config = PagingConfig(pageSize = 10),
-                        initialKey = null,
-                        pagingSourceFactory = {
-                            PostSearchTagPagingSource(fanboxRepository, query.creatorId, query.tag.orEmpty())
-                        },
-                    ).flow.cachedIn(viewModelScope).also {
-                        _uiState.value = uiState.value.copy(tagPaging = it)
-                    }
+                    _uiState.value = uiState.value.copy(tagPaging = fanboxRepository.getPostsFromQueryPager(query.tag.orEmpty(), query.creatorId))
                 }
                 else -> {
                     _uiState.value = uiState.value.copy(

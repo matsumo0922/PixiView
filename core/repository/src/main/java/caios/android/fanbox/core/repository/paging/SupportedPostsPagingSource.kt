@@ -1,4 +1,4 @@
-package caios.android.fanbox.feature.library.home.paging
+package caios.android.fanbox.core.repository.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -7,7 +7,7 @@ import caios.android.fanbox.core.model.fanbox.FanboxCursor
 import caios.android.fanbox.core.model.fanbox.FanboxPost
 import caios.android.fanbox.core.repository.FanboxRepository
 
-class LibrarySupportedPagingSource(
+class SupportedPostsPagingSource(
     private val fanboxRepository: FanboxRepository,
     private val isHideRestricted: Boolean,
 ) : PagingSource<FanboxCursor, FanboxPost>() {
