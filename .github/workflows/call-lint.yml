@@ -49,6 +49,7 @@ jobs:
         run: echo > local.properties
 
       - name: Run detekt and merge reports
+        id: detekt
         continue-on-error: true
         run: ./gradlew detekt reportMerge --continue
 
