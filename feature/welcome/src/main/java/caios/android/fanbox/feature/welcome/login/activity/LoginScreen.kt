@@ -61,7 +61,10 @@ internal fun LoginScreen(
                     cookieManager.acceptCookie()
                     cookieManager.acceptThirdPartyCookies(it)
 
+                    it.settings.loadWithOverviewMode = true
+                    it.settings.domStorageEnabled = true
                     it.settings.javaScriptEnabled = true
+                    it.settings.javaScriptCanOpenWindowsAutomatically = true
                 },
                 client = object : AccompanistWebViewClient() {
                     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
