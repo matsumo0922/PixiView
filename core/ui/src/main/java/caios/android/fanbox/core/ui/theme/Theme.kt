@@ -89,7 +89,7 @@ val DarkDefaultColorScheme = darkColorScheme(
 fun PixiViewTheme(
     fanboxCookie: String = "",
     fanboxMetadata: FanboxMetaData = FanboxMetaData.dummy(),
-    themeColorConfig: ThemeColorConfig = ThemeColorConfig.Default,
+    themeColorConfig: ThemeColorConfig = ThemeColorConfig.Red,
     shouldUseDarkTheme: Boolean = isSystemInDarkTheme(),
     enableDynamicTheme: Boolean = false,
     content: @Composable () -> Unit,

@@ -70,12 +70,12 @@ internal fun SettingThemeColorSection(
                 key = { it.name },
             ) {
                 val color = when (it) {
+                    ThemeColorConfig.Red -> if (isDarkMode) DarkDefaultColorScheme else LightDefaultColorScheme
                     ThemeColorConfig.Blue -> if (isDarkMode) DarkBlueColorScheme else LightBlueColorScheme
                     ThemeColorConfig.Brown -> if (isDarkMode) DarkBrownColorScheme else LightBrownColorScheme
                     ThemeColorConfig.Green -> if (isDarkMode) DarkGreenColorScheme else LightGreenColorScheme
                     ThemeColorConfig.Purple -> if (isDarkMode) DarkPurpleColorScheme else LightPurpleColorScheme
                     ThemeColorConfig.Pink -> if (isDarkMode) DarkPinkColorScheme else LightPinckColorScheme
-                    else -> if (isDarkMode) DarkDefaultColorScheme else LightDefaultColorScheme
                 }
 
                 SettingThemeColorItem(
