@@ -62,10 +62,13 @@ import caios.android.fanbox.core.ui.component.RestrictCardItem
 import caios.android.fanbox.core.ui.component.TagItems
 import caios.android.fanbox.core.ui.extensition.FadePlaceHolder
 import caios.android.fanbox.core.ui.extensition.fanboxHeader
+import caios.android.fanbox.core.ui.extensition.isNullOrEmpty
 import caios.android.fanbox.core.ui.extensition.marquee
 import caios.android.fanbox.core.ui.theme.bold
 import caios.android.fanbox.core.ui.theme.center
+import caios.android.fanbox.core.ui.view.ErrorView
 import caios.android.fanbox.core.ui.view.SimpleAlertContents
+import caios.android.fanbox.feature.post.R
 import caios.android.fanbox.feature.post.detail.items.PostDetailArticleHeader
 import caios.android.fanbox.feature.post.detail.items.PostDetailCommentLikeButton
 import caios.android.fanbox.feature.post.detail.items.PostDetailCommentSection
@@ -103,10 +106,10 @@ internal fun PostDetailRoute(
         }
     }
 
-    if (paging != null) {
+    if (!paging.isNullOrEmpty()) {
         LazyPagingItemsLoadContents(
             modifier = modifier,
-            lazyPagingItems = paging,
+            lazyPagingItems = paging!!,
         ) {
             val initIndex = remember { paging.itemSnapshotList.indexOfFirst { it?.id == postId } }
             val pagerState = rememberPagerState(if (initIndex != -1) initIndex else 0) { paging.itemCount }
@@ -130,7 +133,7 @@ internal fun PostDetailRoute(
                 }
             }
         }
-    } else {
+    } else if (paging != null) {
         PostDetailView(
             modifier = modifier,
             postId = postId,
@@ -141,6 +144,12 @@ internal fun PostDetailRoute(
             navigateToCreatorPosts = navigateToCreatorPosts,
             navigateToCommentDeleteDialog = navigateToCommentDeleteDialog,
             terminate = terminate,
+        )
+    } else {
+        ErrorView(
+            modifier = Modifier.fillMaxSize(),
+            errorState = ScreenState.Error(R.string.error_network),
+            retryAction = { terminate.invoke() },
         )
     }
 }
