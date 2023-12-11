@@ -24,6 +24,7 @@ class PixiViewPreferencesDataStore(
                     else -> ThemeConfig.System
                 },
                 themeColorConfig = when (it.themeColorConfig) {
+                    ThemeColorConfigProto.THEME_COLOR_CONFIG_RED -> ThemeColorConfig.Red
                     ThemeColorConfigProto.THEME_COLOR_CONFIG_BLUE -> ThemeColorConfig.Blue
                     ThemeColorConfigProto.THEME_COLOR_CONFIG_BROWN -> ThemeColorConfig.Brown
                     ThemeColorConfigProto.THEME_COLOR_CONFIG_GREEN -> ThemeColorConfig.Green
@@ -99,8 +100,7 @@ class PixiViewPreferencesDataStore(
                     ThemeColorConfig.Green -> ThemeColorConfigProto.THEME_COLOR_CONFIG_GREEN
                     ThemeColorConfig.Pink -> ThemeColorConfigProto.THEME_COLOR_CONFIG_PINK
                     ThemeColorConfig.Purple -> ThemeColorConfigProto.THEME_COLOR_CONFIG_PURPLE
-                    ThemeColorConfig.Default -> ThemeColorConfigProto.THEME_COLOR_CONFIG_DEFAULT
-                    else -> ThemeColorConfigProto.THEME_COLOR_CONFIG_BLUE
+                    ThemeColorConfig.Red -> ThemeColorConfigProto.THEME_COLOR_CONFIG_RED
                 }
             }
         }

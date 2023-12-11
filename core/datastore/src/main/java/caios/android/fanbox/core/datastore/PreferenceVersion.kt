@@ -29,6 +29,7 @@ class PreferenceVersion @Inject constructor(
                     message = if (Locale.getDefault() == Locale.JAPAN) it.logJp else it.logEn,
                 )
             }
+            .sortedByDescending { it.date }
             .also {
                 data = it
             }

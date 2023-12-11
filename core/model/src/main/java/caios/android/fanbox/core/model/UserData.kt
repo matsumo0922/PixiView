@@ -29,7 +29,7 @@ data class UserData(
             return UserData(
                 pixiViewId = "",
                 themeConfig = ThemeConfig.System,
-                themeColorConfig = ThemeColorConfig.Default,
+                themeColorConfig = ThemeColorConfig.Red,
                 isAgreedPrivacyPolicy = false,
                 isAgreedTermsOfService = false,
                 isAppLock = false,

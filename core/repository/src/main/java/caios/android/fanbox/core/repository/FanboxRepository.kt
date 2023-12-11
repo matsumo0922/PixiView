@@ -13,6 +13,7 @@ import android.webkit.MimeTypeMap
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import caios.android.fanbox.core.datastore.PreferenceBookmarkedPosts
 import caios.android.fanbox.core.datastore.PreferenceFanboxCookie
 import caios.android.fanbox.core.model.FanboxTag
@@ -72,6 +73,7 @@ import io.ktor.utils.io.jvm.javaio.copyTo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -169,6 +171,8 @@ class FanboxRepositoryImpl(
     private val bookmarkedPostsPreference: PreferenceBookmarkedPosts,
     private val ioDispatcher: CoroutineDispatcher,
 ) : FanboxRepository {
+
+    private val scope = CoroutineScope(SupervisorJob() + ioDispatcher)
 
     private val creatorCache = mutableMapOf<CreatorId, FanboxCreatorDetail>()
     private val postCache = mutableMapOf<PostId, FanboxPostDetail>()
@@ -322,7 +326,10 @@ class FanboxRepositoryImpl(
             pagingSourceFactory = {
                 HomePostsPagingSource(this, isHideRestricted)
             },
-        ).flow.also { homePostsPager = it }
+        )
+            .flow
+            .cachedIn(scope)
+            .also { homePostsPager = it }
     }
 
     override fun getHomePostsPagerCache(loadSize: Int, isHideRestricted: Boolean): Flow<PagingData<FanboxPost>> {
@@ -336,7 +343,10 @@ class FanboxRepositoryImpl(
             pagingSourceFactory = {
                 HomePostsPagingSource(this, isHideRestricted)
             },
-        ).flow.also { supportedPostsPager = it }
+        )
+            .flow
+            .cachedIn(scope)
+            .also { supportedPostsPager = it }
     }
 
     override fun getSupportedPostsPagerCache(loadSize: Int, isHideRestricted: Boolean): Flow<PagingData<FanboxPost>> {
@@ -350,7 +360,10 @@ class FanboxRepositoryImpl(
             pagingSourceFactory = {
                 CreatorPostsPagingSource(creatorId, this)
             },
-        ).flow.also { creatorPostsPager = it }
+        )
+            .flow
+            .cachedIn(scope)
+            .also { creatorPostsPager = it }
     }
 
     override fun getCreatorPostsPagerCache(): Flow<PagingData<FanboxPost>>? {
@@ -364,7 +377,10 @@ class FanboxRepositoryImpl(
             pagingSourceFactory = {
                 SearchPostsPagingSource(this, creatorId, query)
             },
-        ).flow.also { searchPostsPager = it }
+        )
+            .flow
+            .cachedIn(scope)
+            .also { searchPostsPager = it }
     }
 
     override fun getPostsFromQueryPagerCache(): Flow<PagingData<FanboxPost>>? {

@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,10 +18,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
@@ -31,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,10 +59,13 @@ import caios.android.fanbox.core.ui.component.RestrictCardItem
 import caios.android.fanbox.core.ui.component.TagItems
 import caios.android.fanbox.core.ui.extensition.FadePlaceHolder
 import caios.android.fanbox.core.ui.extensition.fanboxHeader
+import caios.android.fanbox.core.ui.extensition.isNullOrEmpty
 import caios.android.fanbox.core.ui.extensition.marquee
 import caios.android.fanbox.core.ui.theme.bold
 import caios.android.fanbox.core.ui.theme.center
+import caios.android.fanbox.core.ui.view.ErrorView
 import caios.android.fanbox.core.ui.view.SimpleAlertContents
+import caios.android.fanbox.feature.post.R
 import caios.android.fanbox.feature.post.detail.items.PostDetailArticleHeader
 import caios.android.fanbox.feature.post.detail.items.PostDetailCommentLikeButton
 import caios.android.fanbox.feature.post.detail.items.PostDetailCommentSection
@@ -103,10 +103,10 @@ internal fun PostDetailRoute(
         }
     }
 
-    if (paging != null) {
+    if (!paging.isNullOrEmpty()) {
         LazyPagingItemsLoadContents(
             modifier = modifier,
-            lazyPagingItems = paging,
+            lazyPagingItems = paging!!,
         ) {
             val initIndex = remember { paging.itemSnapshotList.indexOfFirst { it?.id == postId } }
             val pagerState = rememberPagerState(if (initIndex != -1) initIndex else 0) { paging.itemCount }
@@ -130,7 +130,7 @@ internal fun PostDetailRoute(
                 }
             }
         }
-    } else {
+    } else if (paging != null) {
         PostDetailView(
             modifier = modifier,
             postId = postId,
@@ -141,6 +141,12 @@ internal fun PostDetailRoute(
             navigateToCreatorPosts = navigateToCreatorPosts,
             navigateToCommentDeleteDialog = navigateToCommentDeleteDialog,
             terminate = terminate,
+        )
+    } else {
+        ErrorView(
+            modifier = Modifier.fillMaxSize(),
+            errorState = ScreenState.Error(R.string.error_network),
+            retryAction = { terminate.invoke() },
         )
     }
 }
@@ -241,6 +247,7 @@ private fun PostDetailScreen(
     modifier: Modifier = Modifier,
 ) {
     var isShowMenu by remember { mutableStateOf(false) }
+    var isPostLiked by rememberSaveable(postDetail.isLiked) { mutableStateOf(postDetail.isLiked) }
     var isBookmarked by remember(postDetail.isBookmarked) { mutableStateOf(postDetail.isBookmarked) }
 
     val isShowCoordinateHeader = when (val content = postDetail.body) {
@@ -307,32 +314,23 @@ private fun PostDetailScreen(
         }
 
         item {
-            Row(
+            PostDetailCommentLikeButton(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                PostDetailCommentLikeButton(
-                    modifier = Modifier.weight(1f),
-                    likeCount = postDetail.likeCount,
-                    commentCount = postDetail.commentCount,
-                )
-
-                IconButton(
-                    onClick = {
-                        isBookmarked = !isBookmarked
-                        onClickPostBookmark.invoke(postDetail.asPost(), isBookmarked)
-                    },
-                ) {
-                    Icon(
-                        imageVector = if (isBookmarked) Icons.Default.Bookmark else Icons.Outlined.BookmarkBorder,
-                        tint = if (isBookmarked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                        contentDescription = null,
-                    )
-                }
-            }
+                isLiked = isPostLiked,
+                isBookmarked = isBookmarked,
+                likeCount = postDetail.likeCount,
+                commentCount = postDetail.commentCount,
+                onClickLike = {
+                    isPostLiked = true
+                    onClickPostLike.invoke(postDetail.id)
+                },
+                onClickBookmark = {
+                    isBookmarked = it
+                    onClickPostBookmark.invoke(postDetail.asPost(), isBookmarked)
+                },
+            )
         }
 
         if (postDetail.isRestricted) {

@@ -4,5 +4,5 @@ import androidx.compose.runtime.Stable
 
 @Stable
 enum class ThemeColorConfig {
-    Default, Blue, Brown, Green, Pink, Purple
+    Red, Blue, Brown, Green, Pink, Purple
 }
