@@ -260,13 +260,13 @@
     <string name = "welcome_description">This app is an unofficial Android client for his PIXIV FANBOX</string>
     <string name="welcome_privacy_policy">Privacy policy</string>
     <string name="welcome_team_of_service">Terms of Service</string>
-    <string name="welcome_agree">Agree</string>
+    <string name="welcome_agree">Agree with %1$s</string>
     <string name="welcome_button_next">Get started</string>
     <string name="welcome_login_title">Login</string>
     <string name="welcome_login_message">You must log in with your Pixiv account to use this app</string>
     <string name="welcome_login_ready_title">Logged in</string>
     <string name="welcome_login_ready_message">You are already logged in with your Pixiv account</string>
-    <string name="welcome_login_toast_success">Logined</string>
+    <string name="welcome_login_toast_success">Logged in</string>
     <string name="welcome_login_toast_failed">Login failed</string>
     <string name="welcome_login_button_login">Login</string>
     <string name="welcome_login_button_next">Next</string>

@@ -104,7 +104,7 @@ internal fun WelcomeTopScreen(
             CheckBoxLinkButton(
                 isChecked = isAgreedTermsOfService,
                 link = stringResource(R.string.welcome_team_of_service),
-                body = stringResource(R.string.welcome_agree),
+                body = stringResource(R.string.welcome_agree, stringResource(R.string.welcome_team_of_service)),
                 onChecked = { isAgreedTermsOfService = it },
                 onLinkClick = { context.startActivity(Intent(Intent.ACTION_VIEW, teamOfServiceUri)) },
             )
@@ -112,7 +112,7 @@ internal fun WelcomeTopScreen(
             CheckBoxLinkButton(
                 isChecked = isAgreedPrivacyPolicy,
                 link = stringResource(R.string.welcome_privacy_policy),
-                body = stringResource(R.string.welcome_agree),
+                body = stringResource(R.string.welcome_agree, stringResource(R.string.welcome_privacy_policy)),
                 onChecked = { isAgreedPrivacyPolicy = it },
                 onLinkClick = { context.startActivity(Intent(Intent.ACTION_VIEW, privacyPolicyUri)) },
             )
@@ -156,6 +156,9 @@ private fun CheckBoxLinkButton(
     onLinkClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val startIndex = body.indexOf(link)
+    val endIndex = startIndex + link.length
+
     val textStyle = TextStyle(
         color = MaterialTheme.colorScheme.primary,
         textAlign = TextAlign.Center,
@@ -163,19 +166,13 @@ private fun CheckBoxLinkButton(
     )
 
     val annotatedString = buildAnnotatedString {
-        pushStringAnnotation("url", link)
-
-        withStyle(textStyle.toSpanStyle()) {
-            append(link)
-        }
-
-        pop()
-
-        append(" ")
-
         withStyle(TextStyle(color = MaterialTheme.colorScheme.onSurface).toSpanStyle()) {
             append(body)
         }
+
+        addStringAnnotation("url", link, startIndex, endIndex)
+
+        addStyle(textStyle.toSpanStyle(), startIndex, endIndex)
     }
 
     Row(
