@@ -19,6 +19,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -67,6 +69,7 @@ class MainActivity : FragmentActivity(), PostDownloader {
         }
     }
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
@@ -80,6 +83,7 @@ class MainActivity : FragmentActivity(), PostDownloader {
 
         setContent {
             val screenState by viewModel.screenState.collectAsStateWithLifecycle()
+            val windowSize = calculateWindowSizeClass(this)
             val systemUiController = rememberSystemUiController()
             val shouldUseDarkTheme = shouldUseDarkTheme(screenState)
 
@@ -115,6 +119,7 @@ class MainActivity : FragmentActivity(), PostDownloader {
                         PixiViewApp(
                             modifier = Modifier.fillMaxSize(),
                             viewModel = viewModel,
+                            windowSize = windowSize.widthSizeClass,
                             userData = it.userData,
                             isAgreedTeams = isAgreedTeams,
                             isAllowedPermission = isAllowedPermission,

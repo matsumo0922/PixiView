@@ -42,6 +42,8 @@ import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.ui.AsyncLoadContents
 import caios.android.fanbox.core.ui.component.CreatorItem
 import caios.android.fanbox.core.ui.component.PixiViewTopBar
+import caios.android.fanbox.core.ui.extensition.LocalNavigationType
+import caios.android.fanbox.core.ui.extensition.PixiViewNavigationType
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
 import caios.android.fanbox.core.ui.theme.bold
 import caios.android.fanbox.feature.library.R
@@ -98,6 +100,7 @@ private fun LibraryDiscoveryScreen(
     onClickSupporting: (Uri) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val navigationType = LocalNavigationType.current.type
     val scope = rememberCoroutineScope()
     val state = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -110,7 +113,7 @@ private fun LibraryDiscoveryScreen(
                 title = stringResource(R.string.library_navigation_discovery),
                 navigationIcon = Icons.Default.Menu,
                 actionsIcon = Icons.Default.Search,
-                onClickNavigation = openDrawer,
+                onClickNavigation = if (navigationType != PixiViewNavigationType.PermanentNavigationDrawer) openDrawer else null,
                 onClickActions = onClickSearch,
                 scrollBehavior = scrollBehavior,
             )

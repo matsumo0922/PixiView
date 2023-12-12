@@ -30,6 +30,8 @@ import caios.android.fanbox.core.model.fanbox.FanboxBell
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.LazyPagingItemsLoadContents
 import caios.android.fanbox.core.ui.component.PixiViewTopBar
+import caios.android.fanbox.core.ui.extensition.LocalNavigationType
+import caios.android.fanbox.core.ui.extensition.PixiViewNavigationType
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
 import caios.android.fanbox.core.ui.view.PagingErrorSection
 import caios.android.fanbox.feature.library.R
@@ -61,6 +63,7 @@ private fun LibraryNotifyScreen(
     onClickBell: (PostId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val navigationType = LocalNavigationType.current.type
     val state = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -71,7 +74,7 @@ private fun LibraryNotifyScreen(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.library_navigation_notify),
                 navigationIcon = Icons.Default.Menu,
-                onClickNavigation = openDrawer,
+                onClickNavigation = if (navigationType != PixiViewNavigationType.PermanentNavigationDrawer) openDrawer else null,
                 scrollBehavior = scrollBehavior,
             )
         },

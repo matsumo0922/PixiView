@@ -15,7 +15,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import caios.android.fanbox.feature.library.R
 
-internal enum class LibraryDestination(
+enum class LibraryDestination(
     val selectedIcon: ImageVector,
     val deselectedIcon: ImageVector,
     @StringRes val title: Int,

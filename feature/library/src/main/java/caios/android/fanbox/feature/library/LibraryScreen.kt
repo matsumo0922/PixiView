@@ -1,11 +1,13 @@
 package caios.android.fanbox.feature.library
 
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,9 +23,12 @@ import androidx.navigation.navOptions
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.AsyncLoadContents
+import caios.android.fanbox.core.ui.extensition.LocalNavigationType
+import caios.android.fanbox.core.ui.extensition.PixiViewNavigationType
 import caios.android.fanbox.feature.library.component.LibraryBottomBar
 import caios.android.fanbox.feature.library.component.LibraryDestination
 import caios.android.fanbox.feature.library.component.LibraryDrawer
+import caios.android.fanbox.feature.library.component.LibraryNavigationRail
 import caios.android.fanbox.feature.library.discovery.navigateToLibraryDiscovery
 import caios.android.fanbox.feature.library.home.navigateToLibraryHome
 import caios.android.fanbox.feature.library.message.navigateToLibraryMessage
@@ -51,6 +56,7 @@ fun LibraryScreen(
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val navigationType = LocalNavigationType.current
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
     AsyncLoadContents(
@@ -64,7 +70,7 @@ fun LibraryScreen(
                     state = drawerState,
                     userData = it.userData,
                     currentDestination = navController.currentBackStackEntryAsState().value?.destination,
-                    onClickLibrary = navController::navigateToLibrary,
+                    onClickLibrary = navController::navigateToLibraryDestination,
                     navigateToBookmarkedPosts = navigateToBookmarkedPosts,
                     navigateToFollowingCreators = navigateToFollowerCreators,
                     navigateToSupportingCreators = navigateToSupportingCreators,
@@ -75,37 +81,51 @@ fun LibraryScreen(
                 )
             },
         ) {
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                bottomBar = {
-                    LibraryBottomBar(
+            Row(Modifier.fillMaxSize()) {
+                AnimatedVisibility(navigationType.type == PixiViewNavigationType.NavigationRail) {
+                    LibraryNavigationRail(
+                        modifier = Modifier.fillMaxHeight(),
                         destinations = LibraryDestination.entries.toImmutableList(),
                         currentDestination = navController.currentBackStackEntryAsState().value?.destination,
-                        navigateToDestination = navController::navigateToLibrary,
+                        navigateToDestination = navController::navigateToLibraryDestination,
                     )
-                },
-                contentWindowInsets = WindowInsets(0, 0, 0, 0),
-            ) {
-                LibraryNavHost(
-                    modifier = Modifier.padding(it),
-                    navController = navController,
-                    openDrawer = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    },
-                    navigateToPostSearch = navigateToPostSearch,
-                    navigateToPostDetailFromHome = navigateToPostDetailFromHome,
-                    navigateToPostDetailFromSupported = navigateToPostDetailFromSupported,
-                    navigateToCreatorPosts = navigateToCreatorPosts,
-                    navigateToCreatorPlans = navigateToCreatorPlans,
-                )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                ) {
+                    LibraryNavHost(
+                        modifier = Modifier.weight(1f),
+                        navController = navController,
+                        openDrawer = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        },
+                        navigateToPostSearch = navigateToPostSearch,
+                        navigateToPostDetailFromHome = navigateToPostDetailFromHome,
+                        navigateToPostDetailFromSupported = navigateToPostDetailFromSupported,
+                        navigateToCreatorPosts = navigateToCreatorPosts,
+                        navigateToCreatorPlans = navigateToCreatorPlans,
+                    )
+
+                    AnimatedVisibility(navigationType.type == PixiViewNavigationType.BottomNavigation) {
+                        LibraryBottomBar(
+                            modifier = Modifier.fillMaxWidth(),
+                            destinations = LibraryDestination.entries.toImmutableList(),
+                            currentDestination = navController.currentBackStackEntryAsState().value?.destination,
+                            navigateToDestination = navController::navigateToLibraryDestination,
+                        )
+                    }
+                }
             }
         }
     }
 }
 
-private fun NavHostController.navigateToLibrary(destination: LibraryDestination) {
+fun NavHostController.navigateToLibraryDestination(destination: LibraryDestination) {
     val navOption = navOptions {
         popUpTo(graph.findStartDestination().id) {
             saveState = true

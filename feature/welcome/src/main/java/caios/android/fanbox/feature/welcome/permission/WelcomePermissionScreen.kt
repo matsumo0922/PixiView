@@ -35,6 +35,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import caios.android.fanbox.core.ui.extensition.LocalNavigationType
+import caios.android.fanbox.core.ui.extensition.PixiViewNavigationType
 import caios.android.fanbox.core.ui.theme.bold
 import caios.android.fanbox.core.ui.theme.center
 import caios.android.fanbox.feature.welcome.R
@@ -50,43 +52,93 @@ internal fun WelcomePermissionScreen(
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    var isPermissionRequested by remember { mutableStateOf(false) }
+    val navigationType = LocalNavigationType.current.type
 
-    val notifyPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.POST_NOTIFICATIONS else null
-    val storagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        listOf(
-            android.Manifest.permission.READ_MEDIA_IMAGES,
-            android.Manifest.permission.READ_MEDIA_VIDEO,
-        )
+    if (navigationType != PixiViewNavigationType.PermanentNavigationDrawer) {
+        Column(
+            modifier = modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            FirstSection()
+
+            SecondSection(
+                modifier = Modifier.weight(1f),
+                navigateToHome = navigateToHome,
+            )
+        }
     } else {
-        listOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        Row(
+            modifier = modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            FirstSection(
+                modifier = Modifier.weight(1f),
+            )
+
+            Spacer(modifier = Modifier.width(24.dp))
+
+            Column(Modifier.weight(1f)) {
+                Box(Modifier.weight(2f))
+
+                SecondSection(
+                    modifier = Modifier.weight(3f),
+                    navigateToHome = navigateToHome,
+                )
+            }
+        }
     }
+}
 
-    val permissionList = listOfNotNull(*storagePermission.toTypedArray(), notifyPermission)
-    val permissionsState = rememberMultiplePermissionsState(permissionList) {
-        isPermissionRequested = true
-    }
+@Composable
+private fun FirstSection(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier.padding(
+            top = 8.dp,
+            start = 8.dp,
+            end = 8.dp,
+        ),
+        painter = painterResource(R.drawable.vec_welcome_permission),
+        contentDescription = null,
+    )
+}
 
-    val isGrantedStorage = permissionsState.permissions.subList(0, 1).all { it.status is PermissionStatus.Granted }
-    val isGrantedNotify = permissionsState.permissions.elementAtOrNull(1)?.status is PermissionStatus.Granted
-
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+private fun SecondSection(
+    navigateToHome: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(24.dp),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Image(
-            modifier = Modifier.padding(
-                top = 8.dp,
-                start = 8.dp,
-                end = 8.dp,
-            ),
-            painter = painterResource(R.drawable.vec_welcome_permission),
-            contentDescription = null,
-        )
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
+        var isPermissionRequested by remember { mutableStateOf(false) }
+
+        val notifyPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) android.Manifest.permission.POST_NOTIFICATIONS else null
+        val storagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            listOf(
+                android.Manifest.permission.READ_MEDIA_IMAGES,
+                android.Manifest.permission.READ_MEDIA_VIDEO,
+            )
+        } else {
+            listOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+
+        val permissionList = listOfNotNull(*storagePermission.toTypedArray(), notifyPermission)
+        val permissionsState = rememberMultiplePermissionsState(permissionList) {
+            isPermissionRequested = true
+        }
+
+        val isGrantedStorage = permissionsState.permissions.subList(0, 1).all { it.status is PermissionStatus.Granted }
+        val isGrantedNotify = permissionsState.permissions.elementAtOrNull(1)?.status is PermissionStatus.Granted
 
         Text(
             modifier = Modifier.padding(top = 32.dp),
@@ -252,7 +304,7 @@ private fun startAppSettings(context: Context) {
 
 @Preview
 @Composable
-private fun WelcomePermissionScreenPreview() {
+private fun WelcomePermissionScreenPreview1() {
     WelcomePermissionScreen(
         modifier = Modifier.fillMaxSize(),
         navigateToHome = {},

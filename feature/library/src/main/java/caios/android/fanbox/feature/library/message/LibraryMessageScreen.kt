@@ -25,6 +25,8 @@ import caios.android.fanbox.core.model.fanbox.FanboxNewsLetter
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.ui.AsyncLoadContents
 import caios.android.fanbox.core.ui.component.PixiViewTopBar
+import caios.android.fanbox.core.ui.extensition.LocalNavigationType
+import caios.android.fanbox.core.ui.extensition.PixiViewNavigationType
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
 import caios.android.fanbox.core.ui.view.EmptyView
 import caios.android.fanbox.feature.library.R
@@ -63,6 +65,7 @@ private fun LibraryMessageScreen(
     onClickCreator: (CreatorId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val navigationType = LocalNavigationType.current.type
     val state = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -73,7 +76,7 @@ private fun LibraryMessageScreen(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.library_navigation_message),
                 navigationIcon = Icons.Default.Menu,
-                onClickNavigation = openDrawer,
+                onClickNavigation = if (navigationType != PixiViewNavigationType.PermanentNavigationDrawer) openDrawer else null,
                 scrollBehavior = scrollBehavior,
             )
         },
