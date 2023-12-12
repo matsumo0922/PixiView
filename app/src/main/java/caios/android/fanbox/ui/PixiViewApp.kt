@@ -83,7 +83,8 @@ private fun IdleScreen(
     navigationType: PixiViewNavigationType,
     modifier: Modifier = Modifier,
 ) {
-    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
+    val bottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
     val bottomSheetNavigator = remember { BottomSheetNavigator(bottomSheetState) }
 
     PixiViewNavHost(

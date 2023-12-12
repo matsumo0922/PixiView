@@ -67,7 +67,6 @@ internal fun PixiViewNavHost(
     bottomSheetNavigator: BottomSheetNavigator = rememberBottomSheetNavigator(),
     startDestination: String = LibraryRoute,
 ) {
-
     ModalBottomSheetLayout(
         modifier = modifier,
         bottomSheetNavigator = bottomSheetNavigator,
