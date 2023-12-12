@@ -2,6 +2,7 @@ package caios.android.fanbox.feature.library
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -27,6 +28,7 @@ fun LibraryNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = LibraryHomeRoute,
+    applyOtherRoutes: NavGraphBuilder.() -> Unit = {},
 ) {
     NavHost(
         navController = navController,
@@ -56,6 +58,8 @@ fun LibraryNavHost(
             openDrawer = openDrawer,
             navigateToCreatorPosts = navigateToCreatorPosts,
         )
+
+        applyOtherRoutes.invoke(this)
     }
 }
 

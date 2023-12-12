@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -42,6 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import caios.android.fanbox.core.ui.extensition.LocalNavigationType
+import caios.android.fanbox.core.ui.extensition.PixiViewNavigationType
 import caios.android.fanbox.core.ui.theme.bold
 import caios.android.fanbox.core.ui.theme.center
 import caios.android.fanbox.feature.welcome.R
@@ -53,21 +56,58 @@ internal fun WelcomeTopScreen(
     modifier: Modifier = Modifier,
     viewModel: WelcomeTopViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
-    var isAgreedPrivacyPolicy by remember { mutableStateOf(false) }
-    var isAgreedTermsOfService by remember { mutableStateOf(false) }
+    val navigationType = LocalNavigationType.current.type
 
-    val teamOfServiceUri = "https://www.matsumo.me/application/pixiview/team_of_service".toUri()
-    val privacyPolicyUri = "https://www.matsumo.me/application/pixiview/privacy_policy".toUri()
+    if (navigationType != PixiViewNavigationType.PermanentNavigationDrawer) {
+        Column(
+            modifier = modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(modifier = Modifier.height(24.dp))
 
-    Column(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Spacer(modifier = Modifier.height(24.dp))
+            FirstSection()
 
+            SecondSection(
+                modifier = Modifier.weight(1f),
+                navigateToWelcomePlus = navigateToWelcomePlus,
+                setAgreedPrivacyPolicy = viewModel::setAgreedPrivacyPolicy,
+                setAgreedTermsOfService = viewModel::setAgreedTermsOfService,
+            )
+        }
+    } else {
+        Row(
+            modifier = modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            FirstSection(
+                modifier = Modifier.weight(1f),
+            )
+
+            Spacer(modifier = Modifier.width(24.dp))
+
+            Column(Modifier.weight(1f)) {
+                Box(Modifier.weight(2f))
+
+                SecondSection(
+                    modifier = Modifier.weight(3f),
+                    navigateToWelcomePlus = navigateToWelcomePlus,
+                    setAgreedPrivacyPolicy = viewModel::setAgreedPrivacyPolicy,
+                    setAgreedTermsOfService = viewModel::setAgreedTermsOfService,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FirstSection(
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier) {
         Image(
             modifier = Modifier
                 .padding(80.dp, 40.dp)
@@ -77,7 +117,27 @@ internal fun WelcomeTopScreen(
             painter = painterResource(R.drawable.vec_app_icon),
             contentDescription = null,
         )
+    }
+}
 
+@Composable
+private fun SecondSection(
+    navigateToWelcomePlus: () -> Unit,
+    setAgreedPrivacyPolicy: () -> Unit,
+    setAgreedTermsOfService: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    var isAgreedPrivacyPolicy by remember { mutableStateOf(false) }
+    var isAgreedTermsOfService by remember { mutableStateOf(false) }
+
+    val teamOfServiceUri = "https://www.matsumo.me/application/pixiview/team_of_service".toUri()
+    val privacyPolicyUri = "https://www.matsumo.me/application/pixiview/privacy_policy".toUri()
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.welcome_title),
@@ -134,8 +194,8 @@ internal fun WelcomeTopScreen(
             enabled = isAgreedPrivacyPolicy && isAgreedTermsOfService,
             onClick = {
                 navigateToWelcomePlus.invoke()
-                viewModel.setAgreedPrivacyPolicy()
-                viewModel.setAgreedTermsOfService()
+                setAgreedPrivacyPolicy.invoke()
+                setAgreedTermsOfService.invoke()
             },
         ) {
             Text(
@@ -200,7 +260,7 @@ private fun CheckBoxLinkButton(
 
 @Preview
 @Composable
-private fun PreviewWelcomeScreen() {
+private fun PreviewWelcomeScreen1() {
     WelcomeTopScreen(
         modifier = Modifier.fillMaxSize(),
         navigateToWelcomePlus = {},

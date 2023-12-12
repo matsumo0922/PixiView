@@ -1,11 +1,16 @@
 package caios.android.fanbox.ui
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import caios.android.fanbox.core.ui.extensition.PixiViewNavigationType
 import caios.android.fanbox.core.ui.extensition.popBackStackWithResult
 import caios.android.fanbox.core.ui.view.navigateToSimpleAlertDialog
 import caios.android.fanbox.core.ui.view.simpleAlertDialogDialog
@@ -27,8 +32,11 @@ import caios.android.fanbox.feature.creator.support.navigateToSupportingCreators
 import caios.android.fanbox.feature.creator.support.supportingCreatorsScreen
 import caios.android.fanbox.feature.creator.top.creatorTopScreen
 import caios.android.fanbox.feature.creator.top.navigateToCreatorTop
+import caios.android.fanbox.feature.library.LibraryNavHost
 import caios.android.fanbox.feature.library.LibraryRoute
+import caios.android.fanbox.feature.library.component.LibraryPermanentDrawer
 import caios.android.fanbox.feature.library.libraryScreen
+import caios.android.fanbox.feature.library.navigateToLibraryDestination
 import caios.android.fanbox.feature.post.bookmark.bookmarkedPostsScreen
 import caios.android.fanbox.feature.post.bookmark.navigateToBookmarkedPosts
 import caios.android.fanbox.feature.post.detail.PostDetailPagingType
@@ -54,142 +62,266 @@ import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 internal fun PixiViewNavHost(
+    navigationType: PixiViewNavigationType,
+    modifier: Modifier = Modifier,
+    bottomSheetNavigator: BottomSheetNavigator = rememberBottomSheetNavigator(),
+    startDestination: String = LibraryRoute,
+) {
+
+    ModalBottomSheetLayout(
+        modifier = modifier,
+        bottomSheetNavigator = bottomSheetNavigator,
+    ) {
+        when (navigationType) {
+            PixiViewNavigationType.PermanentNavigationDrawer -> {
+                ExpandedNavHost(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomSheetNavigator = bottomSheetNavigator,
+                    subNavController = rememberNavController(bottomSheetNavigator),
+                )
+            }
+
+            PixiViewNavigationType.NavigationRail -> {
+                MediumNavHost(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomSheetNavigator = bottomSheetNavigator,
+                    startDestination = startDestination,
+                )
+            }
+
+            PixiViewNavigationType.BottomNavigation -> {
+                CompactNavHost(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomSheetNavigator = bottomSheetNavigator,
+                    startDestination = startDestination,
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialNavigationApi::class)
+@Composable
+private fun CompactNavHost(
     modifier: Modifier = Modifier,
     bottomSheetNavigator: BottomSheetNavigator = rememberBottomSheetNavigator(),
     navController: NavHostController = rememberNavController(bottomSheetNavigator),
     startDestination: String = LibraryRoute,
 ) {
-    ModalBottomSheetLayout(
+    NavHost(
         modifier = modifier,
-        bottomSheetNavigator = bottomSheetNavigator,
+        navController = navController,
+        startDestination = startDestination,
     ) {
-        NavHost(
-            modifier = Modifier.fillMaxSize(),
-            navController = navController,
-            startDestination = startDestination,
-        ) {
-            // composable
+        applyNavGraph(navController)
+    }
+}
 
-            libraryScreen(
-                navigateToPostSearch = { navController.navigateToPostSearch() },
-                navigateToPostDetailFromHome = { navController.navigateToPostDetail(it, PostDetailPagingType.Home) },
-                navigateToPostDetailFromSupported = { navController.navigateToPostDetail(it, PostDetailPagingType.Supported) },
-                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
-                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-                navigateToBookmarkedPosts = { navController.navigateToBookmarkedPosts() },
-                navigateToFollowerCreators = { navController.navigateToFollowingCreators() },
-                navigateToSupportingCreators = { navController.navigateToSupportingCreators() },
-                navigateToPayments = { navController.navigateToPayments() },
-                navigateToSettingTop = { navController.navigateToSettingTop() },
-                navigateToAbout = { navController.navigateToAbout() },
-                navigateToBillingPlus = { navController.navigateToBillingPlus() },
+@OptIn(ExperimentalMaterialNavigationApi::class)
+@Composable
+private fun MediumNavHost(
+    modifier: Modifier = Modifier,
+    bottomSheetNavigator: BottomSheetNavigator = rememberBottomSheetNavigator(),
+    navController: NavHostController = rememberNavController(bottomSheetNavigator),
+    startDestination: String = LibraryRoute,
+) {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = startDestination,
+    ) {
+        applyNavGraph(navController)
+    }
+}
+
+@OptIn(ExperimentalMaterialNavigationApi::class)
+@Composable
+private fun ExpandedNavHost(
+    modifier: Modifier = Modifier,
+    bottomSheetNavigator: BottomSheetNavigator = rememberBottomSheetNavigator(),
+    mainNavController: NavHostController = rememberNavController(bottomSheetNavigator),
+    subNavController: NavHostController = rememberNavController(bottomSheetNavigator),
+) {
+    PermanentNavigationDrawer(
+        modifier = modifier,
+        drawerContent = {
+            LibraryPermanentDrawer(
+                currentDestination = mainNavController.currentBackStackEntryAsState().value?.destination,
+                onClickLibrary = mainNavController::navigateToLibraryDestination,
+                navigateToBookmarkedPosts = { mainNavController.navigateToBookmarkedPosts() },
+                navigateToFollowingCreators = { mainNavController.navigateToFollowingCreators() },
+                navigateToSupportingCreators = { mainNavController.navigateToSupportingCreators() },
+                navigateToPayments = { subNavController.navigateToPayments() },
+                navigateToSetting = { mainNavController.navigateToSettingTop() },
+                navigateToAbout = { subNavController.navigateToAbout() },
+                navigateToBillingPlus = { mainNavController.navigateToBillingPlus() },
             )
+        },
+    ) {
+        Row(Modifier.fillMaxSize()) {
+            LibraryNavHost(
+                modifier = Modifier.weight(1f),
+                navController = mainNavController,
+                openDrawer = { /* do nothing */ },
+                navigateToPostSearch = { mainNavController.navigateToPostSearch() },
+                navigateToPostDetailFromHome = { subNavController.navigateToPostDetail(it, PostDetailPagingType.Home) },
+                navigateToPostDetailFromSupported = { subNavController.navigateToPostDetail(it, PostDetailPagingType.Supported) },
+                navigateToCreatorPosts = { mainNavController.navigateToCreatorTop(it, isPosts = true) },
+                navigateToCreatorPlans = { mainNavController.navigateToCreatorTop(it) },
+            ) {
+                applyNavGraph(mainNavController, subNavController)
+            }
 
-            postDetailScreen(
-                navigateToPostSearch = { query, creatorId -> navController.navigateToPostSearch(tag = query, creatorId = creatorId) },
-                navigateToPostDetail = { navController.navigateToPostDetail(it, PostDetailPagingType.Unknown) },
-                navigateToPostImage = { postId, index -> navController.navigateToPostImage(postId, index) },
-                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
-                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-                navigateToCommentDeleteDialog = { contents, onResult -> navController.navigateToSimpleAlertDialog(contents, onResult) },
-                terminate = { navController.popBackStack() },
-            )
-
-            postImageScreen(
-                terminate = { navController.popBackStack() },
-            )
-
-            postSearchScreen(
-                navigateToPostSearch = { creatorId, creatorQuery, tag -> navController.navigateToPostSearch(creatorId, creatorQuery, tag) },
-                navigateToPostDetail = { navController.navigateToPostDetail(it, PostDetailPagingType.Search) },
-                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
-                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-                terminate = { navController.popBackStack() },
-            )
-
-            bookmarkedPostsScreen(
-                navigateToPostDetail = { navController.navigateToPostDetail(it, PostDetailPagingType.Unknown) },
-                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
-                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-                terminate = { navController.popBackStack() },
-            )
-
-            creatorTopScreen(
-                navigateToPostDetail = { navController.navigateToPostDetail(it, PostDetailPagingType.Creator) },
-                navigateToPostSearch = { query, creatorId -> navController.navigateToPostSearch(tag = query, creatorId = creatorId) },
-                navigateToBillingPlus = { navController.navigateToBillingPlus() },
-                navigateToDownloadAll = { navController.navigateToCreatorPostsDownload(it) },
-                terminate = { navController.popBackStack() },
-            )
-
-            supportingCreatorsScreen(
-                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
-                navigateToFanCard = { navController.navigateToFanCard(it) },
-                terminate = { navController.popBackStack() },
-            )
-
-            followingCreatorsScreen(
-                navigateToCreatorPlans = { navController.navigateToCreatorTop(it) },
-                terminate = { navController.popBackStack() },
-            )
-
-            paymentsScreen(
-                navigateToCreatorPosts = { navController.navigateToCreatorTop(it, isPosts = true) },
-                terminate = { navController.popBackStack() },
-            )
-
-            fanCardScreen(
-                terminate = { navController.popBackStack() },
-            )
-
-            aboutScreen(
-                navigateToVersionHistory = { navController.navigateToVersionHistory() },
-                navigateToDonate = { navController.navigateToBillingPlus() },
-                terminate = { navController.popBackStack() },
-            )
-
-            settingTopScreen(
-                navigateToThemeSetting = { navController.navigateToSettingTheme() },
-                navigateToBillingPlus = { navController.navigateToBillingPlus() },
-                navigateToSettingDeveloper = { navController.navigateToSettingDeveloper() },
-                navigateToLogoutDialog = { contents, onResult -> navController.navigateToSimpleAlertDialog(contents, onResult) },
-                navigateToOpenSourceLicense = { navController.navigateToSettingLicense() },
-                terminate = { navController.popBackStack() },
-            )
-
-            settingThemeScreen(
-                navigateToBillingPlus = { navController.navigateToBillingPlus() },
-                terminate = { navController.popBackStack() },
-            )
-
-            settingLicenseScreen(
-                terminate = { navController.popBackStack() },
-            )
-
-            settingDeveloperDialog(
-                terminate = { navController.popBackStack() },
-            )
-
-            // dialog
-
-            simpleAlertDialogDialog(
-                terminateWithResult = { navController.popBackStackWithResult(it) },
-            )
-
-            creatorPostsDownloadDialog(
-                terminate = { navController.popBackStack() },
-            )
-
-            // bottom sheet
-
-            versionHistoryBottomSheet(
-                terminate = { navController.popBackStack() },
-            )
-
-            billingPlusBottomSheet(
-                terminate = { navController.popBackStack() },
-            )
+            NavHost(
+                modifier = Modifier.weight(1f),
+                navController = subNavController,
+                startDestination = EmptyDetailRoute,
+            ) {
+                applyNavGraph(mainNavController, subNavController)
+            }
         }
     }
+}
+
+/**
+ * mainNavController
+ *   - Library*
+ *   - CreatorTop
+ *   - PostSearch
+ *   - BookmarkedPosts
+ *   - FollowingCreators
+ *   - SupportingCreators
+ *   - Setting*
+ *   - Dialogs*
+ */
+private fun NavGraphBuilder.applyNavGraph(
+    mainNavController: NavHostController,
+    subNavController: NavHostController = mainNavController,
+) {
+    // composable
+
+    libraryScreen(
+        navigateToPostSearch = { mainNavController.navigateToPostSearch() },
+        navigateToPostDetailFromHome = { subNavController.navigateToPostDetail(it, PostDetailPagingType.Home) },
+        navigateToPostDetailFromSupported = { subNavController.navigateToPostDetail(it, PostDetailPagingType.Supported) },
+        navigateToCreatorPosts = { mainNavController.navigateToCreatorTop(it, isPosts = true) },
+        navigateToCreatorPlans = { mainNavController.navigateToCreatorTop(it) },
+        navigateToBookmarkedPosts = { mainNavController.navigateToBookmarkedPosts() },
+        navigateToFollowerCreators = { mainNavController.navigateToFollowingCreators() },
+        navigateToSupportingCreators = { mainNavController.navigateToSupportingCreators() },
+        navigateToPayments = { subNavController.navigateToPayments() },
+        navigateToSettingTop = { subNavController.navigateToSettingTop() },
+        navigateToAbout = { subNavController.navigateToAbout() },
+        navigateToBillingPlus = { mainNavController.navigateToBillingPlus() },
+    )
+
+    postDetailScreen(
+        navigateToPostSearch = { query, creatorId -> mainNavController.navigateToPostSearch(tag = query, creatorId = creatorId) },
+        navigateToPostDetail = { subNavController.navigateToPostDetail(it, PostDetailPagingType.Unknown) },
+        navigateToPostImage = { postId, index -> subNavController.navigateToPostImage(postId, index) },
+        navigateToCreatorPosts = { mainNavController.navigateToCreatorTop(it, isPosts = true) },
+        navigateToCreatorPlans = { mainNavController.navigateToCreatorTop(it) },
+        navigateToCommentDeleteDialog = { contents, onResult -> mainNavController.navigateToSimpleAlertDialog(contents, onResult) },
+        terminate = { subNavController.popBackStack() },
+    )
+
+    postImageScreen(
+        terminate = { subNavController.popBackStack() },
+    )
+
+    postSearchScreen(
+        navigateToPostSearch = { creatorId, creatorQuery, tag -> mainNavController.navigateToPostSearch(creatorId, creatorQuery, tag) },
+        navigateToPostDetail = { subNavController.navigateToPostDetail(it, PostDetailPagingType.Search) },
+        navigateToCreatorPosts = { mainNavController.navigateToCreatorTop(it, isPosts = true) },
+        navigateToCreatorPlans = { mainNavController.navigateToCreatorTop(it) },
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    bookmarkedPostsScreen(
+        navigateToPostDetail = { subNavController.navigateToPostDetail(it, PostDetailPagingType.Unknown) },
+        navigateToCreatorPosts = { mainNavController.navigateToCreatorTop(it, isPosts = true) },
+        navigateToCreatorPlans = { mainNavController.navigateToCreatorTop(it) },
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    creatorTopScreen(
+        navigateToPostDetail = { subNavController.navigateToPostDetail(it, PostDetailPagingType.Creator) },
+        navigateToPostSearch = { query, creatorId -> mainNavController.navigateToPostSearch(tag = query, creatorId = creatorId) },
+        navigateToBillingPlus = { mainNavController.navigateToBillingPlus() },
+        navigateToDownloadAll = { mainNavController.navigateToCreatorPostsDownload(it) },
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    supportingCreatorsScreen(
+        navigateToCreatorPlans = { mainNavController.navigateToCreatorTop(it) },
+        navigateToCreatorPosts = { mainNavController.navigateToCreatorTop(it, isPosts = true) },
+        navigateToFanCard = { subNavController.navigateToFanCard(it) },
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    followingCreatorsScreen(
+        navigateToCreatorPlans = { mainNavController.navigateToCreatorTop(it) },
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    paymentsScreen(
+        navigateToCreatorPosts = { mainNavController.navigateToCreatorTop(it, isPosts = true) },
+        terminate = { subNavController.popBackStack() },
+    )
+
+    fanCardScreen(
+        terminate = { subNavController.popBackStack() },
+    )
+
+    aboutScreen(
+        navigateToVersionHistory = { mainNavController.navigateToVersionHistory() },
+        navigateToDonate = { mainNavController.navigateToBillingPlus() },
+        terminate = { subNavController.popBackStack() },
+    )
+
+    settingTopScreen(
+        navigateToThemeSetting = { mainNavController.navigateToSettingTheme() },
+        navigateToBillingPlus = { mainNavController.navigateToBillingPlus() },
+        navigateToSettingDeveloper = { mainNavController.navigateToSettingDeveloper() },
+        navigateToLogoutDialog = { contents, onResult -> mainNavController.navigateToSimpleAlertDialog(contents, onResult) },
+        navigateToOpenSourceLicense = { mainNavController.navigateToSettingLicense() },
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    settingThemeScreen(
+        navigateToBillingPlus = { mainNavController.navigateToBillingPlus() },
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    settingLicenseScreen(
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    settingDeveloperDialog(
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    // dialog
+
+    simpleAlertDialogDialog(
+        terminateWithResult = { mainNavController.popBackStackWithResult(it) },
+    )
+
+    creatorPostsDownloadDialog(
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    // bottom sheet
+
+    versionHistoryBottomSheet(
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    billingPlusBottomSheet(
+        terminate = { mainNavController.popBackStack() },
+    )
+
+    // empty for start destination
+
+    emptyDetailScreen()
 }

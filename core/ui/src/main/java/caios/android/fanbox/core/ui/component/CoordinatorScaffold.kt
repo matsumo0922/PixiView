@@ -79,7 +79,7 @@ fun CoordinatorScaffold(
                 backgroundColor = MaterialTheme.colorScheme.surface,
                 elevation = 3.dp,
             ),
-            backgroundAlpha = appBarAlpha,
+            backgroundAlpha = if (appBarAlpha.isNaN()) 0f else appBarAlpha,
             onClickNavigateUp = onClickNavigateUp,
             onClickMenu = onClickMenu,
         )

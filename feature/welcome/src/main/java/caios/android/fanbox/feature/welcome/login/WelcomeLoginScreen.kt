@@ -2,14 +2,19 @@ package caios.android.fanbox.feature.welcome.login
 
 import android.app.Activity
 import android.content.Intent
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import caios.android.fanbox.core.common.util.ToastUtil
+import caios.android.fanbox.core.ui.extensition.LocalNavigationType
+import caios.android.fanbox.core.ui.extensition.PixiViewNavigationType
 import caios.android.fanbox.core.ui.theme.bold
 import caios.android.fanbox.core.ui.theme.center
 import caios.android.fanbox.feature.welcome.R
@@ -38,6 +45,8 @@ internal fun WelcomeLoginScreen(
     viewModel: WelcomeLoginViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val navigationType = LocalNavigationType.current.type
+
     val isLoggedIn by viewModel.isLoggedInFlow.collectAsStateWithLifecycle(initialValue = false)
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
@@ -48,22 +57,77 @@ internal fun WelcomeLoginScreen(
         }
     }
 
+    if (navigationType != PixiViewNavigationType.PermanentNavigationDrawer) {
+        Column(
+            modifier = modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            FirstSection()
+
+            SecondSection(
+                modifier = Modifier.weight(1f),
+                isLoggedIn = isLoggedIn,
+                launcher = launcher,
+                navigateToWelcomePermission = navigateToWelcomePermission,
+            )
+        }
+    } else {
+        Row(
+            modifier = modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            FirstSection(
+                modifier = Modifier.weight(1f),
+            )
+
+            Spacer(modifier = Modifier.width(24.dp))
+
+            Column(Modifier.weight(1f)) {
+                Box(Modifier.weight(2f))
+
+                SecondSection(
+                    modifier = Modifier.weight(3f),
+                    isLoggedIn = isLoggedIn,
+                    launcher = launcher,
+                    navigateToWelcomePermission = navigateToWelcomePermission,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FirstSection(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier.padding(
+            top = 8.dp,
+            start = 8.dp,
+            end = 8.dp,
+        ),
+        painter = painterResource(R.drawable.vec_welcome_plus),
+        contentDescription = null,
+    )
+}
+
+@Composable
+private fun SecondSection(
+    isLoggedIn: Boolean,
+    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>,
+    navigateToWelcomePermission: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+
     Column(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(24.dp),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Image(
-            modifier = Modifier.padding(
-                top = 8.dp,
-                start = 8.dp,
-                end = 8.dp,
-            ),
-            painter = painterResource(R.drawable.vec_welcome_plus),
-            contentDescription = null,
-        )
-
         Text(
             modifier = Modifier.padding(top = 32.dp),
             text = stringResource(if (isLoggedIn) R.string.welcome_login_ready_title else R.string.welcome_login_title),

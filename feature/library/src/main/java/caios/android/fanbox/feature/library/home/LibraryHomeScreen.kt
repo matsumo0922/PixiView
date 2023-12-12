@@ -33,6 +33,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.LazyPagingItemsLoadContents
+import caios.android.fanbox.core.ui.extensition.LocalNavigationType
+import caios.android.fanbox.core.ui.extensition.PixiViewNavigationType
 import caios.android.fanbox.feature.library.R
 import caios.android.fanbox.feature.library.home.items.LibraryHomeIdleSection
 import caios.android.fanbox.feature.library.home.items.LibrarySupportedIdleSection
@@ -50,6 +52,7 @@ internal fun LibraryHomeScreen(
     modifier: Modifier = Modifier,
     viewModel: LibraryHomeViewModel = hiltViewModel(),
 ) {
+    val navigationType = LocalNavigationType.current.type
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val homePager = uiState.homePaging.collectAsLazyPagingItems()
@@ -65,27 +68,29 @@ internal fun LibraryHomeScreen(
     )
 
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = if (navigationType != PixiViewNavigationType.PermanentNavigationDrawer) modifier.nestedScroll(scrollBehavior.nestedScrollConnection) else modifier,
         topBar = {
-            CenterAlignedTopAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                title = {
-                    Text(text = stringResource(R.string.about_name))
-                },
-                navigationIcon = {
-                    IconButton(onClick = openDrawer) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = null,
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface,
-                ),
-            )
+            if (navigationType != PixiViewNavigationType.PermanentNavigationDrawer) {
+                CenterAlignedTopAppBar(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = {
+                        Text(text = stringResource(R.string.about_name))
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = openDrawer) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        scrolledContainerColor = MaterialTheme.colorScheme.surface,
+                    ),
+                )
+            }
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->

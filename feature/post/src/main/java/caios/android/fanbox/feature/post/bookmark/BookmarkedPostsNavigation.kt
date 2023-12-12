@@ -1,5 +1,7 @@
 package caios.android.fanbox.feature.post.bookmark
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -27,6 +29,7 @@ fun NavGraphBuilder.bookmarkedPostsScreen(
         popExitTransition = { NavigateAnimation.Horizontal.popExit },
     ) {
         BookmarkedPostsRoute(
+            modifier = Modifier.fillMaxSize(),
             navigateToPostDetail = navigateToPostDetail,
             navigateToCreatorPosts = navigateToCreatorPosts,
             navigateToCreatorPlans = navigateToCreatorPlans,

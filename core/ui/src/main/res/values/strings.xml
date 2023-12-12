@@ -92,6 +92,10 @@
     <string name="home_app_lock_title">Authentication required</string>
     <string name="home_app_lock_message">App must be unlocked to use</string>
 
+    <!-- Empty -->
+    <string name="empty_detail_title">Check post detail</string>
+    <string name="empty_detail_description">Select a post to see the details here</string>
+
     <!-- Notify -->
     <string name="notify_load_more">More</string>
     <string name="notify_title_post_published">\'%1$s\' has been published!</string>

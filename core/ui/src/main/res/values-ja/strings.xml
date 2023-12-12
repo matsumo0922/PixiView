@@ -92,6 +92,10 @@
     <string name="home_app_lock_title">認証が必要です</string>
     <string name="home_app_lock_message">アプリを使用するにはロック解除が必要です</string>
 
+    <!-- Empty -->
+    <string name="empty_detail_title">投稿を確認</string>
+    <string name="empty_detail_description">投稿を選択するとここに詳細が表示されます</string>
+
     <!-- Notify -->
     <string name="notify_load_more">もっと見る</string>
     <string name="notify_title_post_published">「%1$s」が公開されました！</string>
