@@ -4,9 +4,11 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import caios.android.fanbox.core.common.PixiViewConfig
 import caios.android.fanbox.core.model.fanbox.FanboxPost
 import caios.android.fanbox.core.repository.FanboxRepository
 import caios.android.fanbox.core.repository.UserDataRepository
+import caios.android.fanbox.core.ui.ads.NativeAdsPreLoader
 import caios.android.fanbox.feature.post.detail.PostDetailPagingType.Creator
 import caios.android.fanbox.feature.post.detail.PostDetailPagingType.Home
 import caios.android.fanbox.feature.post.detail.PostDetailPagingType.Search
@@ -24,15 +26,26 @@ import javax.inject.Inject
 class PostDetailRootViewModel @Inject constructor(
     private val userDataRepository: UserDataRepository,
     private val fanboxRepository: FanboxRepository,
+    private val pixiViewConfig: PixiViewConfig,
+    private val nativeAdsPreLoader: NativeAdsPreLoader,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         PostDetailRootUiState(
             paging = null,
+            nativeAdUnitId = pixiViewConfig.adMobNativeAdUnitId,
         ),
     )
 
     val uiState = _uiState.asStateFlow()
+
+    val adsPreLoader = nativeAdsPreLoader
+
+    init {
+        viewModelScope.launch {
+            adsPreLoader.preloadAd()
+        }
+    }
 
     fun fetch(type: PostDetailPagingType) {
         viewModelScope.launch {
@@ -48,6 +61,7 @@ class PostDetailRootViewModel @Inject constructor(
                     Search -> fanboxRepository.getPostsFromQueryPagerCache()
                     Unknown -> null
                 },
+                nativeAdUnitId = pixiViewConfig.adMobNativeAdUnitId,
             )
         }
     }
@@ -56,4 +70,5 @@ class PostDetailRootViewModel @Inject constructor(
 @Stable
 data class PostDetailRootUiState(
     val paging: Flow<PagingData<FanboxPost>>?,
+    val nativeAdUnitId: String,
 )

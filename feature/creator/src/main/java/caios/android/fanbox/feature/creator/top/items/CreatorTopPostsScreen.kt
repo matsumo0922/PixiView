@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -47,6 +48,8 @@ import caios.android.fanbox.core.model.fanbox.FanboxCreatorTag
 import caios.android.fanbox.core.model.fanbox.FanboxPost
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
+import caios.android.fanbox.core.ui.ads.NativeAdMediumItem
+import caios.android.fanbox.core.ui.ads.NativeAdsPreLoader
 import caios.android.fanbox.core.ui.component.PostGridItem
 import caios.android.fanbox.core.ui.component.PostItem
 import caios.android.fanbox.core.ui.extensition.FadePlaceHolder
@@ -63,6 +66,8 @@ internal fun CreatorTopPostsScreen(
     listState: LazyListState,
     gridState: LazyGridState,
     userData: UserData,
+    nativeAdUnitId: String,
+    nativeAdsPreLoader: NativeAdsPreLoader,
     bookmarkedPosts: ImmutableList<PostId>,
     pagingAdapter: LazyPagingItems<FanboxPost>,
     creatorTags: ImmutableList<FanboxCreatorTag>,
@@ -90,6 +95,8 @@ internal fun CreatorTopPostsScreen(
             modifier = modifier,
             state = listState,
             userData = userData,
+            nativeAdUnitId = nativeAdUnitId,
+            nativeAdsPreLoader = nativeAdsPreLoader,
             bookmarkedPosts = bookmarkedPosts,
             pagingAdapter = pagingAdapter,
             creatorTags = creatorTags,
@@ -107,6 +114,8 @@ internal fun CreatorTopPostsScreen(
 private fun ColumnSection(
     state: LazyListState,
     userData: UserData,
+    nativeAdUnitId: String,
+    nativeAdsPreLoader: NativeAdsPreLoader,
     bookmarkedPosts: ImmutableList<PostId>,
     pagingAdapter: LazyPagingItems<FanboxPost>,
     creatorTags: ImmutableList<FanboxCreatorTag>,
@@ -147,19 +156,34 @@ private fun ColumnSection(
             key = pagingAdapter.itemKey { it.id.value },
             contentType = pagingAdapter.itemContentType(),
         ) { index ->
-            pagingAdapter[index]?.let { post ->
-                PostItem(
-                    modifier = Modifier.fillMaxWidth(),
-                    post = post.copy(isBookmarked = bookmarkedPosts.contains(post.id)),
-                    isHideAdultContents = userData.isHideAdultContents,
-                    isOverrideAdultContents = userData.isAllowedShowAdultContents,
-                    isTestUser = userData.isTestUser,
-                    onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
-                    onClickCreator = onClickCreator,
-                    onClickPlanList = onClickPlanList,
-                    onClickLike = onClickPostLike,
-                    onClickBookmark = { _, isBookmarked -> onClickPostBookmark.invoke(post, isBookmarked) },
-                )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                pagingAdapter[index]?.let { post ->
+                    PostItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        post = post.copy(isBookmarked = bookmarkedPosts.contains(post.id)),
+                        isHideAdultContents = userData.isHideAdultContents,
+                        isOverrideAdultContents = userData.isAllowedShowAdultContents,
+                        isTestUser = userData.isTestUser,
+                        onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
+                        onClickCreator = onClickCreator,
+                        onClickPlanList = onClickPlanList,
+                        onClickLike = onClickPostLike,
+                        onClickBookmark = { _, isBookmarked ->
+                            onClickPostBookmark.invoke(post, isBookmarked)
+                        },
+                    )
+                }
+
+                if ((index + 4) % 5 == 0 && !userData.hasPrivilege) {
+                    NativeAdMediumItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        nativeAdUnitId = nativeAdUnitId,
+                        nativeAdsPreLoader = nativeAdsPreLoader,
+                    )
+                }
             }
         }
 

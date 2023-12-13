@@ -274,7 +274,7 @@ class BillingClientProviderImpl @Inject constructor(
         billingClient.queryPurchaseHistoryAsync(params) { result, purchases ->
             when (val response = result.toResponse()) {
                 is BillingResponse.OK -> {
-                    listener.invoke(Result.success(purchases ?: emptyList()))
+                    listener.invoke(Result.success(purchases.orEmpty()))
                 }
                 is BillingResponse.ServiceDisconnected, is BillingResponse.ServiceError -> {
                     Timber.d("queryPurchaseHistory: service error. CODE=${response.code}")

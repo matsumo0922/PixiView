@@ -1,3 +1,5 @@
+@file:Suppress("InjectDispatcher")
+
 package caios.android.fanbox.core.common.di
 
 import dagger.Module

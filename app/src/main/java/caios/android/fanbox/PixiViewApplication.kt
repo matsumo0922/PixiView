@@ -12,6 +12,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.color.DynamicColors
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
@@ -29,6 +30,8 @@ class PixiViewApplication : Application() {
         super.onCreate()
 
         Timber.plant(PixiViewDebugTree())
+
+        MobileAds.initialize(this)
 
         DynamicColors.applyToActivitiesIfAvailable(this)
 
