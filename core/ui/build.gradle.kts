@@ -21,6 +21,7 @@ dependencies {
     implementation(libs.androidx.biomtrics)
     implementation(libs.androidx.biomtrics.ktx)
     implementation(libs.androidx.palette)
+    implementation(libs.play.service.ads)
     implementation(libs.collapsing.toolbar.compose)
     implementation(libs.reorderble.compose)
 }

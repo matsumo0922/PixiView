@@ -24,6 +24,9 @@ object AppModule {
             developerPassword = BuildConfig.DEVELOPER_PASSWORD,
             pixivClientId = BuildConfig.PIXIV_CLIENT_ID,
             pixivClientSecret = BuildConfig.PIXIV_CLIENT_SECRET,
+            adMobAppId = BuildConfig.ADMOB_APP_ID,
+            adMobBannerAdUnitId = BuildConfig.ADMOB_BANNER_AD_UNIT_ID,
+            adMobNativeAdUnitId = BuildConfig.ADMOB_NATIVE_AD_UNIT_ID,
         )
     }
 }

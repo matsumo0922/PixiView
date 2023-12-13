@@ -73,6 +73,9 @@ android {
                 else -> "FANBOX"
             }
 
+            val bannerAdTestId = "ca-app-pub-3940256099942544/6300978111"
+            val nativeAdTestId = "ca-app-pub-3940256099942544/2247696110"
+
             it.resValues.put(it.makeResValueKey("string", "app_name"), ResValue(appName, null))
             it.buildConfigFields.apply {
                 putBuildConfig(localProperties, "VERSION_NAME", libs.versions.versionName.get().toStringLiteral())
@@ -80,6 +83,9 @@ android {
                 putBuildConfig(localProperties, "DEVELOPER_PASSWORD")
                 putBuildConfig(localProperties, "PIXIV_CLIENT_ID")
                 putBuildConfig(localProperties, "PIXIV_CLIENT_SECRET")
+                putBuildConfig(localProperties, "ADMOB_APP_ID")
+                putBuildConfig(localProperties, "ADMOB_BANNER_AD_UNIT_ID", if (it.buildType != "release") bannerAdTestId else null)
+                putBuildConfig(localProperties, "ADMOB_NATIVE_AD_UNIT_ID", if (it.buildType != "release") nativeAdTestId else null)
             }
 
             if (it.buildType == "release") {
@@ -124,6 +130,7 @@ dependencies {
 
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.play.service.oss)
+    implementation(libs.play.service.ads)
     implementation(libs.google.material)
 
     debugImplementation(libs.facebook.flipper)
@@ -140,16 +147,17 @@ fun MapProperty<String, BuildConfigField<out Serializable>>.putBuildConfig(
     type: String = "String",
     comment: String? = null
 ) {
+    val defaultValue = value?.toStringLiteral()
     val property = localProperties.getProperty(key)?.toStringLiteral()
-    val env = System.getenv(key)?.toStringLiteral()
+    val env = System.getenv(key).orEmpty().toStringLiteral()
 
-    put(key, BuildConfigField(type, value ?: property ?: env ?: "\"\"", comment))
+    put(key, BuildConfigField(type, defaultValue ?: property ?: env, comment))
 }
 
 fun Any.toStringLiteral(): String {
     val value = toString()
 
-    if (value.first() == '\"' && value.last() == '\"') {
+    if (value.firstOrNull() == '\"' && value.lastOrNull() == '\"') {
         return value
     }
 

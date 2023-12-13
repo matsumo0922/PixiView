@@ -50,7 +50,7 @@ androidxGlance = "1.0.0"
 androidxGranceWear = "1.0.0-alpha05"
 
 # Google
-playServiceAds = "21.1.0"
+playServiceAds = "22.6.0"
 playServiceOss = "17.0.1"
 material = "1.10.0"
 exoPlayer = "2.19.1"
@@ -175,6 +175,7 @@ androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = 
 androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util" }
+androidx-compose-ui-binding = { module = "androidx.compose.ui:ui-viewbinding" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-animation = { module = "androidx.compose.animation:animation" }
@@ -192,6 +193,7 @@ billing-ktx = { module = "com.android.billingclient:billing-ktx", version.ref = 
 
 # Google
 play-service-oss = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "playServiceOss" }
+play-service-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServiceAds" }
 google-material = { module = "com.google.android.material:material", version.ref = "material" }
 google-exoplayer = { module = "com.google.android.exoplayer:exoplayer", version.ref = "exoPlayer" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
@@ -291,6 +293,7 @@ ui-implementation = [
     "androidx-compose-runtime",
     "androidx-compose-ui",
     "androidx-compose-ui-util",
+    "androidx-compose-ui-binding",
     "androidx-compose-animation",
     "androidx-compose-animation-graphics",
     "androidx-compose-material",

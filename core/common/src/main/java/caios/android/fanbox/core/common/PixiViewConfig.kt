@@ -9,6 +9,9 @@ data class PixiViewConfig(
     val developerPassword: String,
     val pixivClientId: String,
     val pixivClientSecret: String,
+    val adMobAppId: String,
+    val adMobBannerAdUnitId: String,
+    val adMobNativeAdUnitId: String,
 ) {
     companion object {
         fun dummy(): PixiViewConfig {
@@ -21,6 +24,9 @@ data class PixiViewConfig(
                 developerPassword = "1919191919",
                 pixivClientId = "1919191919",
                 pixivClientSecret = "1919191919",
+                adMobAppId = "ca-app-pub-1919191919~1919191919",
+                adMobBannerAdUnitId = "ca-app-pub-1919191919/1919191919",
+                adMobNativeAdUnitId = "ca-app-pub-1919191919/1919191919",
             )
         }
     }
