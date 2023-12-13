@@ -56,6 +56,10 @@ class CreatorTopViewModel @Inject constructor(
                 _screenState.value = screenState.value.changeContent { it.copy(bookmarkedPosts = data) }
             }
         }
+
+        viewModelScope.launch {
+            nativeAdsPreLoader.preloadAd()
+        }
     }
 
     fun fetch(creatorId: CreatorId) {

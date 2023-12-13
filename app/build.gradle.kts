@@ -73,17 +73,27 @@ android {
                 else -> "FANBOX"
             }
 
+            // This ID must be valid or the app will crash.
+            // When building from GitHub, either exclude AdMob code or register with AdMob for an ID.
+            val admobTestAppId = "ca-app-pub-0000000000000000~0000000000"
             val bannerAdTestId = "ca-app-pub-3940256099942544/6300978111"
             val nativeAdTestId = "ca-app-pub-3940256099942544/2247696110"
 
-            it.resValues.put(it.makeResValueKey("string", "app_name"), ResValue(appName, null))
+            it.manifestPlaceholders.apply {
+                putManifestPlaceholder(localProperties, "ADMOB_APP_ID", defaultValue = admobTestAppId)
+            }
+
+            it.resValues.apply {
+                put(it.makeResValueKey("string", "app_name"), ResValue(appName, null))
+            }
+
             it.buildConfigFields.apply {
                 putBuildConfig(localProperties, "VERSION_NAME", libs.versions.versionName.get().toStringLiteral())
                 putBuildConfig(localProperties, "VERSION_CODE", libs.versions.versionCode.get().toStringLiteral())
                 putBuildConfig(localProperties, "DEVELOPER_PASSWORD")
                 putBuildConfig(localProperties, "PIXIV_CLIENT_ID")
                 putBuildConfig(localProperties, "PIXIV_CLIENT_SECRET")
-                putBuildConfig(localProperties, "ADMOB_APP_ID")
+                putBuildConfig(localProperties, "ADMOB_APP_ID", defaultValue = admobTestAppId)
                 putBuildConfig(localProperties, "ADMOB_BANNER_AD_UNIT_ID", if (it.buildType != "release") bannerAdTestId else null)
                 putBuildConfig(localProperties, "ADMOB_NATIVE_AD_UNIT_ID", if (it.buildType != "release") nativeAdTestId else null)
             }
@@ -145,13 +155,29 @@ fun MapProperty<String, BuildConfigField<out Serializable>>.putBuildConfig(
     key: String,
     value: String? = null,
     type: String = "String",
+    defaultValue: String = "",
     comment: String? = null
 ) {
-    val defaultValue = value?.toStringLiteral()
+    val data = value?.toStringLiteral()
     val property = localProperties.getProperty(key)?.toStringLiteral()
-    val env = System.getenv(key).orEmpty().toStringLiteral()
+    val env = System.getenv(key)?.toStringLiteral()
+    val defaultData = defaultValue.toStringLiteral()
 
-    put(key, BuildConfigField(type, defaultValue ?: property ?: env, comment))
+    put(key, BuildConfigField(type, data ?: property ?: env ?: defaultData, comment))
+}
+
+fun MapProperty<String, String>.putManifestPlaceholder(
+    localProperties: Properties,
+    key: String,
+    value: String? = null,
+    defaultValue: String = "",
+) {
+    val data = value?.toStringLiteral()
+    val property = localProperties.getProperty(key)?.toStringLiteral()
+    val env = System.getenv(key)?.toStringLiteral()
+    val defaultData = defaultValue.toStringLiteral()
+
+    put(key, data ?: property ?: env ?: defaultData)
 }
 
 fun Any.toStringLiteral(): String {

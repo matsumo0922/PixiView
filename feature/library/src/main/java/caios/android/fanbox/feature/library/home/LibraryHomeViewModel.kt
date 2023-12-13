@@ -35,7 +35,7 @@ class LibraryHomeViewModel @Inject constructor(
             bookmarkedPosts = emptyList(),
             homePaging = emptyPaging(),
             supportedPaging = emptyPaging(),
-            nativeAdUnitId = "",
+            nativeAdUnitId = pixiViewConfig.adMobNativeAdUnitId,
         ),
     )
 
