@@ -54,6 +54,8 @@ import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.AsyncLoadContents
 import caios.android.fanbox.core.ui.LazyPagingItemsLoadContents
+import caios.android.fanbox.core.ui.ads.NativeAdMediumItem
+import caios.android.fanbox.core.ui.ads.NativeAdsPreLoader
 import caios.android.fanbox.core.ui.component.CoordinatorScaffold
 import caios.android.fanbox.core.ui.component.RestrictCardItem
 import caios.android.fanbox.core.ui.component.TagItems
@@ -77,6 +79,7 @@ import caios.android.fanbox.feature.post.detail.items.PostDetailMenuDialog
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CoroutineScope
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -119,6 +122,8 @@ internal fun PostDetailRoute(
                     PostDetailView(
                         modifier = Modifier.fillMaxSize(),
                         postId = post.id,
+                        nativeAdUnitId = uiState.nativeAdUnitId,
+                        nativeAdsPreLoader = viewModel.adsPreLoader,
                         navigateToPostSearch = navigateToPostSearch,
                         navigateToPostDetail = navigateToPostDetail,
                         navigateToPostImage = navigateToPostImage,
@@ -134,6 +139,8 @@ internal fun PostDetailRoute(
         PostDetailView(
             modifier = modifier,
             postId = postId,
+            nativeAdUnitId = uiState.nativeAdUnitId,
+            nativeAdsPreLoader = viewModel.adsPreLoader,
             navigateToPostSearch = navigateToPostSearch,
             navigateToPostDetail = navigateToPostDetail,
             navigateToPostImage = navigateToPostImage,
@@ -154,6 +161,8 @@ internal fun PostDetailRoute(
 @Composable
 private fun PostDetailView(
     postId: PostId,
+    nativeAdUnitId: String,
+    nativeAdsPreLoader: NativeAdsPreLoader,
     navigateToPostSearch: (String, CreatorId) -> Unit,
     navigateToPostDetail: (PostId) -> Unit,
     navigateToPostImage: (PostId, Int) -> Unit,
@@ -185,6 +194,8 @@ private fun PostDetailView(
             creatorDetail = uiState.creatorDetail,
             userData = uiState.userData,
             metaData = uiState.metaData,
+            nativeAdUnitId = nativeAdUnitId,
+            nativeAdsPreLoader = nativeAdsPreLoader,
             onClickPost = navigateToPostDetail,
             onClickPostLike = viewModel::postLike,
             onClickPostBookmark = viewModel::postBookmark,
@@ -226,6 +237,8 @@ private fun PostDetailScreen(
     creatorDetail: FanboxCreatorDetail,
     userData: UserData,
     metaData: FanboxMetaData,
+    nativeAdUnitId: String,
+    nativeAdsPreLoader: NativeAdsPreLoader,
     onClickPost: (PostId) -> Unit,
     onClickPostLike: (PostId) -> Unit,
     onClickPostBookmark: (FanboxPost, Boolean) -> Unit,
@@ -352,6 +365,18 @@ private fun PostDetailScreen(
                         .fillMaxWidth(),
                     postDetail = postDetail,
                     onClickDownload = onClickDownloadImages,
+                )
+            }
+        }
+
+        if (!userData.hasPrivilege) {
+            item {
+                NativeAdMediumItem(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                    nativeAdUnitId = nativeAdUnitId,
+                    nativeAdsPreLoader = nativeAdsPreLoader,
                 )
             }
         }
@@ -553,6 +578,8 @@ private fun PostDetailScreenPreview() {
         creatorDetail = FanboxCreatorDetail.dummy(),
         userData = UserData.dummy(),
         metaData = FanboxMetaData.dummy(),
+        nativeAdUnitId = "",
+        nativeAdsPreLoader = NativeAdsPreLoader.dummy(),
         onClickPost = {},
         onClickPostLike = {},
         onClickPostBookmark = { _, _ -> },

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import caios.android.fanbox.core.common.PixiViewConfig
 import caios.android.fanbox.core.common.util.suspendRunCatching
 import caios.android.fanbox.core.model.ScreenState
 import caios.android.fanbox.core.model.UserData
@@ -16,6 +17,7 @@ import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.repository.FanboxRepository
 import caios.android.fanbox.core.repository.UserDataRepository
+import caios.android.fanbox.core.ui.ads.NativeAdsPreLoader
 import caios.android.fanbox.feature.creator.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -30,11 +32,15 @@ import javax.inject.Inject
 class CreatorTopViewModel @Inject constructor(
     private val userDataRepository: UserDataRepository,
     private val fanboxRepository: FanboxRepository,
+    private val pixiViewConfig: PixiViewConfig,
+    private val nativeAdsPreLoader: NativeAdsPreLoader,
 ) : ViewModel() {
 
     private val _screenState = MutableStateFlow<ScreenState<CreatorTopUiState>>(ScreenState.Loading)
 
     val screenState = _screenState.asStateFlow()
+
+    val adsPreLoader = nativeAdsPreLoader
 
     private var postsPagingCache: Flow<PagingData<FanboxPost>>? = null
 
@@ -62,6 +68,7 @@ class CreatorTopViewModel @Inject constructor(
                 CreatorTopUiState(
                     userData = userData,
                     bookmarkedPosts = fanboxRepository.bookmarkedPosts.first(),
+                    nativeAdUnitId = pixiViewConfig.adMobNativeAdUnitId,
                     creatorDetail = fanboxRepository.getCreator(creatorId),
                     creatorPlans = fanboxRepository.getCreatorPlans(creatorId),
                     creatorTags = fanboxRepository.getCreatorTags(creatorId),
@@ -112,6 +119,7 @@ class CreatorTopViewModel @Inject constructor(
 @Stable
 data class CreatorTopUiState(
     val userData: UserData,
+    val nativeAdUnitId: String,
     val bookmarkedPosts: List<PostId>,
     val creatorDetail: FanboxCreatorDetail,
     val creatorPlans: List<FanboxCreatorPlan>,

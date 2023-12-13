@@ -4,12 +4,14 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import caios.android.fanbox.core.common.PixiViewConfig
 import caios.android.fanbox.core.common.util.suspendRunCatching
 import caios.android.fanbox.core.model.UserData
 import caios.android.fanbox.core.model.fanbox.FanboxPost
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.repository.FanboxRepository
 import caios.android.fanbox.core.repository.UserDataRepository
+import caios.android.fanbox.core.ui.ads.NativeAdsPreLoader
 import caios.android.fanbox.core.ui.extensition.emptyPaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -23,6 +25,8 @@ import javax.inject.Inject
 class LibraryHomeViewModel @Inject constructor(
     private val userDataRepository: UserDataRepository,
     private val fanboxRepository: FanboxRepository,
+    private val nativeAdsPreLoader: NativeAdsPreLoader,
+    private val pixiViewConfig: PixiViewConfig,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -31,10 +35,13 @@ class LibraryHomeViewModel @Inject constructor(
             bookmarkedPosts = emptyList(),
             homePaging = emptyPaging(),
             supportedPaging = emptyPaging(),
+            nativeAdUnitId = "",
         ),
     )
 
     val uiState = _uiState.asStateFlow()
+
+    val adsPreLoader = nativeAdsPreLoader
 
     init {
         viewModelScope.launch {
@@ -46,6 +53,7 @@ class LibraryHomeViewModel @Inject constructor(
                     userData = userData,
                     homePaging = fanboxRepository.getHomePostsPager(loadSize, isHideRestricted),
                     supportedPaging = fanboxRepository.getSupportedPostsPager(loadSize, isHideRestricted),
+                    nativeAdUnitId = pixiViewConfig.adMobNativeAdUnitId,
                 )
             }
         }
@@ -55,6 +63,8 @@ class LibraryHomeViewModel @Inject constructor(
                 _uiState.value = uiState.value.copy(bookmarkedPosts = it)
             }
         }
+
+        adsPreLoader.preloadAd()
     }
 
     fun postLike(postId: PostId) {
@@ -84,4 +94,5 @@ data class LibraryUiState(
     val bookmarkedPosts: List<PostId>,
     val homePaging: Flow<PagingData<FanboxPost>>,
     val supportedPaging: Flow<PagingData<FanboxPost>>,
+    val nativeAdUnitId: String,
 )

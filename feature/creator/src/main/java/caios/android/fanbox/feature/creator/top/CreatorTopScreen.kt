@@ -60,6 +60,7 @@ import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.AsyncLoadContents
 import caios.android.fanbox.core.ui.LazyPagingItemsLoadContents
+import caios.android.fanbox.core.ui.ads.NativeAdsPreLoader
 import caios.android.fanbox.core.ui.component.CollapsingToolbarScaffold
 import caios.android.fanbox.core.ui.component.ScrollStrategy
 import caios.android.fanbox.core.ui.component.rememberCollapsingToolbarScaffoldState
@@ -102,6 +103,8 @@ internal fun CreatorTopRoute(
             modifier = Modifier.fillMaxSize(),
             isPosts = isPosts,
             userData = uiState.userData,
+            nativeAdUnitId = uiState.nativeAdUnitId,
+            nativeAdsPreLoader = viewModel.adsPreLoader,
             bookmarkedPosts = uiState.bookmarkedPosts.toImmutableList(),
             creatorDetail = uiState.creatorDetail,
             creatorPlans = uiState.creatorPlans.toImmutableList(),
@@ -129,6 +132,8 @@ private fun CreatorTopScreen(
     isPosts: Boolean,
     creatorDetail: FanboxCreatorDetail,
     userData: UserData,
+    nativeAdUnitId: String,
+    nativeAdsPreLoader: NativeAdsPreLoader,
     bookmarkedPosts: ImmutableList<PostId>,
     creatorPlans: ImmutableList<FanboxCreatorPlan>,
     creatorTags: ImmutableList<FanboxCreatorTag>,
@@ -245,6 +250,8 @@ private fun CreatorTopScreen(
                                     listState = postsListState,
                                     gridState = postsGridState,
                                     userData = userData,
+                                    nativeAdUnitId = nativeAdUnitId,
+                                    nativeAdsPreLoader = nativeAdsPreLoader,
                                     bookmarkedPosts = bookmarkedPosts.toImmutableList(),
                                     pagingAdapter = creatorPostsPaging,
                                     creatorTags = creatorTags,

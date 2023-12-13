@@ -1,10 +1,13 @@
 package caios.android.fanbox.feature.library.home.items
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -12,7 +15,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -22,6 +27,8 @@ import caios.android.fanbox.core.model.UserData
 import caios.android.fanbox.core.model.fanbox.FanboxPost
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
+import caios.android.fanbox.core.ui.ads.NativeAdMediumItem
+import caios.android.fanbox.core.ui.ads.NativeAdsPreLoader
 import caios.android.fanbox.core.ui.component.PostGridItem
 import caios.android.fanbox.core.ui.component.PostItem
 import caios.android.fanbox.core.ui.extensition.drawVerticalScrollbar
@@ -32,6 +39,8 @@ import kotlinx.collections.immutable.ImmutableList
 internal fun LibraryHomeIdleSection(
     pagingAdapter: LazyPagingItems<FanboxPost>,
     userData: UserData,
+    nativeAdUnitId: String,
+    nativeAdsPreLoader: NativeAdsPreLoader,
     bookmarkedPosts: ImmutableList<PostId>,
     onClickPost: (PostId) -> Unit,
     onClickPostLike: (PostId) -> Unit,
@@ -52,6 +61,8 @@ internal fun LibraryHomeIdleSection(
         ColumnSection(
             pagingAdapter = pagingAdapter,
             userData = userData,
+            nativeAdUnitId = nativeAdUnitId,
+            nativeAdsPreLoader = nativeAdsPreLoader,
             bookmarkedPosts = bookmarkedPosts,
             onClickPost = onClickPost,
             onClickPostLike = onClickPostLike,
@@ -67,6 +78,8 @@ internal fun LibraryHomeIdleSection(
 private fun ColumnSection(
     pagingAdapter: LazyPagingItems<FanboxPost>,
     userData: UserData,
+    nativeAdUnitId: String,
+    nativeAdsPreLoader: NativeAdsPreLoader,
     bookmarkedPosts: ImmutableList<PostId>,
     onClickPost: (PostId) -> Unit,
     onClickPostLike: (PostId) -> Unit,
@@ -88,19 +101,34 @@ private fun ColumnSection(
             key = pagingAdapter.itemKey { it.id.value },
             contentType = pagingAdapter.itemContentType(),
         ) { index ->
-            pagingAdapter[index]?.let { post ->
-                PostItem(
-                    modifier = Modifier.fillMaxWidth(),
-                    post = post.copy(isBookmarked = bookmarkedPosts.contains(post.id)),
-                    isHideAdultContents = userData.isHideAdultContents,
-                    isOverrideAdultContents = userData.isAllowedShowAdultContents,
-                    isTestUser = userData.isTestUser,
-                    onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
-                    onClickCreator = onClickCreator,
-                    onClickPlanList = onClickPlanList,
-                    onClickLike = onClickPostLike,
-                    onClickBookmark = { _, isBookmarked -> onClickPostBookmark.invoke(post, isBookmarked) },
-                )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                pagingAdapter[index]?.let { post ->
+                    PostItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        post = post.copy(isBookmarked = bookmarkedPosts.contains(post.id)),
+                        isHideAdultContents = userData.isHideAdultContents,
+                        isOverrideAdultContents = userData.isAllowedShowAdultContents,
+                        isTestUser = userData.isTestUser,
+                        onClickPost = { if (!post.isRestricted) onClickPost.invoke(it) },
+                        onClickCreator = onClickCreator,
+                        onClickPlanList = onClickPlanList,
+                        onClickLike = onClickPostLike,
+                        onClickBookmark = { _, isBookmarked ->
+                            onClickPostBookmark.invoke(post, isBookmarked)
+                        },
+                    )
+                }
+
+                if ((index + 4) % 5 == 0 && !userData.hasPrivilege) {
+                    NativeAdMediumItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        nativeAdUnitId = nativeAdUnitId,
+                        nativeAdsPreLoader = nativeAdsPreLoader,
+                    )
+                }
             }
         }
 
