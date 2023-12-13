@@ -15,7 +15,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -46,7 +45,7 @@ class NativeAdsPreLoader @Inject constructor(
                         key = key,
                         ad = nativeAd,
                         date = LocalDateTime.now(),
-                    )
+                    ),
                 )
 
                 key++
@@ -110,7 +109,7 @@ class NativeAdsPreLoader @Inject constructor(
         fun dummy() = NativeAdsPreLoader(
             scope = CoroutineScope(Dispatchers.IO),
             context = LocalContext.current,
-            pixiViewConfig = PixiViewConfig.dummy()
+            pixiViewConfig = PixiViewConfig.dummy(),
         )
     }
 }

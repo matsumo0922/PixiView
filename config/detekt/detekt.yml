@@ -70,6 +70,8 @@ style:
 
 potential-bugs:
   active: true
+  UnsafeCallOnNullableType:
+    active: false
 
 formatting:
   active: true

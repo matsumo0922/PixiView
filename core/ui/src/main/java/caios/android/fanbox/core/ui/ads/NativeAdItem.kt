@@ -28,8 +28,6 @@ import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
-import kotlinx.coroutines.CoroutineScope
-import timber.log.Timber
 
 /*@SuppressLint("MissingPermission")
 @Composable
@@ -192,7 +190,7 @@ fun NativeAdMediumItem(
 
                         adLoader.loadAd(AdRequest.Builder().build())
                     }
-                }
+                },
             )
         }
     }

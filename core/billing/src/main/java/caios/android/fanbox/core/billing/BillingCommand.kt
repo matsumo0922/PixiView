@@ -49,7 +49,7 @@ data class PurchaseSingleCommand(
     fun toBillingFlowParams(): BillingFlowParams {
         val productDetailParams = ProductDetailsParams.newBuilder()
             .setProductDetails(productDetails.rawProductDetails)
-            .setOfferToken(offerToken ?: "")
+            .setOfferToken(offerToken.orEmpty())
             .build()
 
         val builder = BillingFlowParams.newBuilder()

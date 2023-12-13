@@ -79,7 +79,6 @@ import caios.android.fanbox.feature.post.detail.items.PostDetailMenuDialog
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.CoroutineScope
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalFoundationApi::class)
