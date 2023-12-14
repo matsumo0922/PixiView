@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
+import caios.android.fanbox.core.ui.view.SimpleAlertContents
 import caios.android.fanbox.feature.library.discovery.LibraryDiscoveryRoute
 import caios.android.fanbox.feature.library.discovery.libraryDiscoveryScreen
 import caios.android.fanbox.feature.library.home.LibraryHomeRoute
@@ -25,6 +26,7 @@ fun LibraryNavHost(
     navigateToPostDetailFromSupported: (postId: PostId) -> Unit,
     navigateToCreatorPosts: (creatorId: CreatorId) -> Unit,
     navigateToCreatorPlans: (creatorId: CreatorId) -> Unit,
+    navigateToCancelPlus: (SimpleAlertContents) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = LibraryHomeRoute,
@@ -41,6 +43,7 @@ fun LibraryNavHost(
             navigateToPostDetailFromSupported = navigateToPostDetailFromSupported,
             navigateToCreatorPosts = navigateToCreatorPosts,
             navigateToCreatorPlans = navigateToCreatorPlans,
+            navigateToCancelPlus = navigateToCancelPlus,
         )
 
         libraryDiscoveryScreen(

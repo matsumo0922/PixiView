@@ -124,7 +124,7 @@ graph LR
 
 何か不具合を発見したり機能を改善したい場合、機能を新たに開発したい場合は、まず issue を書いてください。その上であなた自身を assign し、開発に取り組んでください。pull request はいつでも歓迎です :smile:
 
-将来的に Pixiv API を用いて新規機能を開発する予定です。APIを使用する場合は `local.properties` に Client ID と Client Secret を追加してください。デフォルトでは空文字が入っています。詳細は `app/build.gradle.kts` を読んでください。 
+このアプリは AdMob を用いて収益化しています。GitHub から手動でビルドする際は AdMob App ID を `local.properties` に記述する必要があります。デフォルトではダミーの ID が入っているため、起動時にクラッシュします。もしくは AdMob の当該コードを削除してからアプリをビルドしてください。その他、 `local.properties` には様々な ID が記述されています。詳細は `app/build.gradle.kts` または `PixiViewConfig` をご覧ください。
 
 ## License
 

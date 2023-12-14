@@ -21,6 +21,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -35,10 +36,12 @@ import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.LazyPagingItemsLoadContents
 import caios.android.fanbox.core.ui.extensition.LocalNavigationType
 import caios.android.fanbox.core.ui.extensition.PixiViewNavigationType
+import caios.android.fanbox.core.ui.view.SimpleAlertContents
 import caios.android.fanbox.feature.library.R
 import caios.android.fanbox.feature.library.home.items.LibraryHomeIdleSection
 import caios.android.fanbox.feature.library.home.items.LibrarySupportedIdleSection
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -49,6 +52,7 @@ internal fun LibraryHomeScreen(
     navigateToPostDetailFromSupported: (PostId) -> Unit,
     navigateToCreatorPlans: (CreatorId) -> Unit,
     navigateToCreatorPosts: (CreatorId) -> Unit,
+    navigateToCancelPlus: (SimpleAlertContents) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LibraryHomeViewModel = hiltViewModel(),
 ) {
@@ -66,6 +70,12 @@ internal fun LibraryHomeScreen(
         HomeTabs.Supported,
         HomeTabs.Home,
     )
+
+    LaunchedEffect(true) {
+        viewModel.cancelPlusTrigger.collectLatest {
+            navigateToCancelPlus.invoke(SimpleAlertContents.CancelPlus)
+        }
+    }
 
     Scaffold(
         modifier = if (navigationType != PixiViewNavigationType.PermanentNavigationDrawer) modifier.nestedScroll(scrollBehavior.nestedScrollConnection) else modifier,

@@ -167,6 +167,7 @@ private fun ExpandedNavHost(
                 navigateToPostDetailFromSupported = { subNavController.navigateToPostDetail(it, PostDetailPagingType.Supported) },
                 navigateToCreatorPosts = { mainNavController.navigateToCreatorTop(it, isPosts = true) },
                 navigateToCreatorPlans = { mainNavController.navigateToCreatorTop(it) },
+                navigateToCancelPlus = { mainNavController.navigateToSimpleAlertDialog(it) },
             ) {
                 applyNavGraph(mainNavController, subNavController)
             }
@@ -212,6 +213,7 @@ private fun NavGraphBuilder.applyNavGraph(
         navigateToSettingTop = { subNavController.navigateToSettingTop() },
         navigateToAbout = { subNavController.navigateToAbout() },
         navigateToBillingPlus = { mainNavController.navigateToBillingPlus() },
+        navigateToCancelPlus = { mainNavController.navigateToSimpleAlertDialog(it) },
     )
 
     postDetailScreen(
