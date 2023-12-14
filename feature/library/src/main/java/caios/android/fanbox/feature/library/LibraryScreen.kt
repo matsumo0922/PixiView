@@ -25,6 +25,7 @@ import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.AsyncLoadContents
 import caios.android.fanbox.core.ui.extensition.LocalNavigationType
 import caios.android.fanbox.core.ui.extensition.PixiViewNavigationType
+import caios.android.fanbox.core.ui.view.SimpleAlertContents
 import caios.android.fanbox.feature.library.component.LibraryBottomBar
 import caios.android.fanbox.feature.library.component.LibraryDestination
 import caios.android.fanbox.feature.library.component.LibraryDrawer
@@ -50,6 +51,7 @@ fun LibraryScreen(
     navigateToSettingTop: () -> Unit,
     navigateToAbout: () -> Unit,
     navigateToBillingPlus: () -> Unit,
+    navigateToCancelPlus: (SimpleAlertContents) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LibraryViewModel = hiltViewModel(),
 ) {
@@ -109,6 +111,7 @@ fun LibraryScreen(
                         navigateToPostDetailFromSupported = navigateToPostDetailFromSupported,
                         navigateToCreatorPosts = navigateToCreatorPosts,
                         navigateToCreatorPlans = navigateToCreatorPlans,
+                        navigateToCancelPlus = navigateToCancelPlus,
                     )
 
                     AnimatedVisibility(navigationType.type == PixiViewNavigationType.BottomNavigation) {

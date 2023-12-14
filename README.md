@@ -126,7 +126,7 @@ This app uses Gradle's Convention Plugins to standardize the build logic, and al
 
 If you find a bug, want to improve a feature, or want to develop a new feature, please first write an issue. Then assign yourself and work on the development. Pull requests are always welcome :smile:
 
-We plan to develop new features using the Pixiv API in the future. When using the API, add Client ID and Client Secret to `local.properties`. By default, it contains an empty string. Read `app/build.gradle.kts` for details.
+This app is monetized using AdMob. When building manually from GitHub, you need to write the AdMob App ID in `local.properties`. By default it contains a dummy ID, which causes it to crash on startup. Alternatively, please delete the AdMob code and build the app. In addition, various IDs are described in `local.properties`. See `appbuild.gradle.kts` or `PixiViewConfig` for details.
 
 ## License
 

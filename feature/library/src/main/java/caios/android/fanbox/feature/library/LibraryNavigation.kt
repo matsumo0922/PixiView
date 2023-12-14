@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.view.SimpleAlertContents
 
 const val LibraryRoute = "library"
 
@@ -28,6 +29,7 @@ fun NavGraphBuilder.libraryScreen(
     navigateToSettingTop: () -> Unit,
     navigateToAbout: () -> Unit,
     navigateToBillingPlus: () -> Unit,
+    navigateToCancelPlus: (SimpleAlertContents) -> Unit,
 ) {
     composable(
         route = LibraryRoute,
@@ -70,6 +72,7 @@ fun NavGraphBuilder.libraryScreen(
             navigateToSettingTop = navigateToSettingTop,
             navigateToAbout = navigateToAbout,
             navigateToBillingPlus = navigateToBillingPlus,
+            navigateToCancelPlus = navigateToCancelPlus,
         )
     }
 }

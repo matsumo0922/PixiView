@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.HideImage
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -47,7 +48,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import caios.android.fanbox.core.billing.models.ProductDetails
 import caios.android.fanbox.core.ui.AsyncLoadContents
 import caios.android.fanbox.core.ui.theme.bold
 import caios.android.fanbox.feature.about.R
@@ -76,7 +76,7 @@ internal fun BillingPlusRoute(
         BillingPlusDialog(
             modifier = Modifier.fillMaxSize(),
             purchase = uiState.purchase,
-            productDetails = uiState.productDetails,
+            formattedPrice = uiState.formattedPrice,
             isDeveloperMode = uiState.isDeveloperMode,
             onClickPurchase = {
                 scope.launch {
@@ -104,7 +104,7 @@ internal fun BillingPlusRoute(
 @Composable
 private fun BillingPlusDialog(
     purchase: Purchase?,
-    productDetails: ProductDetails?,
+    formattedPrice: String?,
     isDeveloperMode: Boolean,
     onClickPurchase: () -> Unit,
     onClickVerify: () -> Unit,
@@ -138,7 +138,7 @@ private fun BillingPlusDialog(
                 .fillMaxWidth(),
             onClick = { onClickPurchase.invoke() },
         ) {
-            Text(stringResource(R.string.billing_plus_purchase_button, productDetails?.rawProductDetails?.oneTimePurchaseOfferDetails?.formattedPrice ?: "￥300"))
+            Text(stringResource(R.string.billing_plus_purchase_button, formattedPrice ?: "￥300"))
         }
 
         OutlinedButton(
@@ -189,6 +189,13 @@ private fun BillingPlusDialog(
                     title = R.string.billing_plus_item_lock,
                     description = R.string.billing_plus_item_lock_description,
                     icon = Icons.Default.Lock,
+                )
+
+                PlusItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = R.string.billing_plus_item_hide_restricted,
+                    description = R.string.billing_plus_item_hide_restricted_description,
+                    icon = Icons.Outlined.HideImage,
                 )
 
                 PlusItem(
@@ -309,7 +316,7 @@ private fun BillingPlusScreenPreview() {
             .background(MaterialTheme.colorScheme.surface)
             .fillMaxSize(),
         purchase = null,
-        productDetails = null,
+        formattedPrice = null,
         isDeveloperMode = true,
         onClickPurchase = {},
         onClickVerify = {},

@@ -6,11 +6,10 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import caios.android.fanbox.core.billing.BillingClient
-import caios.android.fanbox.core.billing.models.ProductDetails
 import caios.android.fanbox.core.billing.models.ProductItem
 import caios.android.fanbox.core.billing.models.ProductType
 import caios.android.fanbox.core.billing.usecase.ConsumePlusUseCase
-import caios.android.fanbox.core.billing.usecase.PurchasePlusUseCase
+import caios.android.fanbox.core.billing.usecase.PurchasePlusSubscriptionUseCase
 import caios.android.fanbox.core.billing.usecase.VerifyPlusUseCase
 import caios.android.fanbox.core.common.util.ToastUtil
 import caios.android.fanbox.core.model.ScreenState
@@ -32,7 +31,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BillingPlusViewModel(
     private val billingClient: BillingClient,
-    private val purchasePlusUseCase: PurchasePlusUseCase,
+    private val purchasePlusSubscriptionUseCase: PurchasePlusSubscriptionUseCase,
     private val consumePlusUseCase: ConsumePlusUseCase,
     private val verifyPlusUseCase: VerifyPlusUseCase,
     private val userDataRepository: UserDataRepository,
@@ -47,11 +46,15 @@ class BillingPlusViewModel(
         viewModelScope.launch {
             _screenState.value = runCatching {
                 val userData = userDataRepository.userData.firstOrNull()
+                val productDetail = billingClient.queryProductDetails(ProductItem.plusSubscription, ProductType.SUBS)
+
+                val plusSubscription = productDetail.rawProductDetails.subscriptionOfferDetails?.firstOrNull()
+                val basePlanPricing = plusSubscription?.pricingPhases?.pricingPhaseList?.firstOrNull()
 
                 BillingPlusUiState(
                     isPlusMode = userData?.isPlusMode ?: false,
                     isDeveloperMode = userData?.isDeveloperMode ?: false,
-                    productDetails = billingClient.queryProductDetails(ProductItem.plus, ProductType.INAPP),
+                    formattedPrice = basePlanPricing?.formattedPrice,
                     purchase = runCatching { verifyPlusUseCase.execute() }.getOrNull(),
                 )
             }.fold(
@@ -70,13 +73,13 @@ class BillingPlusViewModel(
     @Inject
     constructor(
         billingClient: BillingClient,
-        purchasePlusUseCase: PurchasePlusUseCase,
+        purchasePlusSubscriptionUseCase: PurchasePlusSubscriptionUseCase,
         consumePlusUseCase: ConsumePlusUseCase,
         verifyPlusUseCase: VerifyPlusUseCase,
         userDataRepository: UserDataRepository,
     ) : this(
         billingClient = billingClient,
-        purchasePlusUseCase = purchasePlusUseCase,
+        purchasePlusSubscriptionUseCase = purchasePlusSubscriptionUseCase,
         consumePlusUseCase = consumePlusUseCase,
         verifyPlusUseCase = verifyPlusUseCase,
         userDataRepository = userDataRepository,
@@ -86,7 +89,7 @@ class BillingPlusViewModel(
     suspend fun purchase(activity: Activity): Boolean {
         return runCatching {
             withContext(ioDispatcher) {
-                purchasePlusUseCase.execute(activity)
+                purchasePlusSubscriptionUseCase.execute(activity)
             }
         }.fold(
             onSuccess = {
@@ -150,6 +153,6 @@ class BillingPlusViewModel(
 data class BillingPlusUiState(
     val isPlusMode: Boolean = false,
     val isDeveloperMode: Boolean = false,
-    val productDetails: ProductDetails? = null,
+    val formattedPrice: String? = null,
     val purchase: Purchase? = null,
 )

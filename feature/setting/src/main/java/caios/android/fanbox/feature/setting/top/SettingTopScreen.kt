@@ -81,8 +81,19 @@ internal fun SettingTopRoute(
             onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
             onClickHideAdultContents = viewModel::setHideAdultContents,
             onClickOverrideAdultContents = viewModel::setOverrideAdultContents,
-            onClickHideRestricted = viewModel::setHideRestricted,
             onClickGridMode = viewModel::setGridMode,
+            onClickHideRestricted = {
+                if (it) {
+                    if (uiState.userData.hasPrivilege) {
+                        viewModel.setHideRestricted(true)
+                    } else {
+                        ToastUtil.show(context, R.string.billing_plus_toast_require_plus)
+                        navigateToBillingPlus.invoke()
+                    }
+                } else {
+                    viewModel.setHideRestricted(false)
+                }
+            },
             onClickAppLock = {
                 if (it) {
                     if (uiState.userData.hasPrivilege) {

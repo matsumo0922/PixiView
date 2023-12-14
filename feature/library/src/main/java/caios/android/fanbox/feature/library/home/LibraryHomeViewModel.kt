@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import caios.android.fanbox.core.billing.usecase.VerifyPlusUseCase
 import caios.android.fanbox.core.common.PixiViewConfig
 import caios.android.fanbox.core.common.util.suspendRunCatching
 import caios.android.fanbox.core.model.UserData
@@ -14,10 +15,13 @@ import caios.android.fanbox.core.repository.UserDataRepository
 import caios.android.fanbox.core.ui.ads.NativeAdsPreLoader
 import caios.android.fanbox.core.ui.extensition.emptyPaging
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,6 +29,7 @@ import javax.inject.Inject
 class LibraryHomeViewModel @Inject constructor(
     private val userDataRepository: UserDataRepository,
     private val fanboxRepository: FanboxRepository,
+    private val verifiedPlusUseCase: VerifyPlusUseCase,
     private val nativeAdsPreLoader: NativeAdsPreLoader,
     private val pixiViewConfig: PixiViewConfig,
 ) : ViewModel() {
@@ -39,7 +44,11 @@ class LibraryHomeViewModel @Inject constructor(
         ),
     )
 
+    private val _cancelPlusTrigger = Channel<Unit>()
+
     val uiState = _uiState.asStateFlow()
+
+    val cancelPlusTrigger = _cancelPlusTrigger.receiveAsFlow()
 
     val adsPreLoader = nativeAdsPreLoader
 
@@ -64,7 +73,19 @@ class LibraryHomeViewModel @Inject constructor(
             }
         }
 
-        adsPreLoader.preloadAd()
+        viewModelScope.launch {
+            val userData = userDataRepository.userData.first()
+            val plusPurchase = verifiedPlusUseCase.execute()
+
+            if (userData.isPlusMode && plusPurchase == null) {
+                userDataRepository.setPlusMode(false)
+                _cancelPlusTrigger.send(Unit)
+            }
+        }
+
+        viewModelScope.launch {
+            adsPreLoader.preloadAd()
+        }
     }
 
     fun postLike(postId: PostId) {

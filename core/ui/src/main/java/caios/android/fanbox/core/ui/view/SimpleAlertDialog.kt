@@ -50,6 +50,11 @@ enum class SimpleAlertContents(
         negativeTextRes = R.string.common_cancel,
         isCaution = true,
     ),
+    CancelPlus(
+        titleRes = R.string.billing_plus_cancel_title,
+        descriptionRes = R.string.billing_plus_cancel_message,
+        positiveTextRes = R.string.common_ok,
+    ),
 }
 
 const val SimpleAlertDialogContent = "simpleAlertDialogSongs"

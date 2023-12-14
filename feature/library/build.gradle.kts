@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":core:repository"))
     implementation(project(":core:datastore"))
     implementation(project(":core:ui"))
+    implementation(project(":core:billing"))
 
     implementation(libs.bundles.ui.implementation)
     implementation(libs.pinch.zoom.grid)
