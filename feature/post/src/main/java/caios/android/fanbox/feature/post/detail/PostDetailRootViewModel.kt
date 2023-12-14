@@ -9,6 +9,7 @@ import caios.android.fanbox.core.model.fanbox.FanboxPost
 import caios.android.fanbox.core.repository.FanboxRepository
 import caios.android.fanbox.core.repository.UserDataRepository
 import caios.android.fanbox.core.ui.ads.NativeAdsPreLoader
+import caios.android.fanbox.core.ui.extensition.emptyPaging
 import caios.android.fanbox.feature.post.detail.PostDetailPagingType.Creator
 import caios.android.fanbox.feature.post.detail.PostDetailPagingType.Home
 import caios.android.fanbox.feature.post.detail.PostDetailPagingType.Search
@@ -59,7 +60,7 @@ class PostDetailRootViewModel @Inject constructor(
                     Supported -> fanboxRepository.getSupportedPostsPagerCache(loadSize, isHideRestricted)
                     Creator -> fanboxRepository.getCreatorPostsPagerCache()
                     Search -> fanboxRepository.getPostsFromQueryPagerCache()
-                    Unknown -> null
+                    Unknown -> emptyPaging()
                 },
                 nativeAdUnitId = pixiViewConfig.adMobNativeAdUnitId,
             )

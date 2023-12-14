@@ -74,12 +74,14 @@ class LibraryHomeViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            val userData = userDataRepository.userData.first()
-            val plusPurchase = verifiedPlusUseCase.execute()
+            runCatching {
+                val userData = userDataRepository.userData.first()
+                val plusPurchase = verifiedPlusUseCase.execute()
 
-            if (userData.isPlusMode && plusPurchase == null) {
-                userDataRepository.setPlusMode(false)
-                _cancelPlusTrigger.send(Unit)
+                if (userData.isPlusMode && plusPurchase == null) {
+                    userDataRepository.setPlusMode(false)
+                    _cancelPlusTrigger.send(Unit)
+                }
             }
         }
 
