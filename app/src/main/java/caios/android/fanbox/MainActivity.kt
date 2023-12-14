@@ -106,7 +106,9 @@ class MainActivity : FragmentActivity(), PostDownloader {
                 screenState = screenState,
                 containerColor = if (shouldUseDarkTheme) DarkDefaultColorScheme.surface else LightDefaultColorScheme.surface,
             ) {
-                var isAgreedTeams by remember(it.userData) { mutableStateOf(it.userData.isAgreedPrivacyPolicy && it.userData.isAgreedTermsOfService)}
+                var isAgreedTeams by remember(it.userData) {
+                    mutableStateOf(it.userData.isAgreedPrivacyPolicy && it.userData.isAgreedTermsOfService)
+                }
                 var isAllowedPermission by remember(it.userData, it.isLoggedIn) { mutableStateOf(isAllowedPermission()) }
 
                 PixiViewTheme(
@@ -130,7 +132,7 @@ class MainActivity : FragmentActivity(), PostDownloader {
                                 isAllowedPermission = true
 
                                 viewModel.updateState()
-                            }
+                            },
                         )
 
                         AnimatedVisibility(
