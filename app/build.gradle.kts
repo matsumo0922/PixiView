@@ -158,12 +158,10 @@ fun MapProperty<String, BuildConfigField<out Serializable>>.putBuildConfig(
     defaultValue: String = "",
     comment: String? = null
 ) {
-    val data = value?.toStringLiteral()
-    val property = localProperties.getProperty(key)?.toStringLiteral()
-    val env = System.getenv(key)?.toStringLiteral()
-    val defaultData = defaultValue.toStringLiteral()
+    val property = localProperties.getProperty(key)
+    val env = System.getenv(key)
 
-    put(key, BuildConfigField(type, data ?: property ?: env ?: defaultData, comment))
+    put(key, BuildConfigField(type, (value ?: property ?: env ?: defaultValue).toStringLiteral(), comment))
 }
 
 fun MapProperty<String, String>.putManifestPlaceholder(
@@ -172,12 +170,10 @@ fun MapProperty<String, String>.putManifestPlaceholder(
     value: String? = null,
     defaultValue: String = "",
 ) {
-    val data = value?.toStringLiteral()
-    val property = localProperties.getProperty(key)?.toStringLiteral()
-    val env = System.getenv(key)?.toStringLiteral()
-    val defaultData = defaultValue.toStringLiteral()
+    val property = localProperties.getProperty(key)
+    val env = System.getenv(key)
 
-    put(key, data ?: property ?: env ?: defaultData)
+    put(key, (value ?: property ?: env ?: defaultValue).replace("\"", ""))
 }
 
 fun Any.toStringLiteral(): String {
