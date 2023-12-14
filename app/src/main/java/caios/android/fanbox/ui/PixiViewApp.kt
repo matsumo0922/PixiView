@@ -33,6 +33,7 @@ internal fun PixiViewApp(
     isAllowedPermission: Boolean,
     isLoggedIn: Boolean,
     viewModel: MainViewModel,
+    onCompleteWelcome: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigationType = when (windowSize) {
@@ -64,7 +65,7 @@ internal fun PixiViewApp(
                         isAgreedTeams = isAgreedTeams,
                         isAllowedPermission = isAllowedPermission,
                         isLoggedIn = isLoggedIn,
-                        onComplete = viewModel::updateState,
+                        onComplete = { onCompleteWelcome.invoke() },
                     )
                 } else {
                     IdleScreen(

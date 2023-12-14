@@ -47,5 +47,12 @@
     "date": "2023/12/09",
     "logJp": "・スラッシュが入った文字列を検索するとクラッシュする不具合を修正\n・表示する内容がなかった場合のメッセージを改善",
     "logEn": "・Fixed a bug that caused a crash when searching for a string containing a slash.\n・Improved the message when there was no content to display."
+  },
+  {
+    "versionName": "1.1.0",
+    "versionCode": 9,
+    "date": "2023/12/15",
+    "logJp": "・タブレットや Fold などの大画面端末に対応\n・支援プラン外の投稿などの表示制限コンテンツを省く設定を追加\n・投稿を一覧表示できるグリッドモードを追加\n・投稿詳細画面を左右にスワイプすることで、前後の投稿を次々に確認できるように修正\n・ウェルカム画面から先に進めない不具合を修正",
+    "logEn": "・Support for large screen devices such as tablets and Fold.\n・Added a setting to omit display-restricted content, such as posts not covered by a support plan.\n・Grid mode has been added to display a list of posts.\n・Fixed a bug that prevented the user from proceeding to the welcome screen.\n・Fixed a bug that prevented users from proceeding from the welcome screen."
   }
 ]

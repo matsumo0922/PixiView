@@ -25,7 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -104,9 +106,10 @@ class MainActivity : FragmentActivity(), PostDownloader {
                 screenState = screenState,
                 containerColor = if (shouldUseDarkTheme) DarkDefaultColorScheme.surface else LightDefaultColorScheme.surface,
             ) {
-                val isAgreedTeams =
-                    remember(it.userData) { it.userData.isAgreedPrivacyPolicy && it.userData.isAgreedTermsOfService }
-                val isAllowedPermission = remember(it.userData, it.isLoggedIn) { isAllowedPermission() }
+                var isAgreedTeams by remember(it.userData) {
+                    mutableStateOf(it.userData.isAgreedPrivacyPolicy && it.userData.isAgreedTermsOfService)
+                }
+                var isAllowedPermission by remember(it.userData, it.isLoggedIn) { mutableStateOf(isAllowedPermission()) }
 
                 PixiViewTheme(
                     fanboxCookie = it.fanboxCookie,
@@ -124,6 +127,12 @@ class MainActivity : FragmentActivity(), PostDownloader {
                             isAgreedTeams = isAgreedTeams,
                             isAllowedPermission = isAllowedPermission,
                             isLoggedIn = it.isLoggedIn,
+                            onCompleteWelcome = {
+                                isAgreedTeams = true
+                                isAllowedPermission = true
+
+                                viewModel.updateState()
+                            },
                         )
 
                         AnimatedVisibility(
