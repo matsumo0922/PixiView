@@ -49,6 +49,11 @@ class PreferenceBookmarkedPosts @Inject constructor(
         _data.tryEmit(posts.map { it.id })
     }
 
+    fun clear() {
+        accountFile.delete()
+        _data.tryEmit(emptyList())
+    }
+
     fun get(): List<FanboxPost> {
         if (!accountFile.exists()) return emptyList()
 

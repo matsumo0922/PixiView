@@ -54,6 +54,7 @@ import caios.android.fanbox.core.repository.paging.CreatorPostsPagingSource
 import caios.android.fanbox.core.repository.paging.HomePostsPagingSource
 import caios.android.fanbox.core.repository.paging.SearchCreatorsPagingSource
 import caios.android.fanbox.core.repository.paging.SearchPostsPagingSource
+import caios.android.fanbox.core.repository.paging.SupportedPostsPagingSource
 import caios.android.fanbox.core.repository.utils.parse
 import caios.android.fanbox.core.repository.utils.requireSuccess
 import caios.android.fanbox.core.repository.utils.translate
@@ -215,6 +216,7 @@ class FanboxRepositoryImpl(
             if (it) {
                 CoroutineScope(ioDispatcher).launch {
                     fanboxCookiePreference.save("")
+                    bookmarkedPostsPreference.clear()
                     _logoutTrigger.send(OffsetDateTime.now())
                 }
             } else {
@@ -341,7 +343,7 @@ class FanboxRepositoryImpl(
             config = PagingConfig(pageSize = loadSize),
             initialKey = null,
             pagingSourceFactory = {
-                HomePostsPagingSource(this, isHideRestricted)
+                SupportedPostsPagingSource(this, isHideRestricted)
             },
         )
             .flow
