@@ -6,11 +6,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 
 const val WelcomeLoginRoute = "welcomeLogin"
 
 fun NavController.navigateToWelcomeLogin() {
-    this.navigate(WelcomeLoginRoute)
+    this.navigateWithLog(WelcomeLoginRoute)
 }
 
 fun NavGraphBuilder.welcomeLoginScreen(

@@ -8,11 +8,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 
 const val FollowingCreatorsRoute = "followingCreators"
 
 fun NavController.navigateToFollowingCreators(navOptions: NavOptions? = null) {
-    this.navigate(FollowingCreatorsRoute, navOptions)
+    this.navigateWithLog(FollowingCreatorsRoute, navOptions)
 }
 
 fun NavGraphBuilder.followingCreatorsScreen(

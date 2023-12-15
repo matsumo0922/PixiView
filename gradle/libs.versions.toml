@@ -50,6 +50,8 @@ androidxGlance = "1.0.0"
 androidxGranceWear = "1.0.0-alpha05"
 
 # Google
+playReview = "2.0.1"
+playUpdate = "2.1.0"
 playServiceAds = "22.6.0"
 playServiceOss = "17.0.1"
 material = "1.10.0"
@@ -64,6 +66,9 @@ protobufPlugin = "0.9.4"
 
 # Billing
 billing = "6.1.0"
+
+# Log
+puree = "1.4.0"
 
 # Others
 dagger = "2.49"
@@ -81,7 +86,7 @@ ffmpeg = "5.1"
 twitterComposeRule = "0.0.26"
 
 # Debugs
-firebase = "32.6.0"
+firebase = "32.7.0"
 leakCanary = "2.12"
 flipper = "0.240.0"
 timber = "5.0.1"
@@ -192,6 +197,8 @@ billing = { module = "com.android.billingclient:billing", version.ref = "billing
 billing-ktx = { module = "com.android.billingclient:billing-ktx", version.ref = "billing" }
 
 # Google
+play-review = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
+play-update = { module = "com.google.android.play:app-update-ktx", version.ref = "playUpdate" }
 play-service-oss = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "playServiceOss" }
 play-service-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServiceAds" }
 google-material = { module = "com.google.android.material:material", version.ref = "material" }
@@ -224,6 +231,9 @@ ktot-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 # ProtocolBuffers
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
+
+# Log
+puree = { module = "com.cookpad.puree-kotlin:puree-kotlin", version.ref = "puree" }
 
 # Others
 dagger-hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
@@ -269,6 +279,7 @@ infra-api = [
     "kotlinx-datetime",
     "kotlinx-serialization-json",
     "kotlinx-collections-immutable",
+    "puree",
     "timber",
 ]
 

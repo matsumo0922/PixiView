@@ -91,6 +91,7 @@
     <string name="home_tab_supported">支援中</string>
     <string name="home_app_lock_title">認証が必要です</string>
     <string name="home_app_lock_message">アプリを使用するにはロック解除が必要です</string>
+    <string name="home_review_success">レビューありがとうございました</string>
 
     <!-- Empty -->
     <string name="empty_detail_title">投稿を確認</string>

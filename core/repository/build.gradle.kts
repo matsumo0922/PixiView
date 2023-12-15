@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:logs"))
 
     implementation(libs.bundles.ktor)
     implementation(libs.androidx.paging)

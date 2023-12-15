@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import caios.android.fanbox.core.billing.BillingClient
 import caios.android.fanbox.core.common.util.suspendRunCatching
+import caios.android.fanbox.core.datastore.PreferenceLaunchLog
 import caios.android.fanbox.core.model.ScreenState
 import caios.android.fanbox.core.model.UserData
 import caios.android.fanbox.core.model.fanbox.FanboxMetaData
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
 import java.util.Timer
 import java.util.UUID
 import javax.inject.Inject
@@ -33,6 +35,7 @@ class MainViewModel @Inject constructor(
     billingClient: BillingClient,
     private val userDataRepository: UserDataRepository,
     private val fanboxRepository: FanboxRepository,
+    private val launchLog: PreferenceLaunchLog,
 ) : ViewModel() {
 
     private val _isLoggedInFlow: MutableSharedFlow<Boolean> = MutableSharedFlow(replay = 1)
@@ -62,6 +65,7 @@ class MainViewModel @Inject constructor(
     )
 
     init {
+        launchLog.save(OffsetDateTime.now())
         billingClient.initialize()
 
         viewModelScope.launch {
@@ -103,6 +107,10 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             _isAppLockedFlow.emit(isAppLock)
         }
+    }
+
+    fun isAbleToRequestReview(): Boolean {
+        return launchLog.get().size >= 3
     }
 }
 

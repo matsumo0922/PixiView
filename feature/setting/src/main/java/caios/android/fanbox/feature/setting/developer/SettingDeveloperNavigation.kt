@@ -9,11 +9,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.dialog
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 
 const val SettingDeveloperRoute = "SettingDeveloper"
 
 fun NavController.navigateToSettingDeveloper() {
-    this.navigate(SettingDeveloperRoute)
+    this.navigateWithLog(SettingDeveloperRoute)
 }
 
 fun NavGraphBuilder.settingDeveloperDialog(

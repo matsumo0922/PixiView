@@ -10,13 +10,14 @@ import androidx.navigation.navArgument
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 
 const val CreatorTopId = "creatorTopId"
 const val CreatorTopIsPosts = "creatorTopIsPosts"
 const val CreatorTopRoute = "creatorTop/{$CreatorTopId}/{$CreatorTopIsPosts}"
 
 fun NavController.navigateToCreatorTop(creatorId: CreatorId, isPosts: Boolean = false) {
-    this.navigate("creatorTop/$creatorId/$isPosts")
+    this.navigateWithLog("creatorTop/$creatorId/$isPosts")
 }
 
 fun NavGraphBuilder.creatorTopScreen(

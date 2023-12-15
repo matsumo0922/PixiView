@@ -8,11 +8,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 
 const val LibraryDiscoveryRoute = "libraryDiscovery"
 
 fun NavController.navigateToLibraryDiscovery(navOptions: NavOptions? = null) {
-    this.navigate(LibraryDiscoveryRoute, navOptions)
+    this.navigateWithLog(LibraryDiscoveryRoute, navOptions)
 }
 
 fun NavGraphBuilder.libraryDiscoveryScreen(

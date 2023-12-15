@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:repository"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:logs"))
 
     implementation(libs.bundles.ui.implementation)
 

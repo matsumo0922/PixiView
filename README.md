@@ -68,13 +68,14 @@ There was only a web version of FANBOX, which was a bit inconvenient for viewing
   - Download in image/file/GIF format.
   - Download all images included in a post.
   - Download fan cards.
+  - Bulk download function for individual creators.
+- Ads
+  - AdMob Native Ads
 
 #### Not Ready...
 
-- Bulk download function for individual creators.
 - Pixiv integration feature.
 - Widget functionality.
-- All advertising-related features.
 
 ## Architecture
 Shows the architecture diagram of the app. It's quite complex, so I've omitted some modules and dependencies to give you an overview.
@@ -122,11 +123,13 @@ graph LR
 
 ## Contribute
 
+Setup is very easy, just clone this repository and `bundle install`. This app uses [daifuku](https:github.comcookpaddaifuku) and [Puree](https:github.comcookpadpuree-kotlin) to create the log infrastructure. For more information, please see the library documentation or `./scripts/daifuku`.
+
 This app uses Gradle's Convention Plugins to standardize the build logic, and all the logic is written in a module called `build-logic`. For information on this approach, see [nowinandroid](https://github.com/matsumo0922/nowinandroid/tree/main/build-logic).
 
 If you find a bug, want to improve a feature, or want to develop a new feature, please first write an issue. Then assign yourself and work on the development. Pull requests are always welcome :smile:
 
-This app is monetized using AdMob. When building manually from GitHub, you need to write the AdMob App ID in `local.properties`. By default it contains a dummy ID, which causes it to crash on startup. Alternatively, please delete the AdMob code and build the app. In addition, various IDs are described in `local.properties`. See `appbuild.gradle.kts` or `PixiViewConfig` for details.
+This app is monetized using AdMob. When building manually from GitHub, you need to write the AdMob App ID in `local.properties`. By default it contains a dummy ID, which causes it to crash on startup. Alternatively, please delete the AdMob code and build the app. In addition, various IDs are described in `local.properties`. See `app/build.gradle.kts` or `PixiViewConfig` for details.
 
 ## License
 

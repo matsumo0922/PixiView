@@ -6,12 +6,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 import caios.android.fanbox.core.ui.view.SimpleAlertContents
 
 const val SettingTopRoute = "settingTop"
 
 fun NavController.navigateToSettingTop() {
-    this.navigate(SettingTopRoute)
+    this.navigateWithLog(SettingTopRoute)
 }
 
 fun NavGraphBuilder.settingTopScreen(

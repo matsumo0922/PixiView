@@ -91,6 +91,7 @@
     <string name="home_tab_supported">Supporting</string>
     <string name="home_app_lock_title">Authentication required</string>
     <string name="home_app_lock_message">App must be unlocked to use</string>
+    <string name="home_review_success">Thank you for your review</string>
 
     <!-- Empty -->
     <string name="empty_detail_title">Check post detail</string>

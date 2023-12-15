@@ -10,11 +10,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 
 const val LibraryNotifyRoute = "libraryNotify"
 
 fun NavController.navigateToLibraryNotify(navOptions: NavOptions? = null) {
-    this.navigate(LibraryNotifyRoute, navOptions)
+    this.navigateWithLog(LibraryNotifyRoute, navOptions)
 }
 
 fun NavGraphBuilder.libraryNotifyScreen(

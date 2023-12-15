@@ -126,6 +126,7 @@ dependencies {
     implementation(project(":core:repository"))
     implementation(project(":core:ui"))
     implementation(project(":core:billing"))
+    implementation(project(":core:logs"))
 
     implementation(project(":feature:report"))
     implementation(project(":feature:library"))
@@ -139,6 +140,8 @@ dependencies {
     implementation(libs.bundles.ktor)
 
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.play.review)
+    implementation(libs.play.update)
     implementation(libs.play.service.oss)
     implementation(libs.play.service.ads)
     implementation(libs.google.material)
