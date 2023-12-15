@@ -49,7 +49,9 @@ import caios.android.fanbox.core.ui.view.LoadingView
 import caios.android.fanbox.feature.post.service.PostDownloadService
 import caios.android.fanbox.ui.PixiViewApp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.android.play.core.review.ReviewManagerFactory
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity(), PostDownloader {
@@ -192,6 +194,7 @@ class MainActivity : FragmentActivity(), PostDownloader {
 
     override fun onDownloadImages(imageItems: List<FanboxPostDetail.ImageItem>) {
         if (isPostDownloadServiceBound) {
+            showReviewDialog()
             startForegroundService(Intent(this, PostDownloadService::class.java))
             postDownloadService.downloadImages(imageItems)
         } else {
@@ -201,6 +204,7 @@ class MainActivity : FragmentActivity(), PostDownloader {
 
     override fun onDownloadFile(fileItem: FanboxPostDetail.FileItem) {
         if (isPostDownloadServiceBound) {
+            showReviewDialog()
             startForegroundService(Intent(this, PostDownloadService::class.java))
             postDownloadService.downloadFile(fileItem)
         } else {
@@ -210,6 +214,7 @@ class MainActivity : FragmentActivity(), PostDownloader {
 
     override fun onDownloadPosts(posts: List<FanboxPost>, isIgnoreFree: Boolean, isIgnoreFile: Boolean) {
         if (isPostDownloadServiceBound) {
+            showReviewDialog()
             startForegroundService(Intent(this, PostDownloadService::class.java))
             postDownloadService.downloadPosts(posts, isIgnoreFree, isIgnoreFile)
         } else {
@@ -223,6 +228,26 @@ class MainActivity : FragmentActivity(), PostDownloader {
         } else {
             finishAffinity()
             killProcess(android.os.Process.myPid())
+        }
+    }
+
+    private fun showReviewDialog() {
+        if (!viewModel.isAbleToRequestReview()) return
+
+        val manager = ReviewManagerFactory.create(this)
+        val request = manager.requestReviewFlow()
+
+        request.addOnCompleteListener {
+            if (it.isSuccessful) {
+                val reviewInfo = it.result
+                val flow = manager.launchReviewFlow(this, reviewInfo)
+
+                flow.addOnCanceledListener {
+                    ToastUtil.show(this, R.string.home_review_success)
+                }
+            } else {
+                Timber.d("Review request failed: ${it.exception}")
+            }
         }
     }
 

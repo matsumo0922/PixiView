@@ -27,7 +27,7 @@ class VersionHistoryViewModel @Inject constructor(
         fetch()
     }
 
-    fun fetch() {
+    private fun fetch() {
         viewModelScope.launch {
             _screenState.value = ScreenState.Loading
             _screenState.value = suspendRunCatching {

@@ -139,6 +139,8 @@ dependencies {
     implementation(libs.bundles.ktor)
 
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.play.review)
+    implementation(libs.play.update)
     implementation(libs.play.service.oss)
     implementation(libs.play.service.ads)
     implementation(libs.google.material)
