@@ -26,7 +26,7 @@ class PixiViewLogFilter(
             applicationVariant = BuildConfig.BUILD_TYPE,
             applicationVersionCode = pixiViewConfig.versionCode.toLong(),
             applicationVersionName = pixiViewConfig.versionName,
-            timeZone = ZoneId.systemDefault().id
+            timeZone = ZoneId.systemDefault().id,
         )
 
         return commonPayload.applyToJsonObject(log)

@@ -25,7 +25,7 @@ data class CommonPayload(
     // アプリケーション VersionName (21.27.0.13 のような文字列)
     val applicationVersionName: String,
     // タイムゾーン(Asia/Tokyoなど)
-    val timeZone: String
+    val timeZone: String,
 ) {
     fun applyToJsonObject(jsonLog: JSONObject) = jsonLog.apply {
         put("pixiview_id", pixiviewId)

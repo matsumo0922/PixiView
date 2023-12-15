@@ -40,15 +40,15 @@ object PureeConfigurator {
         return PureeLogger.Builder(
             lifecycle = ProcessLifecycleOwner.get().lifecycle,
             logSerializer = PureeKotlinSerializer(formatter),
-            logStore = DbPureeLogStore(context, "puree-kotlin.db")
+            logStore = DbPureeLogStore(context, "puree-kotlin.db"),
         )
             .filter(
                 PixiViewLogFilter(pixiViewConfig, userData, userAgent = "PixiView"),
-                PixiViewActivityLog::class.java
+                PixiViewActivityLog::class.java,
             )
             .output(
                 PixiViewLogOutput(),
-                PixiViewActivityLog::class.java
+                PixiViewActivityLog::class.java,
             )
             .build()
     }

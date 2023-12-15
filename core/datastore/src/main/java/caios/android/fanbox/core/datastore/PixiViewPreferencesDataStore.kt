@@ -40,7 +40,7 @@ class PixiViewPreferencesDataStore(
                 isGridMode = if (it.hasIsGridMode()) it.isGridMode else false,
                 isFollowTabDefaultHome = if (it.hasIsFollowTabDefaultHome()) it.isFollowTabDefaultHome else false,
                 isHideAdultContents = if (it.hasIsHideAdultContents()) it.isHideAdultContents else true,
-                isOverrideAdultContents = if (it.hasIsOverrideAdultContents()) it.isOverrideAdultContents else false,
+                isOverrideAdultContents = if (it.hasIsOverrideAdultContents()) it.isOverrideAdultContents else true,
                 isPlusMode = if (it.hasIsPlusMode()) it.isPlusMode else false,
                 isAgreedPrivacyPolicy = if (it.hasIsAgreedPrivacyPolicy()) it.isAgreedPrivacyPolicy else false,
                 isAgreedTermsOfService = if (it.hasIsAgreedTermsOfService()) it.isAgreedTermsOfService else false,

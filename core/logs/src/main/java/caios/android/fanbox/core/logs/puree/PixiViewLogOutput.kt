@@ -5,7 +5,7 @@ import org.json.JSONObject
 import timber.log.Timber
 import java.time.Duration
 
-class PixiViewLogOutput: PureeBufferedOutput("pixiview_activity_log") {
+class PixiViewLogOutput : PureeBufferedOutput("pixiview_activity_log") {
 
     override val flushInterval: Duration = Duration.ofSeconds(15)
 
