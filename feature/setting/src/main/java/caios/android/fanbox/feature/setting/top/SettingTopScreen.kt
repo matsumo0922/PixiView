@@ -77,6 +77,12 @@ internal fun SettingTopRoute(
             onClickNotifySetting = {
                 context.startActivity(Intent(Intent.ACTION_VIEW, "https://www.fanbox.cc/notifications/settings#email".toUri()))
             },
+            onClickTeamsOfService = {
+                context.startActivity(Intent(Intent.ACTION_VIEW, "https://www.matsumo.me/application/pixiview/team_of_service".toUri()))
+            },
+            onClickPrivacyPolicy = {
+                context.startActivity(Intent(Intent.ACTION_VIEW, "https://www.matsumo.me/application/pixiview/privacy_policy".toUri()))
+            },
             onClickOpenSourceLicense = navigateToOpenSourceLicense,
             onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
             onClickHideAdultContents = viewModel::setHideAdultContents,
@@ -164,6 +170,8 @@ private fun SettingTopScreen(
     onClickOverrideAdultContents: (Boolean) -> Unit,
     onClickHideRestricted: (Boolean) -> Unit,
     onClickGridMode: (Boolean) -> Unit,
+    onClickTeamsOfService: () -> Unit,
+    onClickPrivacyPolicy: () -> Unit,
     onClickLogout: () -> Unit,
     onClickOpenSourceLicense: () -> Unit,
     onClickDeveloperMode: (Boolean) -> Unit,
@@ -235,6 +243,8 @@ private fun SettingTopScreen(
                 SettingTopOthersSection(
                     modifier = Modifier.fillMaxWidth(),
                     userData = userData,
+                    onClickTeamsOfService = onClickTeamsOfService,
+                    onClickPrivacyPolicy = onClickPrivacyPolicy,
                     onClickLogout = onClickLogout,
                     onClickOpenSourceLicense = onClickOpenSourceLicense,
                     onClickDeveloperMode = onClickDeveloperMode,

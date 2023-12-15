@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import caios.android.fanbox.core.model.UserData
 import caios.android.fanbox.feature.setting.R
 import caios.android.fanbox.feature.setting.SettingSwitchItem
@@ -12,6 +13,8 @@ import caios.android.fanbox.feature.setting.SettingTextItem
 @Composable
 internal fun SettingTopOthersSection(
     userData: UserData,
+    onClickTeamsOfService: () -> Unit,
+    onClickPrivacyPolicy: () -> Unit,
     onClickLogout: () -> Unit,
     onClickOpenSourceLicense: () -> Unit,
     onClickDeveloperMode: (Boolean) -> Unit,
@@ -21,6 +24,18 @@ internal fun SettingTopOthersSection(
         SettingTopTitleItem(
             modifier = Modifier.fillMaxWidth(),
             text = R.string.setting_top_others,
+        )
+
+        SettingTextItem(
+            modifier = Modifier.fillMaxWidth(),
+            title = stringResource(R.string.setting_top_information_team_of_service),
+            onClick = onClickTeamsOfService,
+        )
+
+        SettingTextItem(
+            modifier = Modifier.fillMaxWidth(),
+            title = stringResource(R.string.setting_top_information_privacy_policy),
+            onClick = onClickPrivacyPolicy,
         )
 
         SettingTextItem(
