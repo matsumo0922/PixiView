@@ -67,6 +67,9 @@ protobufPlugin = "0.9.4"
 # Billing
 billing = "6.1.0"
 
+# Log
+puree = "5.1.0"
+
 # Others
 dagger = "2.49"
 ktor = "2.3.4"
@@ -229,6 +232,9 @@ ktot-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 
+# Log
+puree = { module = "com.github.cookpad:puree-android", version.ref = "puree" }
+
 # Others
 dagger-hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger" }
@@ -273,6 +279,7 @@ infra-api = [
     "kotlinx-datetime",
     "kotlinx-serialization-json",
     "kotlinx-collections-immutable",
+    "puree",
     "timber",
 ]
 
