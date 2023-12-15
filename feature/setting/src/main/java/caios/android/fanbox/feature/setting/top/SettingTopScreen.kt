@@ -87,7 +87,7 @@ internal fun SettingTopRoute(
             onClickFollowTabDefaultHome = viewModel::setFollowTabDefaultHome,
             onClickHideAdultContents = viewModel::setHideAdultContents,
             onClickOverrideAdultContents = viewModel::setOverrideAdultContents,
-            onClickGridMode =  {
+            onClickGridMode = {
                 if (it) {
                     if (uiState.userData.hasPrivilege) {
                         viewModel.setGridMode(true)
