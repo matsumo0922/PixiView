@@ -8,12 +8,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 
 const val CreatorPostsDownloadId = "creatorPostsDownloadId"
 const val CreatorPostsDownloadRoute = "creatorPostsDownload/{$CreatorPostsDownloadId}"
 
 fun NavController.navigateToCreatorPostsDownload(creatorId: CreatorId) {
-    this.navigate("creatorPostsDownload/$creatorId")
+    this.navigateWithLog("creatorPostsDownload/$creatorId")
 }
 
 fun NavGraphBuilder.creatorPostsDownloadDialog(

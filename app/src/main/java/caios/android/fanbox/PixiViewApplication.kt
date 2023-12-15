@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Build
 import caios.android.fanbox.core.common.PixiViewConfig
 import caios.android.fanbox.core.common.PixiViewDebugTree
+import caios.android.fanbox.core.logs.puree.PureeConfigurator
+import caios.android.fanbox.core.repository.UserDataRepository
 import caios.android.fanbox.feature.report.CrashReportActivity
 import coil.Coil
 import coil.ImageLoader
@@ -17,11 +19,17 @@ import com.google.android.material.color.DynamicColors
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
 class PixiViewApplication : Application() {
+
+    @Inject
+    lateinit var userDataRepository: UserDataRepository
 
     @Inject
     lateinit var pixiViewConfig: PixiViewConfig
@@ -39,8 +47,8 @@ class PixiViewApplication : Application() {
             startCrushReportActivity(e)
         }
 
+        setupLogger()
         setupCoil()
-
         setupFirebase()
     }
 
@@ -100,5 +108,15 @@ class PixiViewApplication : Application() {
             .setStorageBucket("pixiview-b5dc7.appspot.com")
 
         FirebaseApp.initializeApp(this, builder.build())
+    }
+
+    private fun setupLogger() {
+        MainScope().launch {
+            PureeConfigurator.configure(
+                context = this@PixiViewApplication,
+                pixiViewConfig = pixiViewConfig,
+                userData = userDataRepository.userData.first(),
+            )
+        }
     }
 }

@@ -4,6 +4,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.Navigator
+import androidx.navigation.navOptions
+import caios.android.fanbox.core.logs.category.NavigationLog
+import caios.android.fanbox.core.logs.puree.send
 
 /**
  * The navigation result callback between two call screens.
@@ -59,7 +62,7 @@ fun <T> NavController.navigateForResult(
     navigatorExtras: Navigator.Extras? = null,
 ) {
     setNavResultCallback(navResultCallback)
-    navigate(route, navOptions, navigatorExtras)
+    navigateWithLog(route, navOptions, navigatorExtras)
 }
 
 /**
@@ -78,5 +81,14 @@ fun <T> NavController.navigateForResult(
     builder: NavOptionsBuilder.() -> Unit,
 ) {
     setNavResultCallback(navResultCallback)
-    navigate(route, builder)
+    navigateWithLog(route, navOptions(builder))
+}
+
+fun NavController.navigateWithLog(
+    route: String,
+    navOptions: NavOptions? = null,
+    navigatorExtras: Navigator.Extras? = null,
+) {
+    NavigationLog.navigate(route).send()
+    navigate(route, navOptions, navigatorExtras)
 }

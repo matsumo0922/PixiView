@@ -7,12 +7,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import caios.android.fanbox.core.model.Version
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 import kotlinx.collections.immutable.ImmutableList
 
 const val AboutRoute = "about"
 
 fun NavController.navigateToAbout() {
-    this.navigate(AboutRoute)
+    this.navigateWithLog(AboutRoute)
 }
 
 fun NavGraphBuilder.aboutScreen(

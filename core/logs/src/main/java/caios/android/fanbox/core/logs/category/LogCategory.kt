@@ -1,4 +1,4 @@
-package caios.android.fanbox.core.common.logs.category
+package caios.android.fanbox.core.logs.category
 
 import kotlinx.serialization.json.JsonObject
 

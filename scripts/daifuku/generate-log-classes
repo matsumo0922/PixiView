@@ -6,7 +6,7 @@ require 'active_support/inflector'
 ROOT_PATH = File.absolute_path(File.join(__dir__, '../../'))
 LOG_DEFINITIONS = File.join(ROOT_PATH, 'scripts', 'daifuku', 'log_definitions')
 TEMPLATE_DIR = File.join(ROOT_PATH, 'scripts', 'daifuku', 'templates')
-DESTINATION_ROOT = File.join(ROOT_PATH, 'core', 'common', 'src', 'main', 'java', 'caios', 'android', 'fanbox', 'core', 'common', 'logs')
+DESTINATION_ROOT = File.join(ROOT_PATH, 'core', 'logs', 'src', 'main', 'java', 'caios', 'android', 'fanbox', 'core', 'logs')
 KOTLIN_TYPE_MAPS = {
   'smallint' => 'Short',
   'integer' => 'Int',

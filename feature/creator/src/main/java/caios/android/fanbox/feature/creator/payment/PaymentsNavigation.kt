@@ -8,11 +8,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 
 const val PaymentsRoute = "payments"
 
 fun NavController.navigateToPayments(navOptions: NavOptions? = null) {
-    this.navigate(PaymentsRoute, navOptions)
+    this.navigateWithLog(PaymentsRoute, navOptions)
 }
 
 fun NavGraphBuilder.paymentsScreen(

@@ -9,12 +9,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 
 const val FanCardId = "fanCardId"
 const val FanCardRoute = "fanCard/{$FanCardId}"
 
 fun NavController.navigateToFanCard(creatorId: CreatorId) {
-    this.navigate("fanCard/$creatorId")
+    this.navigateWithLog("fanCard/$creatorId")
 }
 
 fun NavGraphBuilder.fanCardScreen(

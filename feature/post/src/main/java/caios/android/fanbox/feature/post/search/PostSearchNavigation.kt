@@ -8,6 +8,7 @@ import androidx.navigation.navArgument
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 import java.net.URLDecoder
 import java.net.URLEncoder
 
@@ -19,7 +20,7 @@ fun NavController.navigateToPostSearch(creatorId: CreatorId? = null, creatorQuer
     val encodedQuery = URLEncoder.encode(query, Charsets.UTF_8.name())
     val route = if (parseQuery(query).mode != PostSearchMode.Unknown) "postSearch/$encodedQuery" else "postSearch/pixiViewUnknown"
 
-    this.navigate(route)
+    this.navigateWithLog(route)
 }
 
 fun NavGraphBuilder.postSearchScreen(

@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 import caios.android.fanbox.core.ui.view.SimpleAlertContents
 
 const val PostDetailId = "postDetailId"
@@ -19,7 +20,7 @@ const val PostDetailType = "postDetailPagingType"
 const val PostDetailRoute = "postDetail/{$PostDetailId}/{$PostDetailType}"
 
 fun NavController.navigateToPostDetail(postId: PostId, pagingType: PostDetailPagingType) {
-    this.navigate("postDetail/$postId/${pagingType.name}")
+    this.navigateWithLog("postDetail/$postId/${pagingType.name}")
 }
 
 fun NavGraphBuilder.postDetailScreen(

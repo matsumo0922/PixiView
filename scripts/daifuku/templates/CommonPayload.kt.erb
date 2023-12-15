@@ -1,4 +1,4 @@
-package caios.android.fanbox.core.common.logs
+package caios.android.fanbox.core.logs
 
 import org.json.JSONObject
 

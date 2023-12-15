@@ -9,12 +9,13 @@ import androidx.navigation.compose.composable
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 import caios.android.fanbox.core.ui.view.SimpleAlertContents
 
 const val LibraryHomeRoute = "libraryHome"
 
 fun NavController.navigateToLibraryHome(navOptions: NavOptions? = null) {
-    this.navigate(LibraryHomeRoute, navOptions)
+    this.navigateWithLog(LibraryHomeRoute, navOptions)
 }
 
 fun NavGraphBuilder.libraryHomeScreen(

@@ -8,12 +8,13 @@ import androidx.navigation.compose.composable
 import caios.android.fanbox.core.model.fanbox.id.CreatorId
 import caios.android.fanbox.core.model.fanbox.id.PostId
 import caios.android.fanbox.core.ui.animation.NavigateAnimation
+import caios.android.fanbox.core.ui.extensition.navigateWithLog
 import caios.android.fanbox.core.ui.view.SimpleAlertContents
 
 const val LibraryRoute = "library"
 
 fun NavController.navigateToLibrary() {
-    this.navigate(LibraryRoute)
+    this.navigateWithLog(LibraryRoute)
 }
 
 fun NavGraphBuilder.libraryScreen(

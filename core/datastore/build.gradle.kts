@@ -31,6 +31,7 @@ protobuf {
 dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
+    implementation(project(":core:logs"))
 
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
