@@ -61,5 +61,12 @@
     "date": "2023/12/15",
     "logJp": "・支援中タブが表示できない問題を修正",
     "logEn": "・Fixed an issue where the support tab could not be displayed."
+  },
+  {
+    "versionName": "1.1.2",
+    "versionCode": 11,
+    "date": "2023/12/16",
+    "logJp": "・FANBOX Viewer+ の購入画面に定期購入契約における注意点を追記",
+    "logEn": "・Added notes on the subscription contract to the purchase screen of FANBOX Viewer+."
   }
 ]
