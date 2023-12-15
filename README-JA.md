@@ -66,13 +66,14 @@ FANBOX には Web 版しかなく、スマートフォンで投稿を閲覧す�
   - 画像 / ファイル / GIF 形式でダウンロード
   - 投稿に含まれるすべての画像をダウンロード
   - ファンカードのダウンロード
+  - クリエイター単位での一括ダウンロード機能
+- 広告
+  - AdMob Native 広告
 
 #### Not Ready...
 
-- クリエイター単位での一括ダウンロード機能
 - Pixiv 連携機能
 - ウィジェット機能
-- 広告系全般
 
 ## Architecture
 アプリのアーキテクチャ図を示します。 だいぶ複雑になっているので、一部のモジュールや依存関係は省略し、概略を掴める形にしています。
@@ -119,6 +120,8 @@ graph LR
 ```
 
 ## Contribute
+
+セットアップはとても簡単で、このリポジトリをクローン氏 `bundle install` するだけです。このアプリは [daifuku](https://github.com/cookpad/daifuku) と [Puree](https://github.com/cookpad/puree-kotlin) を用いてログ基盤を作成しています。詳しくはライブラリのドキュメントまたは `./scripts/daifuku` 以下をご覧ください。
 
 このアプリは Gradle の Convention Plugins を用いてビルドのロジックを共通化しており、`build-logic` というモジュールに全てのロジックが記述されています。このアプローチに関しては、[nowinandroid](https://github.com/matsumo0922/nowinandroid/tree/main/build-logic) をご覧ください。
 

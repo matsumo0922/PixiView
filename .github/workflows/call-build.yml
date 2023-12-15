@@ -29,19 +29,10 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Restore bundle cache
-        uses: actions/cache@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@cd48c8e22733480b66887b42bfeb6c0b88ea1a56
         with:
-          path: vendor/bundle
-          key: bundle-${{ hashFiles('**/Gemfile.lock') }}
-
-      - name: Restore gradle cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts') }}
+          bundler-cache: true
 
       - name: Create release keystore
         run: echo "${{ secrets.RELEASE_KEYSTORE }}" | base64 -d > gradle/keystore/release.jks
