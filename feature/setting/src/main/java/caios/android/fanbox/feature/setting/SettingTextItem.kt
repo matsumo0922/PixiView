@@ -24,8 +24,8 @@ import caios.android.fanbox.core.ui.theme.PixiViewTheme
 @Composable
 internal fun SettingTextItem(
     title: String,
-    description: String?,
     modifier: Modifier = Modifier,
+    description: String? = null,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
     isEnabled: Boolean = true,
@@ -80,9 +80,9 @@ internal fun SettingTextItem(
 @Composable
 internal fun SettingTextItem(
     @StringRes title: Int,
-    @StringRes description: Int?,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    @StringRes description: Int? = null,
+    onClick: () -> Unit = {},
     isEnabled: Boolean = true,
 ) {
     SettingTextItem(

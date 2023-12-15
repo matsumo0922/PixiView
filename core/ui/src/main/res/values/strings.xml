@@ -184,6 +184,8 @@
     <string name="setting_top_information_version">App version</string>
     <string name="setting_top_information_csrf_token">CSRF token</string>
     <string name="setting_top_information_fanbox_session_id">FANBOXSESSID</string>
+    <string name="setting_top_information_team_of_service">Teams of Service</string>
+    <string name="setting_top_information_privacy_policy">Privacy Policy</string>
     <string name="setting_top_others">Others</string>
     <string name="setting_top_others_logout">Logout</string>
     <string name="setting_top_others_logout_description">Delete your credentials and log out from FANBOX</string>
@@ -225,10 +227,12 @@
 
     <!-- Billing -->
     <string name="billing_plus_title">FANBOX Viewer+</string>
-    <string name="billing_plus_description">FANBOX Viewer+ is a paid service that allows you to access all features for the price of a cup of coffee.</string>
+    <string name="billing_plus_description">FANBOX Viewer+ is a support plan for developers that allows access to all features for the cost of one coffee per month.</string>
     <string name="billing_plus_purchase_button">Buy for %1$s / month</string>
     <string name="billing_plus_verify_button">Restore purchase</string>
     <string name="billing_plus_consume_button">Consume Purchase</string>
+    <string name="billing_plus_caution1">※ FANBOX Viewer+ is a subscription service that adds exclusive features. The payment is made immediately, and to continue using the features, monthly renewal is necessary. You can cancel the subscription at any time.</string>
+    <string name="billing_plus_caution2">※ When using the app, you have already agreed to the Terms of Service and Privacy Policy, but please reconfirm them from the settings screen.</string>
     <string name="billing_plus_toast_require_plus">This feature can only be used with FANBOX Viewer+</string>
     <string name="billing_plus_toast_purchased">Purchased</string>
     <string name="billing_plus_toast_purchased_error">Purchase failed</string>
