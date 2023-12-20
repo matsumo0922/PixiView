@@ -11,14 +11,6 @@ data class FanboxMetaDataEntity(
     val context: Context,
     @SerialName("csrfToken")
     val csrfToken: String,
-    @SerialName("invitationsDisabled")
-    val invitationsDisabled: Boolean,
-    @SerialName("isOnCc")
-    val isOnCc: Boolean,
-    @SerialName("urlContext")
-    val urlContext: UrlContext,
-    @SerialName("wwwUrl")
-    val wwwUrl: String,
 ) {
     @Serializable
     data class Context(
@@ -67,32 +59,6 @@ data class FanboxMetaDataEntity(
             val showAdultContent: Boolean,
             @SerialName("userId")
             val userId: String?,
-        )
-    }
-
-    @Serializable
-    data class UrlContext(
-        @SerialName("creatorOriginPattern")
-        val creatorOriginPattern: String,
-        @SerialName("host")
-        val host: Host,
-        @SerialName("rootOriginPattern")
-        val rootOriginPattern: String,
-        @SerialName("user")
-        val user: User,
-    ) {
-        @Serializable
-        data class Host(
-            @SerialName("creatorId")
-            val creatorId: String?,
-        )
-
-        @Serializable
-        data class User(
-            @SerialName("creatorId")
-            val creatorId: String?,
-            @SerialName("isLoggedIn")
-            val isLoggedIn: Boolean,
         )
     }
 }

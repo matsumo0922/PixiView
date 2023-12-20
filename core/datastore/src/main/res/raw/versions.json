@@ -68,5 +68,12 @@
     "date": "2023/12/16",
     "logJp": "・FANBOX Viewer+ の購入画面に定期購入契約における注意点を追記",
     "logEn": "・Added notes on the subscription contract to the purchase screen of FANBOX Viewer+."
+  },
+  {
+    "versionName": "1.1.3",
+    "versionCode": 12,
+    "date": "2023/12/20",
+    "logJp": "・ログインが出来ない問題を修正",
+    "logEn": "・Fixed the issue of not being able to login."
   }
 ]

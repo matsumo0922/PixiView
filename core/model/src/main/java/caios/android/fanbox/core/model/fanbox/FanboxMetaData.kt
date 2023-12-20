@@ -6,10 +6,6 @@ data class FanboxMetaData(
     val apiUrl: String,
     val context: Context,
     val csrfToken: String,
-    val invitationsDisabled: Boolean,
-    val isOnCc: Boolean,
-    val urlContext: UrlContext,
-    val wwwUrl: String,
 ) {
     data class Context(
         val privacyPolicy: PrivacyPolicy,
@@ -48,11 +44,6 @@ data class FanboxMetaData(
         }
     }
 
-    data class UrlContext(
-        val creatorOriginPattern: String,
-        val rootOriginPattern: String,
-    )
-
     companion object {
         fun dummy() = FanboxMetaData(
             apiUrl = "",
@@ -80,13 +71,6 @@ data class FanboxMetaData(
                 ),
             ),
             csrfToken = "",
-            invitationsDisabled = false,
-            isOnCc = false,
-            urlContext = UrlContext(
-                creatorOriginPattern = "",
-                rootOriginPattern = "",
-            ),
-            wwwUrl = "",
         )
     }
 }

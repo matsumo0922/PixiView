@@ -451,10 +451,7 @@ internal fun FanboxBellItemsEntity.translate(): PageNumberInfo<FanboxBell> {
 internal fun FanboxMetaDataEntity.translate(): FanboxMetaData {
     return FanboxMetaData(
         apiUrl = apiUrl,
-        wwwUrl = wwwUrl,
         csrfToken = csrfToken,
-        invitationsDisabled = invitationsDisabled,
-        isOnCc = isOnCc,
         context = FanboxMetaData.Context(
             privacyPolicy = FanboxMetaData.Context.PrivacyPolicy(
                 policyUrl = context.privacyPolicy.policyUrl,
@@ -477,10 +474,6 @@ internal fun FanboxMetaDataEntity.translate(): FanboxMetaData {
                 showAdultContent = context.user.showAdultContent,
                 userId = context.user.userId,
             ),
-        ),
-        urlContext = FanboxMetaData.UrlContext(
-            creatorOriginPattern = urlContext.creatorOriginPattern,
-            rootOriginPattern = urlContext.rootOriginPattern,
         ),
     )
 }
