@@ -80,6 +80,11 @@ class LibraryHomeViewModel @Inject constructor(
 
                 if (userData.isPlusMode && plusPurchase == null) {
                     userDataRepository.setPlusMode(false)
+                    userDataRepository.setGridMode(false)
+                    userDataRepository.setAppLock(false)
+                    userDataRepository.setHideRestricted(false)
+                    userDataRepository.setUseDynamicColor(false)
+
                     _cancelPlusTrigger.send(Unit)
                 }
             }
