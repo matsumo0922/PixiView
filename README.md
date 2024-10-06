@@ -27,14 +27,10 @@ PixiView is an unofficial Android client app for PIXIV FANBOX.
 <p align="center">Do you speak Japanese? Japanese <a href="./README-JA.md">READEME</a> is Here!</p>
 
 ## Status
-#### Ready!! :rocket:
+#### Deprecated!! ⚠️
 
-Now available on Google Play! Please download from the link below.
-Or, if you're an Android developer, you can build the app and install it yourself.
-Contributions are always welcome. Try building your app by following the section below.
-
-#### [Download](https://play.google.com/store/apps/details?id=caios.android.fanbox) from GooglePlay
-#### [Download](https://github.com/matsumo0922/PixiView/releases) from GitHub
+This repository will be archived soon.
+Please use the [new repository](https://github.com/matsumo0922/PixiView-KMP) which is KMP-compatible based on this repository from now on.
 
 ## Why?
 
